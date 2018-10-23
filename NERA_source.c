@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_source.instr (NERA_source)
- * Date:       Tue Oct 23 15:30:05 2018
+ * Date:       Tue Oct 23 15:51:11 2018
  * File:       ./NERA_source.c
  * Compile:    cc -o NERA_source.out ./NERA_source.c 
  * CFLAGS=
@@ -9620,13 +9620,15 @@ void off_display(off_struct data)
 MCNUM mcipsource_lambda_min;
 MCNUM mcipsource_lambda_max;
 MCNUM mcipsource_pulse_number;
+MCNUM mcipsource_optics_dist;
 
-#define mcNUMIPAR 3
-int mcnumipar = 3;
+#define mcNUMIPAR 4
+int mcnumipar = 4;
 struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
   "source_lambda_min", &mcipsource_lambda_min, instr_type_double, "0.1", 
   "source_lambda_max", &mcipsource_lambda_max, instr_type_double, "10", 
   "source_pulse_number", &mcipsource_pulse_number, instr_type_double, "2", 
+  "source_optics_dist", &mcipsource_optics_dist, instr_type_double, "6", 
   NULL, NULL, instr_type_double, ""
 };
 
@@ -9638,9 +9640,10 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
 #define source_pulse_number mcipsource_pulse_number
+#define source_optics_dist mcipsource_optics_dist
 #line 22 "NERA_source.instr"
 double source_optics_dist = 6;
-double guide_width = 0.05, guide_height = 0.16;
+double width_guide = 0.05, height_guide = 0.16;
 double source_I = 1e16, source_T = 300;
 double source_height=0.4, source_width=0.4;
 
@@ -9648,7 +9651,8 @@ double pulse_length = 340; //in microsec
 double T; //for defining the number of pulse
 double source_freq = 5; //in Hz
 double source_pulse_number_help;
-#line 9651 "./NERA_source.c"
+#line 9654 "./NERA_source.c"
+#undef source_optics_dist
 #undef source_pulse_number
 #undef source_lambda_max
 #undef source_lambda_min
@@ -9791,7 +9795,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 9794 "./NERA_source.c"
+#line 9798 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -9875,7 +9879,7 @@ time_t CurrentTime;
   double pTable_dymin;
   double pTable_dymax;
 
-#line 9878 "./NERA_source.c"
+#line 9882 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -9963,7 +9967,7 @@ time_t CurrentTime;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 9966 "./NERA_source.c"
+#line 9970 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -10031,7 +10035,7 @@ time_t CurrentTime;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 10034 "./NERA_source.c"
+#line 10038 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -10094,12 +10098,14 @@ void mcinit(void) {
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
 #define source_pulse_number mcipsource_pulse_number
+#define source_optics_dist mcipsource_optics_dist
 #line 34 "NERA_source.instr"
 {
 source_pulse_number_help = source_pulse_number;
 source_I = source_I*source_pulse_number/4/PI;
 }
-#line 10102 "./NERA_source.c"
+#line 10107 "./NERA_source.c"
+#undef source_optics_dist
 #undef source_pulse_number
 #undef source_lambda_max
 #undef source_lambda_min
@@ -10128,14 +10134,14 @@ source_I = source_I*source_pulse_number/4/PI;
   mccorigin_flag_save = 0;
 #line 39 "NERA_source.instr"
   mccorigin_minutes = 0;
-#line 10131 "./NERA_source.c"
+#line 10137 "./NERA_source.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10138 "./NERA_source.c"
+#line 10144 "./NERA_source.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
 #line 42 "NERA_source.instr"
@@ -10144,7 +10150,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 42 "NERA_source.instr"
     0);
-#line 10147 "./NERA_source.c"
+#line 10153 "./NERA_source.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -10164,11 +10170,11 @@ source_I = source_I*source_pulse_number/4/PI;
 #line 130 "NERA_source.instr"
   mccSource_radius = 0.0;
 #line 45 "NERA_source.instr"
-  mccSource_dist = source_optics_dist;
+  mccSource_dist = mcipsource_optics_dist;
 #line 46 "NERA_source.instr"
-  mccSource_focus_xw = guide_width;
+  mccSource_focus_xw = width_guide;
 #line 47 "NERA_source.instr"
-  mccSource_focus_yh = guide_height;
+  mccSource_focus_yh = height_guide;
 #line 130 "NERA_source.instr"
   mccSource_focus_aw = 0;
 #line 130 "NERA_source.instr"
@@ -10215,14 +10221,14 @@ source_I = source_I*source_pulse_number/4/PI;
   mccSource_zdepth = 0;
 #line 134 "NERA_source.instr"
   mccSource_target_index = + 1;
-#line 10218 "./NERA_source.c"
+#line 10224 "./NERA_source.c"
 
   SIG_MESSAGE("Source (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10225 "./NERA_source.c"
+#line 10231 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource, mctr1, mcrotrSource);
@@ -10233,7 +10239,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 54 "NERA_source.instr"
     0);
-#line 10236 "./NERA_source.c"
+#line 10242 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource = coords_add(mcposaorigin, mctc2);
@@ -10287,14 +10293,14 @@ source_I = source_I*source_pulse_number/4/PI;
   if("NULL") strncpy(mccsource_time_mon_one_pulse_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username2[0]='\0';
 #line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username3[0]='\0';
-#line 10290 "./NERA_source.c"
+#line 10296 "./NERA_source.c"
 
   SIG_MESSAGE("source_time_mon_one_pulse (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10297 "./NERA_source.c"
+#line 10303 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_one_pulse);
   rot_transpose(mcrotaSource, mctr1);
   rot_mul(mcrotasource_time_mon_one_pulse, mctr1, mcrotrsource_time_mon_one_pulse);
@@ -10305,7 +10311,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 66 "NERA_source.instr"
     0.0001);
-#line 10308 "./NERA_source.c"
+#line 10314 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposasource_time_mon_one_pulse = coords_add(mcposaorigin, mctc2);
@@ -10359,14 +10365,14 @@ source_I = source_I*source_pulse_number/4/PI;
   if("NULL") strncpy(mccsource_time_mon_many_pulses_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username2[0]='\0';
 #line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username3[0]='\0';
-#line 10362 "./NERA_source.c"
+#line 10368 "./NERA_source.c"
 
   SIG_MESSAGE("source_time_mon_many_pulses (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10369 "./NERA_source.c"
+#line 10375 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_many_pulses);
   rot_transpose(mcrotasource_time_mon_one_pulse, mctr1);
   rot_mul(mcrotasource_time_mon_many_pulses, mctr1, mcrotrsource_time_mon_many_pulses);
@@ -10377,7 +10383,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 73 "NERA_source.instr"
     0.00011);
-#line 10380 "./NERA_source.c"
+#line 10386 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposasource_time_mon_many_pulses = coords_add(mcposaorigin, mctc2);
@@ -10397,7 +10403,7 @@ source_I = source_I*source_pulse_number/4/PI;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10400 "./NERA_source.c"
+#line 10406 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotasource_time_mon_many_pulses, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
@@ -10407,8 +10413,8 @@ source_I = source_I*source_pulse_number/4/PI;
 #line 76 "NERA_source.instr"
     0,
 #line 76 "NERA_source.instr"
-    source_optics_dist);
-#line 10411 "./NERA_source.c"
+    mcipsource_optics_dist);
+#line 10417 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -10445,7 +10451,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 10448 "./NERA_source.c"
+#line 10454 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10782,7 +10788,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
       printf("Source_gen: component %s unactivated", NAME_CURRENT_COMP);
   );
 }
-#line 10785 "./NERA_source.c"
+#line 10791 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -10945,7 +10951,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 10948 "./NERA_source.c"
+#line 10954 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -11088,7 +11094,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 11091 "./NERA_source.c"
+#line 11097 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -11276,7 +11282,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 11279 "./NERA_source.c"
+#line 11285 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -11524,13 +11530,13 @@ int target_index = mccSource_target_index;
     SCATTER;
   }
 }
-#line 11527 "./NERA_source.c"
+#line 11533 "./NERA_source.c"
 /* 'Source=Source_gen()' component instance extend code */
     SIG_MESSAGE("Source (Trace:Extend)");
 #line 57 "NERA_source.instr"
 T = floor(rand01()*source_pulse_number_help);
 t = rand01()*pulse_length*1e-6 + T*1/source_freq;
-#line 11533 "./NERA_source.c"
+#line 11539 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -11849,7 +11855,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 11852 "./NERA_source.c"
+#line 11858 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12158,7 +12164,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 12161 "./NERA_source.c"
+#line 12167 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12377,7 +12383,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 12380 "./NERA_source.c"
+#line 12386 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12425,7 +12431,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 12428 "./NERA_source.c"
+#line 12434 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12476,7 +12482,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 12479 "./NERA_source.c"
+#line 12485 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12523,7 +12529,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 12526 "./NERA_source.c"
+#line 12532 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12595,7 +12601,7 @@ int target_index = mccSource_target_index;
   Table_Free(&pTable_x);
   Table_Free(&pTable_y);
 }
-#line 12597 "./NERA_source.c"
+#line 12603 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -12659,7 +12665,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
 }
-#line 12660 "./NERA_source.c"
+#line 12666 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12713,7 +12719,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
 }
-#line 12713 "./NERA_source.c"
+#line 12719 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12764,7 +12770,7 @@ MCNUM minutes = mccorigin_minutes;
 {
   magnify("");
 }
-#line 12762 "./NERA_source.c"
+#line 12768 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12877,7 +12883,7 @@ int target_index = mccSource_target_index;
     dashed_line(0,0,0, -focus_xw/2, focus_yh/2,dist, 4);
   }
 }
-#line 12875 "./NERA_source.c"
+#line 12881 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -12943,7 +12949,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 12941 "./NERA_source.c"
+#line 12947 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12999,7 +13005,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 12997 "./NERA_source.c"
+#line 13003 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -13026,7 +13032,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 13024 "./NERA_source.c"
+#line 13030 "./NERA_source.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
