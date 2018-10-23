@@ -1,27 +1,18 @@
 /*******************************************************************************
-* Instrument: <instrument name>
+* Instrument: NERA_source.instr
 *
-* %I
-* Written by: <your name (email)>
-* Date: <current date>
-* Origin: <your institution>
+* Written by: Peter Konik
+* Date: 23.10.18
+* Origin: PNPI
 * %INSTRUMENT_SITE: Templates
 *
-* <instrument short description>
+* NERA TOF-spectrometer source
 *
-* %D
-* <instrument description>
+* IBR-2M source for channel 7
 *
-* Example: <parameters=values>
+* source_lambda_min: [AA] minimal wavelength produced by the source
+* source_lambda_max: [AA] maximal wavelength produced by the source
 *
-* %P
-* <parameter1>: [<unit>] <parameter1 description>
-* ...
-*
-* %L
-* <reference/HTML link>
-*
-* %E
 *******************************************************************************/
 DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10)
 
@@ -43,7 +34,6 @@ TRACE
 
 COMPONENT origin = Progress_bar()
 AT (0, 0, 0) RELATIVE ABSOLUTE
-
 
 COMPONENT Source = Source_gen(
     dist=source_optics_dist, 
@@ -70,7 +60,6 @@ AT (0, 0, 0.0001) RELATIVE origin
 
 COMPONENT Guide_start_arm = Arm()
 AT (0, 0, source_optics_dist) RELATIVE origin
-
 
 FINALLY
 %{
