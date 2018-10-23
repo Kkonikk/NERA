@@ -65,7 +65,7 @@ COMPONENT source_time_mon = Monitor_nD(
     xwidth=0.5, 
     yheight=0.5, 
     bins=100, 
-    options="time limits = [0 0.00045")
+    options="time limits = [0 0.00045]")
 AT (0, 0, 0.0001) RELATIVE origin
 
 COMPONENT Guide_start_arm = Arm()
