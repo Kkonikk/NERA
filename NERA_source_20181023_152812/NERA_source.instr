@@ -33,7 +33,7 @@ double source_pulse_number_help;
 INITIALIZE
 %{
 source_pulse_number_help = source_pulse_number;
-source_I = source_I*source_pulse_number/4/PI;
+source_I = source_I*source_pulse_number;
 %}
 
 TRACE
