@@ -16,13 +16,12 @@
 * source_optics_dist:  [m] distance between moderator and optics
 *
 *******************************************************************************/
-DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10, source_pulse_number=2, source_optics_dist = 5.45)
+DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10, source_pulse_number=2, source_optics_dist = 5.45, width_guid=0.05, height_guide=0.16)
 
 DECLARE
 %{
-double width_guide = 0.05, height_guide = 0.16;
 double source_I = 1e16, source_T = 300;
-double source_height=0.4, source_width=0.4;
+double source_height=0.4, source_width=0.4; //check and change
 
 double pulse_length = 340; //in microsec
 double T; //for defining the number of pulse
