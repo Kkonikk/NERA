@@ -1,0 +1,177 @@
+/*******************************************************************************
+* Instrument: <instrument name>
+*
+* %I
+* Written by: <your name (email)>
+* Date: <current date>
+* Origin: <your institution>
+* %INSTRUMENT_SITE: Templates
+*
+* <instrument short description>
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Nera(source_lambda_min = 0.1, source_lambda_max = 10)
+
+DECLARE
+%{
+//100%
+double distrance_1chop = 5.45, distrance_after_1chop = 0.16;
+double width_guide = 0.05, height_guide = 0.16;
+double guide_swiss = 24.43175;
+double linh = 2.5;
+
+//from stars
+double guide_length_before_2chop;
+double distance_after_guide_to_2chop = 0.16;
+double distance_after_2chop = 0.16;
+double m_w = 1, m_h = 2;
+double guide_length_after_2chop = 103;
+double distance_before_sample = 0.5;
+double source_optics_dist = 6;
+double guide_width = 0.05, guide_height = 0.15;
+double source_I = 1, source_T = 300;
+double source_height=0.4, source_width=0.4;
+
+double pulse_length = 340; //in microsec
+%}
+
+INITIALIZE
+%{
+guide_length_before_2chop = 26.95 - 5.45 - 0.16 - distance_after_guide_to_2chop;
+%}
+
+TRACE
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT Source = Source_gen(
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    I1=source_I, 
+    yheight=source_height, 
+    xwidth=source_width, 
+    T1=source_T, 
+    Lmin=source_lambda_min, 
+    Lmax=source_lambda_max)
+AT (0, 0, 0) RELATIVE origin
+EXTEND
+%{
+t = rand01()*pulse_length*1e-6;
+%}
+
+COMPONENT source_time_mon = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.5, 
+    bins=100, 
+    options="time limits = [0 0.00045]")
+AT (0, 0, 0.0001) RELATIVE origin
+
+COMPONENT Guide_start_arm = Arm()
+AT (0, 0, source_optics_dist) RELATIVE origin
+
+/* ******************************* Background chopper 1  *************************************/
+COMPONENT diskchopper = Slit(
+    xwidth=width_guide, 
+    yheight=height_guide)
+AT (0, 0, distrance_1chop) RELATIVE PREVIOUS
+
+/*
+COMPONENT diskchopper = DiskChopper(
+    yheight=0.2, 
+    nu=41.7)
+AT (0, 0, distrance_1chop) RELATIVE PREVIOUS
+
+/* ******************************* Spliter_bulkin  *************************************/
+
+COMPONENT  CG_1 = Guide_gravity(
+    w1 = width_guide, h1 = height_guide,  l = guide_length_before_2chop, mleft  = m_w, mright = m_w, 
+mtop = m_h, mbottom = m_h, G = -9.81)
+  AT (0, 0, distrance_after_1chop) RELATIVE diskchopper
+
+/* ******************************* Background chopper 2  *************************************/
+COMPONENT diskchopper2 = Slit(
+    xwidth=width_guide, 
+    yheight=height_guide)
+AT (0, 0, guide_length_before_2chop + distance_after_guide_to_2chop) RELATIVE PREVIOUS
+
+/*
+COMPONENT diskchopper2 = DiskChopper(
+    yheight=0.2, 
+    nu=41.7)
+AT (0, 0, guide_length_before_2chop + distance_after_guide_to_2chop) RELATIVE PREVIOUS
+
+/* ******************************* Guide_bulikin_end  *************************************/
+/*
+COMPONENT  CG_2 = Guide_gravity(
+    w1 = width_guide, h1 = height_guide,  l = guide_length_after_2chop, mleft  = m_w, mright = m_w, 
+mtop = m_h, mbottom = m_h, G = -9.81)
+  AT (0, 0, distrance_after_1chop) RELATIVE diskchopper2
+
+COMPONENT guide_end = Arm()
+AT (0, 0, guide_length_after_2chop+0.001) RELATIVE PREVIOUS
+
+/* ******************************* Guide_swiss_end_without_wavy  *************************************/
+
+COMPONENT  CG_2 = Guide_gravity(
+    w1 = width_guide, h1 = height_guide,  l = guide_length_after_2chop - guide_swiss, mleft  = m_w, mright = m_w, 
+mtop = m_h, mbottom = m_h, G = -9.81)
+  AT (0, 0, distrance_after_1chop) RELATIVE diskchopper2
+
+COMPONENT guide_tapering = Guide_tapering(
+    option="parabolical", 
+    w1=width_guide, h1=height_guide, 
+    l=guide_swiss,
+     louth=linh,
+    mx=1, 
+    my=5)
+AT (0, 0, guide_length_after_2chop - guide_swiss+0.001) RELATIVE PREVIOUS
+
+COMPONENT guide_end = Arm()
+AT (0, 0, guide_swiss+0.001) RELATIVE PREVIOUS
+
+//m_left/right = 1, top/bottom = 2, parabolic guide a = -4.208095z^2
+
+
+/* ******************************* Sample  *************************************/
+COMPONENT monitor_nd_xy = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="x y")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_lambda = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="lambda limits = [0 20]")
+AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
+
+COMPONENT monitor_nd_dxdy = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="dx limits = [-1 1] dy limits = [-1 1]")
+AT (0, 0, distance_before_sample+0.002) RELATIVE guide_end
+
+COMPONENT monitor_nd_t = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="t")
+AT (0, 0, distance_before_sample+0.003) RELATIVE guide_end
+
+/* ******************************* end  *************************************/
+
+FINALLY
+%{
+%}
+
+END
