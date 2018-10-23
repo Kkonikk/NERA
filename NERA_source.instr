@@ -16,7 +16,7 @@
 * source_optics_dist:  [m] distance between moderator and optics
 *
 *******************************************************************************/
-DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10, source_pulse_number=2, source_optics_dist = 6)
+DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10, source_pulse_number=2, source_optics_dist = 5.45)
 
 DECLARE
 %{
