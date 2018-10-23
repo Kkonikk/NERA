@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_source.instr (NERA_source)
- * Date:       Tue Oct 23 14:39:38 2018
+ * Date:       Tue Oct 23 15:20:58 2018
  * File:       ./NERA_source.c
  * Compile:    cc -o NERA_source.out ./NERA_source.c 
  * CFLAGS=
@@ -9619,12 +9619,14 @@ void off_display(off_struct data)
 /* Instrument parameters. */
 MCNUM mcipsource_lambda_min;
 MCNUM mcipsource_lambda_max;
+MCNUM mcipsource_pulse_number;
 
-#define mcNUMIPAR 2
-int mcnumipar = 2;
+#define mcNUMIPAR 3
+int mcnumipar = 3;
 struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
   "source_lambda_min", &mcipsource_lambda_min, instr_type_double, "0.1", 
   "source_lambda_max", &mcipsource_lambda_max, instr_type_double, "10", 
+  "source_pulse_number", &mcipsource_pulse_number, instr_type_double, "2", 
   NULL, NULL, instr_type_double, ""
 };
 
@@ -9635,14 +9637,19 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define mcposaNERA_source coords_set(0,0,0)
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
-#line 30 "NERA_source.instr"
+#define source_pulse_number mcipsource_pulse_number
+#line 22 "NERA_source.instr"
 double source_optics_dist = 6;
-double guide_width = 0.05, guide_height = 0.15;
+double guide_width = 0.05, guide_height = 0.16;
 double source_I = 1, source_T = 300;
 double source_height=0.4, source_width=0.4;
 
 double pulse_length = 340; //in microsec
-#line 9645 "./NERA_source.c"
+double T; //for defining the number of pulse
+double source_freq = 5; //in Hz
+double source_pulse_number_help;
+#line 9651 "./NERA_source.c"
+#undef source_pulse_number
 #undef source_lambda_max
 #undef source_lambda_min
 #undef mcposaNERA_source
@@ -9652,17 +9659,17 @@ double pulse_length = 340; //in microsec
 
 /* neutron state table at each component input (local coords) */
 /* [x, y, z, vx, vy, vz, t, sx, sy, sz, p] */
-MCNUM mccomp_storein[11*6];
+MCNUM mccomp_storein[11*7];
 /* Components position table (absolute and relative coords) */
-Coords mccomp_posa[6];
-Coords mccomp_posr[6];
+Coords mccomp_posa[7];
+Coords mccomp_posr[7];
 /* Counter for each comp to check for inactive ones */
-MCNUM  mcNCounter[6];
-MCNUM  mcPCounter[6];
-MCNUM  mcP2Counter[6];
-#define mcNUMCOMP 5 /* number of components */
+MCNUM  mcNCounter[7];
+MCNUM  mcPCounter[7];
+MCNUM  mcP2Counter[7];
+#define mcNUMCOMP 6 /* number of components */
 /* Counter for PROP ABSORB */
-MCNUM  mcAbsorbProp[6];
+MCNUM  mcAbsorbProp[7];
 /* Flag true when previous component acted on the neutron (SCATTER) */
 MCNUM mcScattered=0;
 /* Flag true when neutron should be restored (RESTORE) */
@@ -9707,31 +9714,57 @@ MCNUM mccSource_I3;
 MCNUM mccSource_zdepth;
 int mccSource_target_index;
 
-/* Definition parameters for component 'source_time_mon' [3]. */
-#define mccsource_time_mon_user1 FLT_MAX
-#define mccsource_time_mon_user2 FLT_MAX
-#define mccsource_time_mon_user3 FLT_MAX
-/* Setting parameters for component 'source_time_mon' [3]. */
-MCNUM mccsource_time_mon_xwidth;
-MCNUM mccsource_time_mon_yheight;
-MCNUM mccsource_time_mon_zdepth;
-MCNUM mccsource_time_mon_xmin;
-MCNUM mccsource_time_mon_xmax;
-MCNUM mccsource_time_mon_ymin;
-MCNUM mccsource_time_mon_ymax;
-MCNUM mccsource_time_mon_zmin;
-MCNUM mccsource_time_mon_zmax;
-MCNUM mccsource_time_mon_bins;
-MCNUM mccsource_time_mon_min;
-MCNUM mccsource_time_mon_max;
-MCNUM mccsource_time_mon_restore_neutron;
-MCNUM mccsource_time_mon_radius;
-char mccsource_time_mon_options[16384];
-char mccsource_time_mon_filename[16384];
-char mccsource_time_mon_geometry[16384];
-char mccsource_time_mon_username1[16384];
-char mccsource_time_mon_username2[16384];
-char mccsource_time_mon_username3[16384];
+/* Definition parameters for component 'source_time_mon_one_pulse' [3]. */
+#define mccsource_time_mon_one_pulse_user1 FLT_MAX
+#define mccsource_time_mon_one_pulse_user2 FLT_MAX
+#define mccsource_time_mon_one_pulse_user3 FLT_MAX
+/* Setting parameters for component 'source_time_mon_one_pulse' [3]. */
+MCNUM mccsource_time_mon_one_pulse_xwidth;
+MCNUM mccsource_time_mon_one_pulse_yheight;
+MCNUM mccsource_time_mon_one_pulse_zdepth;
+MCNUM mccsource_time_mon_one_pulse_xmin;
+MCNUM mccsource_time_mon_one_pulse_xmax;
+MCNUM mccsource_time_mon_one_pulse_ymin;
+MCNUM mccsource_time_mon_one_pulse_ymax;
+MCNUM mccsource_time_mon_one_pulse_zmin;
+MCNUM mccsource_time_mon_one_pulse_zmax;
+MCNUM mccsource_time_mon_one_pulse_bins;
+MCNUM mccsource_time_mon_one_pulse_min;
+MCNUM mccsource_time_mon_one_pulse_max;
+MCNUM mccsource_time_mon_one_pulse_restore_neutron;
+MCNUM mccsource_time_mon_one_pulse_radius;
+char mccsource_time_mon_one_pulse_options[16384];
+char mccsource_time_mon_one_pulse_filename[16384];
+char mccsource_time_mon_one_pulse_geometry[16384];
+char mccsource_time_mon_one_pulse_username1[16384];
+char mccsource_time_mon_one_pulse_username2[16384];
+char mccsource_time_mon_one_pulse_username3[16384];
+
+/* Definition parameters for component 'source_time_mon_many_pulses' [4]. */
+#define mccsource_time_mon_many_pulses_user1 FLT_MAX
+#define mccsource_time_mon_many_pulses_user2 FLT_MAX
+#define mccsource_time_mon_many_pulses_user3 FLT_MAX
+/* Setting parameters for component 'source_time_mon_many_pulses' [4]. */
+MCNUM mccsource_time_mon_many_pulses_xwidth;
+MCNUM mccsource_time_mon_many_pulses_yheight;
+MCNUM mccsource_time_mon_many_pulses_zdepth;
+MCNUM mccsource_time_mon_many_pulses_xmin;
+MCNUM mccsource_time_mon_many_pulses_xmax;
+MCNUM mccsource_time_mon_many_pulses_ymin;
+MCNUM mccsource_time_mon_many_pulses_ymax;
+MCNUM mccsource_time_mon_many_pulses_zmin;
+MCNUM mccsource_time_mon_many_pulses_zmax;
+MCNUM mccsource_time_mon_many_pulses_bins;
+MCNUM mccsource_time_mon_many_pulses_min;
+MCNUM mccsource_time_mon_many_pulses_max;
+MCNUM mccsource_time_mon_many_pulses_restore_neutron;
+MCNUM mccsource_time_mon_many_pulses_radius;
+char mccsource_time_mon_many_pulses_options[16384];
+char mccsource_time_mon_many_pulses_filename[16384];
+char mccsource_time_mon_many_pulses_geometry[16384];
+char mccsource_time_mon_many_pulses_username1[16384];
+char mccsource_time_mon_many_pulses_username2[16384];
+char mccsource_time_mon_many_pulses_username3[16384];
 
 /* User component declarations. */
 
@@ -9758,7 +9791,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 9761 "./NERA_source.c"
+#line 9794 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -9842,7 +9875,7 @@ time_t CurrentTime;
   double pTable_dymin;
   double pTable_dymax;
 
-#line 9845 "./NERA_source.c"
+#line 9878 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -9894,43 +9927,43 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'source_time_mon' [3]. */
-#define mccompcurname  source_time_mon
+/* User declarations for component 'source_time_mon_one_pulse' [3]. */
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-#define xwidth mccsource_time_mon_xwidth
-#define yheight mccsource_time_mon_yheight
-#define zdepth mccsource_time_mon_zdepth
-#define xmin mccsource_time_mon_xmin
-#define xmax mccsource_time_mon_xmax
-#define ymin mccsource_time_mon_ymin
-#define ymax mccsource_time_mon_ymax
-#define zmin mccsource_time_mon_zmin
-#define zmax mccsource_time_mon_zmax
-#define bins mccsource_time_mon_bins
-#define min mccsource_time_mon_min
-#define max mccsource_time_mon_max
-#define restore_neutron mccsource_time_mon_restore_neutron
-#define radius mccsource_time_mon_radius
-#define options mccsource_time_mon_options
-#define filename mccsource_time_mon_filename
-#define geometry mccsource_time_mon_geometry
-#define username1 mccsource_time_mon_username1
-#define username2 mccsource_time_mon_username2
-#define username3 mccsource_time_mon_username3
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+#define xwidth mccsource_time_mon_one_pulse_xwidth
+#define yheight mccsource_time_mon_one_pulse_yheight
+#define zdepth mccsource_time_mon_one_pulse_zdepth
+#define xmin mccsource_time_mon_one_pulse_xmin
+#define xmax mccsource_time_mon_one_pulse_xmax
+#define ymin mccsource_time_mon_one_pulse_ymin
+#define ymax mccsource_time_mon_one_pulse_ymax
+#define zmin mccsource_time_mon_one_pulse_zmin
+#define zmax mccsource_time_mon_one_pulse_zmax
+#define bins mccsource_time_mon_one_pulse_bins
+#define min mccsource_time_mon_one_pulse_min
+#define max mccsource_time_mon_one_pulse_max
+#define restore_neutron mccsource_time_mon_one_pulse_restore_neutron
+#define radius mccsource_time_mon_one_pulse_radius
+#define options mccsource_time_mon_one_pulse_options
+#define filename mccsource_time_mon_one_pulse_filename
+#define geometry mccsource_time_mon_one_pulse_geometry
+#define username1 mccsource_time_mon_one_pulse_username1
+#define username2 mccsource_time_mon_one_pulse_username2
+#define username3 mccsource_time_mon_one_pulse_username3
 #line 220 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 9933 "./NERA_source.c"
+#line 9966 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -9962,10 +9995,78 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'Guide_start_arm' [4]. */
+/* User declarations for component 'source_time_mon_many_pulses' [4]. */
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+#define xwidth mccsource_time_mon_many_pulses_xwidth
+#define yheight mccsource_time_mon_many_pulses_yheight
+#define zdepth mccsource_time_mon_many_pulses_zdepth
+#define xmin mccsource_time_mon_many_pulses_xmin
+#define xmax mccsource_time_mon_many_pulses_xmax
+#define ymin mccsource_time_mon_many_pulses_ymin
+#define ymax mccsource_time_mon_many_pulses_ymax
+#define zmin mccsource_time_mon_many_pulses_zmin
+#define zmax mccsource_time_mon_many_pulses_zmax
+#define bins mccsource_time_mon_many_pulses_bins
+#define min mccsource_time_mon_many_pulses_min
+#define max mccsource_time_mon_many_pulses_max
+#define restore_neutron mccsource_time_mon_many_pulses_restore_neutron
+#define radius mccsource_time_mon_many_pulses_radius
+#define options mccsource_time_mon_many_pulses_options
+#define filename mccsource_time_mon_many_pulses_filename
+#define geometry mccsource_time_mon_many_pulses_geometry
+#define username1 mccsource_time_mon_many_pulses_username1
+#define username2 mccsource_time_mon_many_pulses_username2
+#define username3 mccsource_time_mon_many_pulses_username3
+#line 220 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+  MonitornD_Defines_type DEFS;
+  MonitornD_Variables_type Vars;
+  MCDETECTOR detector;
+  off_struct offdata;
+#line 10034 "./NERA_source.c"
+#undef username3
+#undef username2
+#undef username1
+#undef geometry
+#undef filename
+#undef options
+#undef radius
+#undef restore_neutron
+#undef max
+#undef min
+#undef bins
+#undef zmax
+#undef zmin
+#undef ymax
+#undef ymin
+#undef xmax
+#undef xmin
+#undef zdepth
+#undef yheight
+#undef xwidth
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+/* User declarations for component 'Guide_start_arm' [5]. */
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 4
+#define mccompcurindex 5
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -9974,8 +10075,10 @@ Coords mcposaorigin, mcposrorigin;
 Rotation mcrotaorigin, mcrotrorigin;
 Coords mcposaSource, mcposrSource;
 Rotation mcrotaSource, mcrotrSource;
-Coords mcposasource_time_mon, mcposrsource_time_mon;
-Rotation mcrotasource_time_mon, mcrotrsource_time_mon;
+Coords mcposasource_time_mon_one_pulse, mcposrsource_time_mon_one_pulse;
+Rotation mcrotasource_time_mon_one_pulse, mcrotrsource_time_mon_one_pulse;
+Coords mcposasource_time_mon_many_pulses, mcposrsource_time_mon_many_pulses;
+Rotation mcrotasource_time_mon_many_pulses, mcrotrsource_time_mon_many_pulses;
 Coords mcposaGuide_start_arm, mcposrGuide_start_arm;
 Rotation mcrotaGuide_start_arm, mcrotrGuide_start_arm;
 
@@ -9990,6 +10093,13 @@ void mcinit(void) {
 #define mcposaNERA_source coords_set(0,0,0)
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
+#define source_pulse_number mcipsource_pulse_number
+#line 34 "NERA_source.instr"
+{
+source_pulse_number_help = source_pulse_number;
+}
+#line 10101 "./NERA_source.c"
+#undef source_pulse_number
 #undef source_lambda_max
 #undef source_lambda_min
 #undef mcposaNERA_source
@@ -10017,23 +10127,23 @@ void mcinit(void) {
   mccorigin_flag_save = 0;
 #line 39 "NERA_source.instr"
   mccorigin_minutes = 0;
-#line 10020 "./NERA_source.c"
+#line 10130 "./NERA_source.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10027 "./NERA_source.c"
+#line 10137 "./NERA_source.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
-#line 45 "NERA_source.instr"
+#line 41 "NERA_source.instr"
     0,
-#line 45 "NERA_source.instr"
+#line 41 "NERA_source.instr"
     0,
-#line 45 "NERA_source.instr"
+#line 41 "NERA_source.instr"
     0);
-#line 10036 "./NERA_source.c"
+#line 10146 "./NERA_source.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -10052,11 +10162,11 @@ void mcinit(void) {
   if("NULL") strncpy(mccSource_ydiv_file, "NULL" ? "NULL" : "", 16384); else mccSource_ydiv_file[0]='\0';
 #line 130 "NERA_source.instr"
   mccSource_radius = 0.0;
-#line 49 "NERA_source.instr"
+#line 44 "NERA_source.instr"
   mccSource_dist = source_optics_dist;
-#line 50 "NERA_source.instr"
+#line 45 "NERA_source.instr"
   mccSource_focus_xw = guide_width;
-#line 51 "NERA_source.instr"
+#line 46 "NERA_source.instr"
   mccSource_focus_yh = guide_height;
 #line 130 "NERA_source.instr"
   mccSource_focus_aw = 0;
@@ -10070,23 +10180,23 @@ void mcinit(void) {
   mccSource_lambda0 = 0;
 #line 131 "NERA_source.instr"
   mccSource_dlambda = 0;
-#line 52 "NERA_source.instr"
+#line 47 "NERA_source.instr"
   mccSource_I1 = source_I;
-#line 53 "NERA_source.instr"
+#line 48 "NERA_source.instr"
   mccSource_yheight = source_height;
-#line 54 "NERA_source.instr"
+#line 49 "NERA_source.instr"
   mccSource_xwidth = source_width;
 #line 132 "NERA_source.instr"
   mccSource_verbose = 0;
-#line 55 "NERA_source.instr"
+#line 50 "NERA_source.instr"
   mccSource_T1 = source_T;
 #line 133 "NERA_source.instr"
   mccSource_flux_file_perAA = 0;
 #line 133 "NERA_source.instr"
   mccSource_flux_file_log = 0;
-#line 56 "NERA_source.instr"
+#line 51 "NERA_source.instr"
   mccSource_Lmin = mcipsource_lambda_min;
-#line 57 "NERA_source.instr"
+#line 52 "NERA_source.instr"
   mccSource_Lmax = mcipsource_lambda_max;
 #line 134 "NERA_source.instr"
   mccSource_Emin = 0;
@@ -10104,25 +10214,25 @@ void mcinit(void) {
   mccSource_zdepth = 0;
 #line 134 "NERA_source.instr"
   mccSource_target_index = + 1;
-#line 10107 "./NERA_source.c"
+#line 10217 "./NERA_source.c"
 
   SIG_MESSAGE("Source (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10114 "./NERA_source.c"
+#line 10224 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource, mctr1, mcrotrSource);
   mctc1 = coords_set(
-#line 58 "NERA_source.instr"
+#line 53 "NERA_source.instr"
     0,
-#line 58 "NERA_source.instr"
+#line 53 "NERA_source.instr"
     0,
-#line 58 "NERA_source.instr"
+#line 53 "NERA_source.instr"
     0);
-#line 10125 "./NERA_source.c"
+#line 10235 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource = coords_add(mcposaorigin, mctc2);
@@ -10133,78 +10243,150 @@ void mcinit(void) {
   mccomp_posr[2] = mcposrSource;
   mcNCounter[2]  = mcPCounter[2] = mcP2Counter[2] = 0;
   mcAbsorbProp[2]= 0;
-    /* Component source_time_mon. */
-  /* Setting parameters for component source_time_mon. */
-  SIG_MESSAGE("source_time_mon (Init:SetPar)");
-#line 65 "NERA_source.instr"
-  mccsource_time_mon_xwidth = 0.5;
-#line 66 "NERA_source.instr"
-  mccsource_time_mon_yheight = 0.5;
+    /* Component source_time_mon_one_pulse. */
+  /* Setting parameters for component source_time_mon_one_pulse. */
+  SIG_MESSAGE("source_time_mon_one_pulse (Init:SetPar)");
+#line 61 "NERA_source.instr"
+  mccsource_time_mon_one_pulse_xwidth = 0.5;
+#line 62 "NERA_source.instr"
+  mccsource_time_mon_one_pulse_yheight = 0.5;
 #line 200 "NERA_source.instr"
-  mccsource_time_mon_zdepth = 0;
+  mccsource_time_mon_one_pulse_zdepth = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_xmin = 0;
+  mccsource_time_mon_one_pulse_xmin = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_xmax = 0;
+  mccsource_time_mon_one_pulse_xmax = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_ymin = 0;
+  mccsource_time_mon_one_pulse_ymin = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_ymax = 0;
+  mccsource_time_mon_one_pulse_ymax = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_zmin = 0;
+  mccsource_time_mon_one_pulse_zmin = 0;
 #line 201 "NERA_source.instr"
-  mccsource_time_mon_zmax = 0;
-#line 67 "NERA_source.instr"
-  mccsource_time_mon_bins = 100;
+  mccsource_time_mon_one_pulse_zmax = 0;
+#line 63 "NERA_source.instr"
+  mccsource_time_mon_one_pulse_bins = 100;
 #line 202 "NERA_source.instr"
-  mccsource_time_mon_min = -1e40;
+  mccsource_time_mon_one_pulse_min = -1e40;
 #line 202 "NERA_source.instr"
-  mccsource_time_mon_max = 1e40;
+  mccsource_time_mon_one_pulse_max = 1e40;
 #line 202 "NERA_source.instr"
-  mccsource_time_mon_restore_neutron = 0;
+  mccsource_time_mon_one_pulse_restore_neutron = 0;
 #line 202 "NERA_source.instr"
-  mccsource_time_mon_radius = 0;
-#line 68 "NERA_source.instr"
-  if("time limits = [0 0.00045") strncpy(mccsource_time_mon_options, "time limits = [0 0.00045" ? "time limits = [0 0.00045" : "", 16384); else mccsource_time_mon_options[0]='\0';
+  mccsource_time_mon_one_pulse_radius = 0;
+#line 64 "NERA_source.instr"
+  if("time limits = [0 0.00045]") strncpy(mccsource_time_mon_one_pulse_options, "time limits = [0 0.00045]" ? "time limits = [0 0.00045]" : "", 16384); else mccsource_time_mon_one_pulse_options[0]='\0';
 #line 203 "NERA_source.instr"
-  if("NULL") strncpy(mccsource_time_mon_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_filename[0]='\0';
+  if("NULL") strncpy(mccsource_time_mon_one_pulse_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_filename[0]='\0';
 #line 203 "NERA_source.instr"
-  if("NULL") strncpy(mccsource_time_mon_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_geometry[0]='\0';
+  if("NULL") strncpy(mccsource_time_mon_one_pulse_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_geometry[0]='\0';
 #line 204 "NERA_source.instr"
-  if("NULL") strncpy(mccsource_time_mon_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_username1[0]='\0';
+  if("NULL") strncpy(mccsource_time_mon_one_pulse_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username1[0]='\0';
 #line 204 "NERA_source.instr"
-  if("NULL") strncpy(mccsource_time_mon_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_username2[0]='\0';
+  if("NULL") strncpy(mccsource_time_mon_one_pulse_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username2[0]='\0';
 #line 204 "NERA_source.instr"
-  if("NULL") strncpy(mccsource_time_mon_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_username3[0]='\0';
-#line 10179 "./NERA_source.c"
+  if("NULL") strncpy(mccsource_time_mon_one_pulse_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username3[0]='\0';
+#line 10289 "./NERA_source.c"
 
-  SIG_MESSAGE("source_time_mon (Init:Place/Rotate)");
+  SIG_MESSAGE("source_time_mon_one_pulse (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10186 "./NERA_source.c"
-  rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon);
+#line 10296 "./NERA_source.c"
+  rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_one_pulse);
   rot_transpose(mcrotaSource, mctr1);
-  rot_mul(mcrotasource_time_mon, mctr1, mcrotrsource_time_mon);
+  rot_mul(mcrotasource_time_mon_one_pulse, mctr1, mcrotrsource_time_mon_one_pulse);
   mctc1 = coords_set(
-#line 69 "NERA_source.instr"
+#line 65 "NERA_source.instr"
     0,
-#line 69 "NERA_source.instr"
+#line 65 "NERA_source.instr"
     0,
-#line 69 "NERA_source.instr"
+#line 65 "NERA_source.instr"
     0.0001);
-#line 10197 "./NERA_source.c"
+#line 10307 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposasource_time_mon = coords_add(mcposaorigin, mctc2);
-  mctc1 = coords_sub(mcposaSource, mcposasource_time_mon);
-  mcposrsource_time_mon = rot_apply(mcrotasource_time_mon, mctc1);
-  mcDEBUG_COMPONENT("source_time_mon", mcposasource_time_mon, mcrotasource_time_mon)
-  mccomp_posa[3] = mcposasource_time_mon;
-  mccomp_posr[3] = mcposrsource_time_mon;
+  mcposasource_time_mon_one_pulse = coords_add(mcposaorigin, mctc2);
+  mctc1 = coords_sub(mcposaSource, mcposasource_time_mon_one_pulse);
+  mcposrsource_time_mon_one_pulse = rot_apply(mcrotasource_time_mon_one_pulse, mctc1);
+  mcDEBUG_COMPONENT("source_time_mon_one_pulse", mcposasource_time_mon_one_pulse, mcrotasource_time_mon_one_pulse)
+  mccomp_posa[3] = mcposasource_time_mon_one_pulse;
+  mccomp_posr[3] = mcposrsource_time_mon_one_pulse;
   mcNCounter[3]  = mcPCounter[3] = mcP2Counter[3] = 0;
   mcAbsorbProp[3]= 0;
+    /* Component source_time_mon_many_pulses. */
+  /* Setting parameters for component source_time_mon_many_pulses. */
+  SIG_MESSAGE("source_time_mon_many_pulses (Init:SetPar)");
+#line 68 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_xwidth = 0.5;
+#line 69 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_yheight = 0.5;
+#line 200 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_zdepth = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_xmin = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_xmax = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_ymin = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_ymax = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_zmin = 0;
+#line 201 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_zmax = 0;
+#line 70 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_bins = 100;
+#line 202 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_min = -1e40;
+#line 202 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_max = 1e40;
+#line 202 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_restore_neutron = 0;
+#line 202 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_radius = 0;
+#line 71 "NERA_source.instr"
+  if("time limits = [0 1]") strncpy(mccsource_time_mon_many_pulses_options, "time limits = [0 1]" ? "time limits = [0 1]" : "", 16384); else mccsource_time_mon_many_pulses_options[0]='\0';
+#line 203 "NERA_source.instr"
+  if("NULL") strncpy(mccsource_time_mon_many_pulses_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_filename[0]='\0';
+#line 203 "NERA_source.instr"
+  if("NULL") strncpy(mccsource_time_mon_many_pulses_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_geometry[0]='\0';
+#line 204 "NERA_source.instr"
+  if("NULL") strncpy(mccsource_time_mon_many_pulses_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username1[0]='\0';
+#line 204 "NERA_source.instr"
+  if("NULL") strncpy(mccsource_time_mon_many_pulses_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username2[0]='\0';
+#line 204 "NERA_source.instr"
+  if("NULL") strncpy(mccsource_time_mon_many_pulses_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username3[0]='\0';
+#line 10361 "./NERA_source.c"
+
+  SIG_MESSAGE("source_time_mon_many_pulses (Init:Place/Rotate)");
+  rot_set_rotation(mctr1,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD);
+#line 10368 "./NERA_source.c"
+  rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_many_pulses);
+  rot_transpose(mcrotasource_time_mon_one_pulse, mctr1);
+  rot_mul(mcrotasource_time_mon_many_pulses, mctr1, mcrotrsource_time_mon_many_pulses);
+  mctc1 = coords_set(
+#line 72 "NERA_source.instr"
+    0,
+#line 72 "NERA_source.instr"
+    0,
+#line 72 "NERA_source.instr"
+    0.00011);
+#line 10379 "./NERA_source.c"
+  rot_transpose(mcrotaorigin, mctr1);
+  mctc2 = rot_apply(mctr1, mctc1);
+  mcposasource_time_mon_many_pulses = coords_add(mcposaorigin, mctc2);
+  mctc1 = coords_sub(mcposasource_time_mon_one_pulse, mcposasource_time_mon_many_pulses);
+  mcposrsource_time_mon_many_pulses = rot_apply(mcrotasource_time_mon_many_pulses, mctc1);
+  mcDEBUG_COMPONENT("source_time_mon_many_pulses", mcposasource_time_mon_many_pulses, mcrotasource_time_mon_many_pulses)
+  mccomp_posa[4] = mcposasource_time_mon_many_pulses;
+  mccomp_posr[4] = mcposrsource_time_mon_many_pulses;
+  mcNCounter[4]  = mcPCounter[4] = mcP2Counter[4] = 0;
+  mcAbsorbProp[4]= 0;
     /* Component Guide_start_arm. */
   /* Setting parameters for component Guide_start_arm. */
   SIG_MESSAGE("Guide_start_arm (Init:SetPar)");
@@ -10214,28 +10396,28 @@ void mcinit(void) {
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10217 "./NERA_source.c"
+#line 10399 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
-  rot_transpose(mcrotasource_time_mon, mctr1);
+  rot_transpose(mcrotasource_time_mon_many_pulses, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
   mctc1 = coords_set(
-#line 72 "NERA_source.instr"
+#line 75 "NERA_source.instr"
     0,
-#line 72 "NERA_source.instr"
+#line 75 "NERA_source.instr"
     0,
-#line 72 "NERA_source.instr"
+#line 75 "NERA_source.instr"
     source_optics_dist);
-#line 10228 "./NERA_source.c"
+#line 10410 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
-  mctc1 = coords_sub(mcposasource_time_mon, mcposaGuide_start_arm);
+  mctc1 = coords_sub(mcposasource_time_mon_many_pulses, mcposaGuide_start_arm);
   mcposrGuide_start_arm = rot_apply(mcrotaGuide_start_arm, mctc1);
   mcDEBUG_COMPONENT("Guide_start_arm", mcposaGuide_start_arm, mcrotaGuide_start_arm)
-  mccomp_posa[4] = mcposaGuide_start_arm;
-  mccomp_posr[4] = mcposrGuide_start_arm;
-  mcNCounter[4]  = mcPCounter[4] = mcP2Counter[4] = 0;
-  mcAbsorbProp[4]= 0;
+  mccomp_posa[5] = mcposaGuide_start_arm;
+  mccomp_posr[5] = mcposrGuide_start_arm;
+  mcNCounter[5]  = mcPCounter[5] = mcP2Counter[5] = 0;
+  mcAbsorbProp[5]= 0;
   /* Component initializations. */
   /* Initializations for component origin. */
   SIG_MESSAGE("origin (Init)");
@@ -10262,7 +10444,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 10265 "./NERA_source.c"
+#line 10447 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10599,7 +10781,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
       printf("Source_gen: component %s unactivated", NAME_CURRENT_COMP);
   );
 }
-#line 10602 "./NERA_source.c"
+#line 10784 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -10651,38 +10833,38 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* Initializations for component source_time_mon. */
-  SIG_MESSAGE("source_time_mon (Init)");
-#define mccompcurname  source_time_mon
+  /* Initializations for component source_time_mon_one_pulse. */
+  SIG_MESSAGE("source_time_mon_one_pulse (Init)");
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-#define xwidth mccsource_time_mon_xwidth
-#define yheight mccsource_time_mon_yheight
-#define zdepth mccsource_time_mon_zdepth
-#define xmin mccsource_time_mon_xmin
-#define xmax mccsource_time_mon_xmax
-#define ymin mccsource_time_mon_ymin
-#define ymax mccsource_time_mon_ymax
-#define zmin mccsource_time_mon_zmin
-#define zmax mccsource_time_mon_zmax
-#define bins mccsource_time_mon_bins
-#define min mccsource_time_mon_min
-#define max mccsource_time_mon_max
-#define restore_neutron mccsource_time_mon_restore_neutron
-#define radius mccsource_time_mon_radius
-#define options mccsource_time_mon_options
-#define filename mccsource_time_mon_filename
-#define geometry mccsource_time_mon_geometry
-#define username1 mccsource_time_mon_username1
-#define username2 mccsource_time_mon_username2
-#define username3 mccsource_time_mon_username3
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+#define xwidth mccsource_time_mon_one_pulse_xwidth
+#define yheight mccsource_time_mon_one_pulse_yheight
+#define zdepth mccsource_time_mon_one_pulse_zdepth
+#define xmin mccsource_time_mon_one_pulse_xmin
+#define xmax mccsource_time_mon_one_pulse_xmax
+#define ymin mccsource_time_mon_one_pulse_ymin
+#define ymax mccsource_time_mon_one_pulse_ymax
+#define zmin mccsource_time_mon_one_pulse_zmin
+#define zmax mccsource_time_mon_one_pulse_zmax
+#define bins mccsource_time_mon_one_pulse_bins
+#define min mccsource_time_mon_one_pulse_min
+#define max mccsource_time_mon_one_pulse_max
+#define restore_neutron mccsource_time_mon_one_pulse_restore_neutron
+#define radius mccsource_time_mon_one_pulse_radius
+#define options mccsource_time_mon_one_pulse_options
+#define filename mccsource_time_mon_one_pulse_filename
+#define geometry mccsource_time_mon_one_pulse_geometry
+#define username1 mccsource_time_mon_one_pulse_username1
+#define username2 mccsource_time_mon_one_pulse_username2
+#define username3 mccsource_time_mon_one_pulse_username3
 #line 227 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
@@ -10762,7 +10944,150 @@ MPI_MASTER(
 );
 #endif
 }
-#line 10765 "./NERA_source.c"
+#line 10947 "./NERA_source.c"
+#undef username3
+#undef username2
+#undef username1
+#undef geometry
+#undef filename
+#undef options
+#undef radius
+#undef restore_neutron
+#undef max
+#undef min
+#undef bins
+#undef zmax
+#undef zmin
+#undef ymax
+#undef ymin
+#undef xmax
+#undef xmin
+#undef zdepth
+#undef yheight
+#undef xwidth
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* Initializations for component source_time_mon_many_pulses. */
+  SIG_MESSAGE("source_time_mon_many_pulses (Init)");
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+#define xwidth mccsource_time_mon_many_pulses_xwidth
+#define yheight mccsource_time_mon_many_pulses_yheight
+#define zdepth mccsource_time_mon_many_pulses_zdepth
+#define xmin mccsource_time_mon_many_pulses_xmin
+#define xmax mccsource_time_mon_many_pulses_xmax
+#define ymin mccsource_time_mon_many_pulses_ymin
+#define ymax mccsource_time_mon_many_pulses_ymax
+#define zmin mccsource_time_mon_many_pulses_zmin
+#define zmax mccsource_time_mon_many_pulses_zmax
+#define bins mccsource_time_mon_many_pulses_bins
+#define min mccsource_time_mon_many_pulses_min
+#define max mccsource_time_mon_many_pulses_max
+#define restore_neutron mccsource_time_mon_many_pulses_restore_neutron
+#define radius mccsource_time_mon_many_pulses_radius
+#define options mccsource_time_mon_many_pulses_options
+#define filename mccsource_time_mon_many_pulses_filename
+#define geometry mccsource_time_mon_many_pulses_geometry
+#define username1 mccsource_time_mon_many_pulses_username1
+#define username2 mccsource_time_mon_many_pulses_username2
+#define username3 mccsource_time_mon_many_pulses_username3
+#line 227 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  char tmp[CHAR_BUF_LENGTH];
+  strcpy(Vars.compcurname, NAME_CURRENT_COMP);
+  if (options != NULL)
+    strncpy(Vars.option, options, CHAR_BUF_LENGTH);
+  else {
+    strcpy(Vars.option, "x y");
+    printf("Monitor_nD: %s has no option specified. Setting to PSD ('x y') monitor.\n", NAME_CURRENT_COMP);
+  }
+  Vars.compcurpos = POS_A_CURRENT_COMP;
+
+  if (strstr(Vars.option, "source"))
+    strcat(Vars.option, " list, x y z vx vy vz t sx sy sz ");
+
+  if (bins) { sprintf(tmp, " all bins=%ld ", (long)bins); strcat(Vars.option, tmp); }
+  if (min > -FLT_MAX && max < FLT_MAX) { sprintf(tmp, " all limits=[%g %g]", min, max); strcat(Vars.option, tmp); }
+  else if (min > -FLT_MAX) { sprintf(tmp, " all min=%g", min); strcat(Vars.option, tmp); }
+  else if (max <  FLT_MAX) { sprintf(tmp, " all max=%g", max); strcat(Vars.option, tmp); }
+
+  strncpy(Vars.UserName1,
+    username1 && strlen(username1) && strcmp(username1, "0") && strcmp(username1, "NULL") ?
+    username1 : "", 128);
+  strncpy(Vars.UserName2,
+    username2 && strlen(username2) && strcmp(username2, "0") && strcmp(username2, "NULL") ?
+    username2 : "", 128);
+  strncpy(Vars.UserName3,
+    username3 && strlen(username3) && strcmp(username3, "0") && strcmp(username3, "NULL") ?
+    username3 : "", 128);
+  if (radius) {
+    xwidth = zdepth = 2*radius;
+    if (yheight && !strstr(Vars.option, "cylinder") && !strstr(Vars.option, "banana") && !strstr(Vars.option, "sphere"))
+      strcat(Vars.option, " banana");
+    else if (!yheight && !strstr(Vars.option ,"sphere")) {
+      strcat(Vars.option, " sphere");
+      yheight=2*radius;
+    }
+  }
+  int offflag=0;
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+    if (!off_init(  geometry, xwidth, yheight, zdepth, 1, &offdata )) {
+      printf("Monitor_nD: %s could not initiate the OFF geometry %s. \n"
+             "            Defaulting to normal Monitor dimensions.\n",
+             NAME_CURRENT_COMP, geometry);
+      strcpy(geometry, "");
+    } else {
+      offflag=1;
+    }
+
+  if (!radius && !xwidth && !yheight && !zdepth && !xmin && !xmax && !ymin && !ymax &&
+    !strstr(Vars.option, "previous") && (!geometry || !strlen(geometry)))
+    exit(printf("Monitor_nD: %s has no dimension specified. Aborting (radius, xwidth, yheight, zdepth, previous, geometry).\n", NAME_CURRENT_COMP));
+
+  Monitor_nD_Init(&DEFS, &Vars, xwidth, yheight, zdepth, xmin,xmax,ymin,ymax,zmin,zmax,offflag);
+
+  if (Vars.Flag_OFF) {
+    offdata.mantidflag=Vars.Flag_mantid;
+    offdata.mantidoffset=Vars.Coord_Min[Vars.Coord_Number-1];
+  }
+
+
+  if (filename && strlen(filename) && strcmp(filename,"NULL") && strcmp(filename,"0"))
+    strncpy(Vars.Mon_File, filename, 128);
+
+  /* check if user given filename with ext will be used more than once */
+  if ( ((Vars.Flag_Multiple && Vars.Coord_Number > 1) || Vars.Flag_List) && strchr(Vars.Mon_File,'.') )
+  { char *XY; XY = strrchr(Vars.Mon_File,'.'); *XY='_'; }
+
+  if (restore_neutron) Vars.Flag_parallel=1;
+  detector.m = 0;
+
+#ifdef USE_MPI
+MPI_MASTER(
+  if (strstr(Vars.option, "auto") && mpi_node_count > 1)
+    printf("Monitor_nD: %s is using automatic limits option 'auto' together with MPI.\n"
+           "WARNING     this may create incorrect distributions (but integrated flux will be right).\n", NAME_CURRENT_COMP);
+);
+#endif
+}
+#line 11090 "./NERA_source.c"
 #undef username3
 #undef username2
 #undef username1
@@ -10950,7 +11275,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 10953 "./NERA_source.c"
+#line 11278 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -11198,12 +11523,13 @@ int target_index = mccSource_target_index;
     SCATTER;
   }
 }
-#line 11201 "./NERA_source.c"
+#line 11526 "./NERA_source.c"
 /* 'Source=Source_gen()' component instance extend code */
     SIG_MESSAGE("Source (Trace:Extend)");
-#line 61 "NERA_source.instr"
-t = rand01()*pulse_length*1e-6;
-#line 11206 "./NERA_source.c"
+#line 56 "NERA_source.instr"
+T = floor(rand01()*source_pulse_number_help);
+t = rand01()*pulse_length*1e-6 + T*1/source_freq;
+#line 11532 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -11265,8 +11591,8 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component source_time_mon [3] */
-  mccoordschange(mcposrsource_time_mon, mcrotrsource_time_mon,
+  /* TRACE Component source_time_mon_one_pulse [3] */
+  mccoordschange(mcposrsource_time_mon_one_pulse, mcrotrsource_time_mon_one_pulse,
     &mcnlx,
     &mcnly,
     &mcnlz,
@@ -11276,10 +11602,10 @@ mcnlp)
     &mcnlsx,
     &mcnlsy,
     &mcnlsz);
-  /* define label inside component source_time_mon (without coords transformations) */
-  mcJumpTrace_source_time_mon:
-  SIG_MESSAGE("source_time_mon (Trace)");
-  mcDEBUG_COMP("source_time_mon")
+  /* define label inside component source_time_mon_one_pulse (without coords transformations) */
+  mcJumpTrace_source_time_mon_one_pulse:
+  SIG_MESSAGE("source_time_mon_one_pulse (Trace)");
+  mcDEBUG_COMP("source_time_mon_one_pulse")
   mcDEBUG_STATE(
     mcnlx,
     mcnly,
@@ -11304,7 +11630,7 @@ mcnlp)
 #define sz mcnlsz
 #define p mcnlp
 
-#define mcabsorbComp mcabsorbCompsource_time_mon
+#define mcabsorbComp mcabsorbCompsource_time_mon_one_pulse
   STORE_NEUTRON(3,
     mcnlx,
     mcnly,
@@ -11322,37 +11648,37 @@ mcnlp)
   mcNCounter[3]++;
   mcPCounter[3] += p;
   mcP2Counter[3] += p*p;
-#define mccompcurname  source_time_mon
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-{   /* Declarations of source_time_mon=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_xwidth;
-MCNUM yheight = mccsource_time_mon_yheight;
-MCNUM zdepth = mccsource_time_mon_zdepth;
-MCNUM xmin = mccsource_time_mon_xmin;
-MCNUM xmax = mccsource_time_mon_xmax;
-MCNUM ymin = mccsource_time_mon_ymin;
-MCNUM ymax = mccsource_time_mon_ymax;
-MCNUM zmin = mccsource_time_mon_zmin;
-MCNUM zmax = mccsource_time_mon_zmax;
-MCNUM bins = mccsource_time_mon_bins;
-MCNUM min = mccsource_time_mon_min;
-MCNUM max = mccsource_time_mon_max;
-MCNUM restore_neutron = mccsource_time_mon_restore_neutron;
-MCNUM radius = mccsource_time_mon_radius;
-char* options = mccsource_time_mon_options;
-char* filename = mccsource_time_mon_filename;
-char* geometry = mccsource_time_mon_geometry;
-char* username1 = mccsource_time_mon_username1;
-char* username2 = mccsource_time_mon_username2;
-char* username3 = mccsource_time_mon_username3;
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
+MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
+MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
+MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
+MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
+MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
+MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
+MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
+MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
+MCNUM bins = mccsource_time_mon_one_pulse_bins;
+MCNUM min = mccsource_time_mon_one_pulse_min;
+MCNUM max = mccsource_time_mon_one_pulse_max;
+MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
+MCNUM radius = mccsource_time_mon_one_pulse_radius;
+char* options = mccsource_time_mon_one_pulse_options;
+char* filename = mccsource_time_mon_one_pulse_filename;
+char* geometry = mccsource_time_mon_one_pulse_geometry;
+char* username1 = mccsource_time_mon_one_pulse_username1;
+char* username2 = mccsource_time_mon_one_pulse_username2;
+char* username3 = mccsource_time_mon_one_pulse_username3;
 #line 307 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
@@ -11522,8 +11848,8 @@ char* username3 = mccsource_time_mon_username3;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 11525 "./NERA_source.c"
-}   /* End of source_time_mon=Monitor_nD() SETTING parameter declarations. */
+#line 11851 "./NERA_source.c"
+}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -11535,7 +11861,7 @@ char* username3 = mccsource_time_mon_username3;
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
-  mcabsorbCompsource_time_mon:
+  mcabsorbCompsource_time_mon_one_pulse:
   if (RESTORE) /* restore if needed */
   { RESTORE_NEUTRON(3,
       mcnlx,
@@ -11574,7 +11900,316 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component Guide_start_arm [4] */
+  /* TRACE Component source_time_mon_many_pulses [4] */
+  mccoordschange(mcposrsource_time_mon_many_pulses, mcrotrsource_time_mon_many_pulses,
+    &mcnlx,
+    &mcnly,
+    &mcnlz,
+    &mcnlvx,
+    &mcnlvy,
+    &mcnlvz,
+    &mcnlsx,
+    &mcnlsy,
+    &mcnlsz);
+  /* define label inside component source_time_mon_many_pulses (without coords transformations) */
+  mcJumpTrace_source_time_mon_many_pulses:
+  SIG_MESSAGE("source_time_mon_many_pulses (Trace)");
+  mcDEBUG_COMP("source_time_mon_many_pulses")
+  mcDEBUG_STATE(
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp)
+#define x mcnlx
+#define y mcnly
+#define z mcnlz
+#define vx mcnlvx
+#define vy mcnlvy
+#define vz mcnlvz
+#define t mcnlt
+#define sx mcnlsx
+#define sy mcnlsy
+#define sz mcnlsz
+#define p mcnlp
+
+#define mcabsorbComp mcabsorbCompsource_time_mon_many_pulses
+  STORE_NEUTRON(4,
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp);
+  mcScattered=0;
+  mcRestore=0;
+  mcNCounter[4]++;
+  mcPCounter[4] += p;
+  mcP2Counter[4] += p*p;
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
+MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
+MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
+MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
+MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
+MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
+MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
+MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
+MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
+MCNUM bins = mccsource_time_mon_many_pulses_bins;
+MCNUM min = mccsource_time_mon_many_pulses_min;
+MCNUM max = mccsource_time_mon_many_pulses_max;
+MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
+MCNUM radius = mccsource_time_mon_many_pulses_radius;
+char* options = mccsource_time_mon_many_pulses_options;
+char* filename = mccsource_time_mon_many_pulses_filename;
+char* geometry = mccsource_time_mon_many_pulses_geometry;
+char* username1 = mccsource_time_mon_many_pulses_username1;
+char* username2 = mccsource_time_mon_many_pulses_username2;
+char* username3 = mccsource_time_mon_many_pulses_username3;
+#line 307 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  double  XY=0;
+  double  t0 = 0;
+  double  t1 = 0;
+  double  pp;
+  int     intersect   = 0;
+  char    Flag_Restore = 0;
+
+  if (user1 != FLT_MAX) Vars.UserVariable1 = user1;
+  if (user2 != FLT_MAX) Vars.UserVariable2 = user2;
+  if (user3 != FLT_MAX) Vars.UserVariable3 = user3;
+
+  /* this is done automatically
+    STORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+  */
+
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+  {
+    /* determine intersections with object */
+    intersect = off_intersect_all(&t0, &t1, NULL, NULL,
+       x,y,z, vx, vy, vz, &offdata );
+    if (Vars.Flag_mantid) {
+      if(intersect) {
+        Vars.OFF_polyidx=(offdata.intersects[offdata.nextintersect]).index;
+      } else {
+        Vars.OFF_polyidx=-1;
+      }
+    }
+  }
+  else if ( (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
+            || (abs(Vars.Flag_Shape) == DEFS.SHAPE_DISK) ) /* square xy or disk xy */
+  {
+    // propagate to xy plane and find intersection
+    // make sure the event is recoverable afterwards
+    t0 = t;
+    ALLOW_BACKPROP;
+    PROP_Z0;
+    if ( (t>=t0) && (z==0.0) ) // forward propagation to xy plane was successful
+    {
+      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
+      {
+        // square xy
+        intersect = (x>=Vars.mxmin && x<=Vars.mxmax && y>=Vars.mymin && y<=Vars.mymax);
+      }
+      else
+      {
+        // disk xy
+        intersect = (SQR(x) + SQR(y)) <= SQR(Vars.Sphere_Radius);
+      }
+    }
+    else
+    {
+      intersect=0;
+    }
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) /* sphere */
+  {
+    intersect = sphere_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius);
+  /*      intersect = (intersect && t0 > 0); */
+  }
+  else if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)) /* cylinder */
+  {
+    intersect = cylinder_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius, Vars.Cylinder_Height);
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) /* box */
+  {
+    intersect = box_intersect(&t0, &t1, x, y, z, vx, vy, vz,
+                              fabs(Vars.mxmax-Vars.mxmin), fabs(Vars.mymax-Vars.mymin), fabs(Vars.mzmax-Vars.mzmin));
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_PREVIOUS) /* previous comp */
+  { intersect = 1; }
+
+  if (intersect)
+  {
+    if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND)
+     || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)
+     || (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) )
+    {
+      /* check if we have to remove the top/bottom with BANANA shape */
+      if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA) && (intersect != 1)) {
+        double y0,y1;
+        /* propagate to intersection point as temporary variable to check top/bottom */
+        y0 = y+t0*vy;
+        y1 = y+t1*vy;
+        if (fabs(y0) >= Vars.Cylinder_Height/2*0.99) t0 = t1;
+        if (fabs(y1) >= Vars.Cylinder_Height/2*0.99) t1 = t0;
+      }
+      if (t0 < 0 && t1 > 0)
+        t0 = t;  /* neutron was already inside ! */
+      if (t1 < 0 && t0 > 0) /* neutron exit before entering !! */
+        t1 = t;
+      /* t0 is now time of incoming intersection with the detection area */
+      if ((Vars.Flag_Shape < 0) && (t1 > 0))
+        PROP_DT(t1); /* t1 outgoing beam */
+      else
+        PROP_DT(t0); /* t0 incoming beam */
+      /* Final test if we are on lid / bottom of banana/sphere */
+      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA || abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) {
+        if (fabs(y) >= Vars.Cylinder_Height/2*0.99) {
+          intersect=0;
+          Flag_Restore=1;
+        }
+      }
+    }
+  }
+
+  if (intersect)
+  {
+    /* Now get the data to monitor: current or keep from PreMonitor */
+    if (Vars.Flag_UsePreMonitor != 1)
+    {
+      Vars.cp  = p;
+      Vars.cx  = x;
+      Vars.cvx = vx;
+      Vars.csx = sx;
+      Vars.cy  = y;
+      Vars.cvy = vy;
+      Vars.csy = sy;
+      Vars.cz  = z;
+      Vars.cvz = vz;
+      Vars.csz = sz;
+      Vars.ct  = t;
+    }
+
+    if ((Vars.He3_pressure > 0) && (t1 != t0) && ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX)))
+    {
+      XY = exp(-7.417*Vars.He3_pressure*fabs(t1-t0)*2*PI*K2V);
+      /* will monitor the absorbed part */
+      Vars.cp *= 1-XY;
+      /* and modify the neutron weight after monitor, only remains 1-p_detect */
+      p *= XY;
+    }
+
+    if (Vars.Flag_capture)
+    {
+      XY = sqrt(Vars.cvx*Vars.cvx+Vars.cvy*Vars.cvy+Vars.cvz*Vars.cvz);
+      XY *= V2K;
+      if (XY != 0) XY = 2*PI/XY; /* lambda. lambda(2200 m/2) = 1.7985 Angs  */
+      Vars.cp *= XY/1.7985;
+    }
+
+    pp = Monitor_nD_Trace(&DEFS, &Vars);
+    if (pp==0.0)
+    { ABSORB;
+    }
+    else
+    {
+      SCATTER;
+    }
+
+    if (Vars.Flag_parallel) /* back to neutron state before detection */
+      Flag_Restore = 1;
+  } /* end if intersection */
+  else {
+    if (Vars.Flag_Absorb && !Vars.Flag_parallel)
+    {
+      // restore neutron ray before absorbing for correct mcdisplay
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+      ABSORB;
+    }
+    else Flag_Restore = 1;  /* no intersection, back to previous state */
+  }
+
+  if (Flag_Restore)
+  {
+    RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+  }
+}
+#line 12160 "./NERA_source.c"
+}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+  /* Label for restoring  neutron */
+  mcabsorbCompsource_time_mon_many_pulses:
+  if (RESTORE) /* restore if needed */
+  { RESTORE_NEUTRON(4,
+      mcnlx,
+      mcnly,
+      mcnlz,
+      mcnlvx,
+      mcnlvy,
+      mcnlvz,
+      mcnlt,
+      mcnlsx,
+      mcnlsy,
+      mcnlsz,
+      mcnlp); }
+#undef mcabsorbComp
+#undef p
+#undef sz
+#undef sy
+#undef sx
+#undef t
+#undef vz
+#undef vy
+#undef vx
+#undef z
+#undef y
+#undef x
+  mcDEBUG_STATE(
+mcnlx,
+mcnly,
+mcnlz,
+mcnlvx,
+mcnlvy,
+mcnlvz,
+mcnlt,
+mcnlsx,
+mcnlsy,
+mcnlsz,
+mcnlp)
+
+  /* TRACE Component Guide_start_arm [5] */
   mccoordschange(mcposrGuide_start_arm, mcrotrGuide_start_arm,
     &mcnlx,
     &mcnly,
@@ -11614,7 +12249,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompGuide_start_arm
-  STORE_NEUTRON(4,
+  STORE_NEUTRON(5,
     mcnlx,
     mcnly,
     mcnlz,
@@ -11628,19 +12263,19 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[4]++;
-  mcPCounter[4] += p;
-  mcP2Counter[4] += p*p;
+  mcNCounter[5]++;
+  mcPCounter[5] += p;
+  mcP2Counter[5] += p*p;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 4
+#define mccompcurindex 5
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
   mcabsorbCompGuide_start_arm:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(4,
+  { RESTORE_NEUTRON(5,
       mcnlx,
       mcnly,
       mcnlz,
@@ -11741,7 +12376,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 11744 "./NERA_source.c"
+#line 12379 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -11751,46 +12386,97 @@ MCNUM minutes = mccorigin_minutes;
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* User SAVE code for component 'source_time_mon'. */
-  SIG_MESSAGE("source_time_mon (Save)");
-#define mccompcurname  source_time_mon
+  /* User SAVE code for component 'source_time_mon_one_pulse'. */
+  SIG_MESSAGE("source_time_mon_one_pulse (Save)");
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-{   /* Declarations of source_time_mon=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_xwidth;
-MCNUM yheight = mccsource_time_mon_yheight;
-MCNUM zdepth = mccsource_time_mon_zdepth;
-MCNUM xmin = mccsource_time_mon_xmin;
-MCNUM xmax = mccsource_time_mon_xmax;
-MCNUM ymin = mccsource_time_mon_ymin;
-MCNUM ymax = mccsource_time_mon_ymax;
-MCNUM zmin = mccsource_time_mon_zmin;
-MCNUM zmax = mccsource_time_mon_zmax;
-MCNUM bins = mccsource_time_mon_bins;
-MCNUM min = mccsource_time_mon_min;
-MCNUM max = mccsource_time_mon_max;
-MCNUM restore_neutron = mccsource_time_mon_restore_neutron;
-MCNUM radius = mccsource_time_mon_radius;
-char* options = mccsource_time_mon_options;
-char* filename = mccsource_time_mon_filename;
-char* geometry = mccsource_time_mon_geometry;
-char* username1 = mccsource_time_mon_username1;
-char* username2 = mccsource_time_mon_username2;
-char* username3 = mccsource_time_mon_username3;
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
+MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
+MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
+MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
+MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
+MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
+MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
+MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
+MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
+MCNUM bins = mccsource_time_mon_one_pulse_bins;
+MCNUM min = mccsource_time_mon_one_pulse_min;
+MCNUM max = mccsource_time_mon_one_pulse_max;
+MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
+MCNUM radius = mccsource_time_mon_one_pulse_radius;
+char* options = mccsource_time_mon_one_pulse_options;
+char* filename = mccsource_time_mon_one_pulse_filename;
+char* geometry = mccsource_time_mon_one_pulse_geometry;
+char* username1 = mccsource_time_mon_one_pulse_username1;
+char* username2 = mccsource_time_mon_one_pulse_username2;
+char* username3 = mccsource_time_mon_one_pulse_username3;
 #line 477 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 11792 "./NERA_source.c"
-}   /* End of source_time_mon=Monitor_nD() SETTING parameter declarations. */
+#line 12427 "./NERA_source.c"
+}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* User SAVE code for component 'source_time_mon_many_pulses'. */
+  SIG_MESSAGE("source_time_mon_many_pulses (Save)");
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
+MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
+MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
+MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
+MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
+MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
+MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
+MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
+MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
+MCNUM bins = mccsource_time_mon_many_pulses_bins;
+MCNUM min = mccsource_time_mon_many_pulses_min;
+MCNUM max = mccsource_time_mon_many_pulses_max;
+MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
+MCNUM radius = mccsource_time_mon_many_pulses_radius;
+char* options = mccsource_time_mon_many_pulses_options;
+char* filename = mccsource_time_mon_many_pulses_filename;
+char* geometry = mccsource_time_mon_many_pulses_geometry;
+char* username1 = mccsource_time_mon_many_pulses_username1;
+char* username2 = mccsource_time_mon_many_pulses_username2;
+char* username3 = mccsource_time_mon_many_pulses_username3;
+#line 477 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  /* save results, but do not free pointers */
+  detector = Monitor_nD_Save(&DEFS, &Vars);
+}
+#line 12478 "./NERA_source.c"
+}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -11836,7 +12522,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 11839 "./NERA_source.c"
+#line 12525 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -11908,7 +12594,7 @@ int target_index = mccSource_target_index;
   Table_Free(&pTable_x);
   Table_Free(&pTable_y);
 }
-#line 11910 "./NERA_source.c"
+#line 12596 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -11934,46 +12620,46 @@ int target_index = mccSource_target_index;
     if (!mcNCounter[2]) fprintf(stderr, "Warning: No neutron could reach Component[2] Source\n");
     if (mcAbsorbProp[2]) fprintf(stderr, "Warning: %g events were removed in Component[2] Source=Source_gen()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[2]);
-  /* User FINALLY code for component 'source_time_mon'. */
-  SIG_MESSAGE("source_time_mon (Finally)");
-#define mccompcurname  source_time_mon
+  /* User FINALLY code for component 'source_time_mon_one_pulse'. */
+  SIG_MESSAGE("source_time_mon_one_pulse (Finally)");
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-{   /* Declarations of source_time_mon=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_xwidth;
-MCNUM yheight = mccsource_time_mon_yheight;
-MCNUM zdepth = mccsource_time_mon_zdepth;
-MCNUM xmin = mccsource_time_mon_xmin;
-MCNUM xmax = mccsource_time_mon_xmax;
-MCNUM ymin = mccsource_time_mon_ymin;
-MCNUM ymax = mccsource_time_mon_ymax;
-MCNUM zmin = mccsource_time_mon_zmin;
-MCNUM zmax = mccsource_time_mon_zmax;
-MCNUM bins = mccsource_time_mon_bins;
-MCNUM min = mccsource_time_mon_min;
-MCNUM max = mccsource_time_mon_max;
-MCNUM restore_neutron = mccsource_time_mon_restore_neutron;
-MCNUM radius = mccsource_time_mon_radius;
-char* options = mccsource_time_mon_options;
-char* filename = mccsource_time_mon_filename;
-char* geometry = mccsource_time_mon_geometry;
-char* username1 = mccsource_time_mon_username1;
-char* username2 = mccsource_time_mon_username2;
-char* username3 = mccsource_time_mon_username3;
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
+MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
+MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
+MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
+MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
+MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
+MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
+MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
+MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
+MCNUM bins = mccsource_time_mon_one_pulse_bins;
+MCNUM min = mccsource_time_mon_one_pulse_min;
+MCNUM max = mccsource_time_mon_one_pulse_max;
+MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
+MCNUM radius = mccsource_time_mon_one_pulse_radius;
+char* options = mccsource_time_mon_one_pulse_options;
+char* filename = mccsource_time_mon_one_pulse_filename;
+char* geometry = mccsource_time_mon_one_pulse_geometry;
+char* username1 = mccsource_time_mon_one_pulse_username1;
+char* username2 = mccsource_time_mon_one_pulse_username2;
+char* username3 = mccsource_time_mon_one_pulse_username3;
 #line 483 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
 }
-#line 11973 "./NERA_source.c"
-}   /* End of source_time_mon=Monitor_nD() SETTING parameter declarations. */
+#line 12659 "./NERA_source.c"
+}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -11985,12 +12671,66 @@ char* username3 = mccsource_time_mon_username3;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[3]) fprintf(stderr, "Warning: No neutron could reach Component[3] source_time_mon\n");
-    if (mcAbsorbProp[3]) fprintf(stderr, "Warning: %g events were removed in Component[3] source_time_mon=Monitor_nD()\n"
+    if (!mcNCounter[3]) fprintf(stderr, "Warning: No neutron could reach Component[3] source_time_mon_one_pulse\n");
+    if (mcAbsorbProp[3]) fprintf(stderr, "Warning: %g events were removed in Component[3] source_time_mon_one_pulse=Monitor_nD()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[3]);
-    if (!mcNCounter[4]) fprintf(stderr, "Warning: No neutron could reach Component[4] Guide_start_arm\n");
-    if (mcAbsorbProp[4]) fprintf(stderr, "Warning: %g events were removed in Component[4] Guide_start_arm=Arm()\n"
+  /* User FINALLY code for component 'source_time_mon_many_pulses'. */
+  SIG_MESSAGE("source_time_mon_many_pulses (Finally)");
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
+MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
+MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
+MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
+MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
+MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
+MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
+MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
+MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
+MCNUM bins = mccsource_time_mon_many_pulses_bins;
+MCNUM min = mccsource_time_mon_many_pulses_min;
+MCNUM max = mccsource_time_mon_many_pulses_max;
+MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
+MCNUM radius = mccsource_time_mon_many_pulses_radius;
+char* options = mccsource_time_mon_many_pulses_options;
+char* filename = mccsource_time_mon_many_pulses_filename;
+char* geometry = mccsource_time_mon_many_pulses_geometry;
+char* username1 = mccsource_time_mon_many_pulses_username1;
+char* username2 = mccsource_time_mon_many_pulses_username2;
+char* username3 = mccsource_time_mon_many_pulses_username3;
+#line 483 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  /* free pointers */
+  Monitor_nD_Finally(&DEFS, &Vars);
+}
+#line 12712 "./NERA_source.c"
+}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+    if (!mcNCounter[4]) fprintf(stderr, "Warning: No neutron could reach Component[4] source_time_mon_many_pulses\n");
+    if (mcAbsorbProp[4]) fprintf(stderr, "Warning: %g events were removed in Component[4] source_time_mon_many_pulses=Monitor_nD()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[4]);
+    if (!mcNCounter[5]) fprintf(stderr, "Warning: No neutron could reach Component[5] Guide_start_arm\n");
+    if (mcAbsorbProp[5]) fprintf(stderr, "Warning: %g events were removed in Component[5] Guide_start_arm=Arm()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[5]);
   mcsiminfo_close(); 
 } /* end finally */
 #define magnify mcdis_magnify
@@ -12023,7 +12763,7 @@ MCNUM minutes = mccorigin_minutes;
 {
   magnify("");
 }
-#line 12022 "./NERA_source.c"
+#line 12761 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12136,7 +12876,7 @@ int target_index = mccSource_target_index;
     dashed_line(0,0,0, -focus_xw/2, focus_yh/2,dist, 4);
   }
 }
-#line 12135 "./NERA_source.c"
+#line 12874 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -12159,40 +12899,40 @@ int target_index = mccSource_target_index;
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* MCDISPLAY code for component 'source_time_mon'. */
-  SIG_MESSAGE("source_time_mon (McDisplay)");
-  printf("MCDISPLAY: component %s\n", "source_time_mon");
-#define mccompcurname  source_time_mon
+  /* MCDISPLAY code for component 'source_time_mon_one_pulse'. */
+  SIG_MESSAGE("source_time_mon_one_pulse (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "source_time_mon_one_pulse");
+#define mccompcurname  source_time_mon_one_pulse
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 3
-#define user1 mccsource_time_mon_user1
-#define user2 mccsource_time_mon_user2
-#define user3 mccsource_time_mon_user3
-#define DEFS mccsource_time_mon_DEFS
-#define Vars mccsource_time_mon_Vars
-#define detector mccsource_time_mon_detector
-#define offdata mccsource_time_mon_offdata
-{   /* Declarations of source_time_mon=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_xwidth;
-MCNUM yheight = mccsource_time_mon_yheight;
-MCNUM zdepth = mccsource_time_mon_zdepth;
-MCNUM xmin = mccsource_time_mon_xmin;
-MCNUM xmax = mccsource_time_mon_xmax;
-MCNUM ymin = mccsource_time_mon_ymin;
-MCNUM ymax = mccsource_time_mon_ymax;
-MCNUM zmin = mccsource_time_mon_zmin;
-MCNUM zmax = mccsource_time_mon_zmax;
-MCNUM bins = mccsource_time_mon_bins;
-MCNUM min = mccsource_time_mon_min;
-MCNUM max = mccsource_time_mon_max;
-MCNUM restore_neutron = mccsource_time_mon_restore_neutron;
-MCNUM radius = mccsource_time_mon_radius;
-char* options = mccsource_time_mon_options;
-char* filename = mccsource_time_mon_filename;
-char* geometry = mccsource_time_mon_geometry;
-char* username1 = mccsource_time_mon_username1;
-char* username2 = mccsource_time_mon_username2;
-char* username3 = mccsource_time_mon_username3;
+#define user1 mccsource_time_mon_one_pulse_user1
+#define user2 mccsource_time_mon_one_pulse_user2
+#define user3 mccsource_time_mon_one_pulse_user3
+#define DEFS mccsource_time_mon_one_pulse_DEFS
+#define Vars mccsource_time_mon_one_pulse_Vars
+#define detector mccsource_time_mon_one_pulse_detector
+#define offdata mccsource_time_mon_one_pulse_offdata
+{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
+MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
+MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
+MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
+MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
+MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
+MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
+MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
+MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
+MCNUM bins = mccsource_time_mon_one_pulse_bins;
+MCNUM min = mccsource_time_mon_one_pulse_min;
+MCNUM max = mccsource_time_mon_one_pulse_max;
+MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
+MCNUM radius = mccsource_time_mon_one_pulse_radius;
+char* options = mccsource_time_mon_one_pulse_options;
+char* filename = mccsource_time_mon_one_pulse_filename;
+char* geometry = mccsource_time_mon_one_pulse_geometry;
+char* username1 = mccsource_time_mon_one_pulse_username1;
+char* username2 = mccsource_time_mon_one_pulse_username2;
+char* username3 = mccsource_time_mon_one_pulse_username3;
 #line 489 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
@@ -12202,8 +12942,64 @@ char* username3 = mccsource_time_mon_username3;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 12201 "./NERA_source.c"
-}   /* End of source_time_mon=Monitor_nD() SETTING parameter declarations. */
+#line 12940 "./NERA_source.c"
+}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* MCDISPLAY code for component 'source_time_mon_many_pulses'. */
+  SIG_MESSAGE("source_time_mon_many_pulses (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "source_time_mon_many_pulses");
+#define mccompcurname  source_time_mon_many_pulses
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 4
+#define user1 mccsource_time_mon_many_pulses_user1
+#define user2 mccsource_time_mon_many_pulses_user2
+#define user3 mccsource_time_mon_many_pulses_user3
+#define DEFS mccsource_time_mon_many_pulses_DEFS
+#define Vars mccsource_time_mon_many_pulses_Vars
+#define detector mccsource_time_mon_many_pulses_detector
+#define offdata mccsource_time_mon_many_pulses_offdata
+{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
+MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
+MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
+MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
+MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
+MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
+MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
+MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
+MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
+MCNUM bins = mccsource_time_mon_many_pulses_bins;
+MCNUM min = mccsource_time_mon_many_pulses_min;
+MCNUM max = mccsource_time_mon_many_pulses_max;
+MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
+MCNUM radius = mccsource_time_mon_many_pulses_radius;
+char* options = mccsource_time_mon_many_pulses_options;
+char* filename = mccsource_time_mon_many_pulses_filename;
+char* geometry = mccsource_time_mon_many_pulses_geometry;
+char* username1 = mccsource_time_mon_many_pulses_username1;
+char* username2 = mccsource_time_mon_many_pulses_username2;
+char* username3 = mccsource_time_mon_many_pulses_username3;
+#line 489 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+  {
+    off_display(offdata);
+  } else {
+    Monitor_nD_McDisplay(&DEFS, &Vars);
+  }
+}
+#line 12996 "./NERA_source.c"
+}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -12220,7 +13016,7 @@ char* username3 = mccsource_time_mon_username3;
   printf("MCDISPLAY: component %s\n", "Guide_start_arm");
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 4
+#define mccompcurindex 5
 #line 40 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
@@ -12229,7 +13025,7 @@ char* username3 = mccsource_time_mon_username3;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 12228 "./NERA_source.c"
+#line 13023 "./NERA_source.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
