@@ -18,7 +18,6 @@ DEFINE INSTRUMENT template_body_simple(PGz=0.05, PGy=0.05, angle=30,theta=45)
 
 DECLARE
 %{
-double Lsa=0.815; /*meters, sample-analysator */
 double Lad=0.058; /*meters, analysator-detector */
 %}
 
