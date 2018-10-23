@@ -23,13 +23,13 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera(source_lambda_min = 0.1, source_lambda_max = 10)
+DEFINE INSTRUMENT Nera()
 
 DECLARE
 %{
 //100%
-double distrance_1chop = 5.45, distrance_after_1chop = 0.16;
-double width_guide = 0.05, height_guide = 0.16;
+double distrance_after_1chop = 0.16;
+//double width_guide = 0.05, height_guide = 0.16;
 double guide_swiss = 24.43175;
 double linh = 2.5;
 
@@ -40,55 +40,24 @@ double distance_after_2chop = 0.16;
 double m_w = 1, m_h = 2;
 double guide_length_after_2chop = 103;
 double distance_before_sample = 0.5;
-double source_optics_dist = 6;
-double guide_width = 0.05, guide_height = 0.15;
-double source_I = 1, source_T = 300;
-double source_height=0.4, source_width=0.4;
 
-double pulse_length = 340; //in microsec
+
 %}
 
 INITIALIZE
 %{
-guide_length_before_2chop = 26.95 - 5.45 - 0.16 - distance_after_guide_to_2chop;
+guide_length_before_2chop = 26.95 - source_optics_dist - distrance_after_1chop - distance_after_guide_to_2chop;
 %}
 
 TRACE
 
-COMPONENT origin = Progress_bar()
-AT (0, 0, 0) RELATIVE ABSOLUTE
-
-COMPONENT Source = Source_gen(
-    dist=source_optics_dist, 
-    focus_xw=guide_width, 
-    focus_yh=guide_height, 
-    I1=source_I, 
-    yheight=source_height, 
-    xwidth=source_width, 
-    T1=source_T, 
-    Lmin=source_lambda_min, 
-    Lmax=source_lambda_max)
-AT (0, 0, 0) RELATIVE origin
-EXTEND
-%{
-t = rand01()*pulse_length*1e-6;
-%}
-
-COMPONENT source_time_mon = Monitor_nD(
-    xwidth=0.5, 
-    yheight=0.5, 
-    bins=100, 
-    options="time limits = [0 0.00045]")
-AT (0, 0, 0.0001) RELATIVE origin
-
-COMPONENT Guide_start_arm = Arm()
-AT (0, 0, source_optics_dist) RELATIVE origin
+%include "NERA_source.instr"
 
 /* ******************************* Background chopper 1  *************************************/
 COMPONENT diskchopper = Slit(
     xwidth=width_guide, 
     yheight=height_guide)
-AT (0, 0, distrance_1chop) RELATIVE PREVIOUS
+AT (0, 0, 0) RELATIVE Guide_start_arm
 
 /*
 COMPONENT diskchopper = DiskChopper(
@@ -167,6 +136,9 @@ COMPONENT monitor_nd_t = Monitor_nD(
     xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
     options="t")
 AT (0, 0, distance_before_sample+0.003) RELATIVE guide_end
+
+COMPONENT sample_arm = Arm()
+AT (0, 0, 0.001) RELATIVE PREVIOUS
 
 /* ******************************* end  *************************************/
 
