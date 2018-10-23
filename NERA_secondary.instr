@@ -1,27 +1,18 @@
 /*******************************************************************************
-* Instrument: <instrument name>
+* Instrument: NERA_secondary.instr
 *
-* %I
-* Written by: <your name (email)>
-* Date: <current date>
-* Origin: <your institution>
+* Written by: Anita Petrova
+* Date: 23/10/2018
+* Origin: SPbGU
 * %INSTRUMENT_SITE: Templates
 *
-* <instrument short description>
+* NERA TOF-spectrometer
 *
-* %D
-* <instrument description>
+* secondary spectrometer
 *
-* Example: <parameters=values>
+* PGz: width along z-axis of PG flat monoc [meters]
+* angle: hand with Be filter, analysator and detector[deg]
 *
-* %P
-* <parameter1>: [<unit>] <parameter1 description>
-* PGz - width along z-axis of PG flat monoc
-*
-* %L
-* <reference/HTML link>
-*
-* %E
 *******************************************************************************/
 DEFINE INSTRUMENT template_body_simple(PGz=0.05, PGy=0.05, angle=30,theta=45)
 
@@ -37,44 +28,6 @@ INITIALIZE
 %}
 
 TRACE
-
-/*COMPONENT origin = Progress_bar()
-AT (0, 0, 0) RELATIVE ABSOLUTE*/
-
-// insert components here (e.g. Insert -> Source -> ...)
-
-/*COMPONENT Source = Source_gen(
-    dist=1, 
-    focus_xw=0.05, 
-    focus_yh=0.05, 
-    Lmin=0.7,
-    Lmax=8, 
-    I1=1.75e12, 
-    yheight=0.05, 
-    xwidth=0.05, 
-    T1=310, 
-    T2=150, 
-    I2=6.65e12, 
-    T3=26, 
-    I3=1.05e13)
-AT (0, 0, 0) RELATIVE origin
-
-COMPONENT Guide1 = Guide_gravity(
-    w1=0.05, 
-    h1=0.05, 
-    l=1, 
-    m=3, 
-    nslit=1, 
-    d=0.001, 
-    nhslit=1)
-AT (0, 0, 1e-4) RELATIVE PREVIOUS
-
-COMPONENT MonLGuide = Monitor_nD(
-    xwidth=0.13, 
-    yheight=0.21, 
-    restore_neutron=1, 
-    options="wavelength, bins=50, limits=[0.5 10]")
-AT (0, 0, 1+1e-4) RELATIVE PREVIOUS*/
 
 %include "NERA_guide.instr"
 
