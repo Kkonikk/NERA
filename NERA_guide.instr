@@ -1,21 +1,19 @@
 /*******************************************************************************
-* Instrument: <instrument name>
+* Instrument: NERA_source.instr
 *
-* %I
-* Written by: <your name (email)>
-* Date: <current date>
-* Origin: <your institution>
+* Written by: Yurii Kireenko
+* Date: 23.10.18
+* Origin: PNPI
 * %INSTRUMENT_SITE: Templates
 *
-* <instrument short description>
+* NERA TOF-spectrometer guide
 *
-* %D
-* <instrument description>
+* IBR-2M guide for channel 7
 *
-* Example: <parameters=values>
-*
-* %P
-* <parameter1>: [<unit>] <parameter1 description>
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_pulse_number: [int] number of pulses produced by the source
+* source_optics_dist:  [m] distance between moderator and optics
 * ...
 *
 * %L
@@ -23,7 +21,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera(linh1 = 12.43, linh2 = 5.93, linh3 = 2.5)
+DEFINE INSTRUMENT Nera()
 
 DECLARE
 %{
@@ -34,14 +32,14 @@ double guide_swiss = 24.43175;
 double guide_swiss_1 = 14.49875, guide_swiss_2 = 6.49975, guide_swiss_3 = 3.43125;
 double height_guide_s1 = 0.16, height_guide_s2 = 0.108705, height_guide_s3 = 0.075117;
 //double linh = 2.5;
-//double linh1, linh2, linh3;
+double linh1 = 12.43, linh2 = 5.93, linh3 = 2.5; // put formula here
 
 //from stars
 double guide_length_before_2chop;
 double distance_after_guide_to_2chop = 0.16;
 double distance_after_2chop = 0.16;
 double m_w = 1, m_h = 2;
-double guide_length_after_2chop = 103;
+double guide_length_after_2chop = 103; //change and put formula here
 double distance_before_sample = 0.5;
 
 
@@ -71,7 +69,7 @@ COMPONENT diskchopper = DiskChopper(
     nu=41.7)
 AT (0, 0, distrance_1chop) RELATIVE PREVIOUS
 
-/* ******************************* Spliter_bulkin  *************************************/
+/* ******************************* Guide between choppers  *************************************/
 
 COMPONENT  CG_1 = Guide_gravity(
     w1 = width_guide, h1 = height_guide,  l = guide_length_before_2chop, mleft  = m_w, mright = m_w, 
@@ -90,15 +88,6 @@ COMPONENT diskchopper2 = DiskChopper(
     nu=41.7)
 AT (0, 0, guide_length_before_2chop + distance_after_guide_to_2chop) RELATIVE PREVIOUS
 
-/* ******************************* Guide_bulikin_end  *************************************/
-/*
-COMPONENT  CG_2 = Guide_gravity(
-    w1 = width_guide, h1 = height_guide,  l = guide_length_after_2chop, mleft  = m_w, mright = m_w, 
-mtop = m_h, mbottom = m_h, G = -9.81)
-  AT (0, 0, distrance_after_1chop) RELATIVE diskchopper2
-
-COMPONENT guide_end = Arm()
-AT (0, 0, guide_length_after_2chop+0.001) RELATIVE PREVIOUS
 
 /* ******************************* Guide_swiss_end_without_wavy  *************************************/
 
