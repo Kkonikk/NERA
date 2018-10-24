@@ -14,7 +14,7 @@
 * angle: hand with Be filter, analysator and detector[deg]
 *
 *******************************************************************************/
-DEFINE INSTRUMENT template_body_simple(sample_radius=0.05, Be_width=0.05, Be_height=0.05,angle=30/*,sample_inc1_powd2=1*/)
+DEFINE INSTRUMENT template_body_simple(sample_radius=0.05, Be_width=0.05, Be_height=0.05,angle=30,sample_sqw1_tunnel2=1)
 
 DECLARE
 %{
@@ -63,10 +63,28 @@ TRACE
     concentric=1)
 AT (0, 0, 0) RELATIVE sample_arm*/
 
-COMPONENT incoherent = Incoherent(
+/*COMPONENT incoherent = Incoherent(
     radius=sample_radius, 
     focus_r=sample_focus_radius, 
     target_index=sample_target_index)
+AT (0, 0, 0) RELATIVE sample_arm*/
+
+COMPONENT sample1 = Isotropic_Sqw(
+    Sqw_coh="Al.laz", 
+    order=2,  
+    p_interact=0.3,
+    xwidth=0.05,
+    radius=0.05,
+    zdepth=0.05)
+WHEN (sample_sqw1_tunnel2==1)
+AT (0, 0, 0) RELATIVE sample_arm
+
+COMPONENT sample2 = Tunneling_sample(
+    thickness=0.001, 
+    radius=sample_radius, 
+    focus_r=0.035, 
+    yheight=0.02)
+WHEN (sample_sqw1_tunnel2==2)
 AT (0, 0, 0) RELATIVE sample_arm
 
 /*WHEN sample_inc1_powd2=1*/
@@ -117,10 +135,10 @@ AT (0, 0, Col_length+Lca+1E-4) RELATIVE PREVIOUS
 COMPONENT PGmon = Monochromator_flat( 
     zwidth=PGz, 
     yheight=PGy, 
-    mosaich=30, 
-    mosaicv=30, 
+    mosaich=60, 
+    mosaicv=60, 
     r0=0.70, 
-    Q=1.873, 
+    /*Q=1.873,*/ 
     DM=3.355)
 AT (0, 0, 0) RELATIVE arm
 ROTATED (0, theta, 0) RELATIVE arm
