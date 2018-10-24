@@ -87,7 +87,14 @@ COMPONENT sample2 = Tunneling_sample(
 WHEN (sample_sqw1_tunnel2==2)
 AT (0, 0, 0) RELATIVE sample_arm
 
-/*WHEN sample_inc1_powd2=1*/
+COMPONENT Sample_det = Monitor_nD(
+    xwidth=0.05, 
+    yheight=0.05, 
+    bins=200, 
+    restore_neutron=1,
+    options="lambda limits=[0.5 10]",
+    filename="Sample_monL")
+AT (0, 0, 1E-3) RELATIVE sample2
 
 COMPONENT armBe = Arm()
 AT (0, 0, 0) RELATIVE PREVIOUS
