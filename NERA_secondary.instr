@@ -14,7 +14,7 @@
 * angle: hand with Be filter, analysator and detector[deg]
 *
 *******************************************************************************/
-DEFINE INSTRUMENT template_body_simple(sample_radius=0.05, Be_width=0.05, Be_height=0.05,angle=30)
+DEFINE INSTRUMENT template_body_simple(sample_radius=0.05, Be_width=0.05, Be_height=0.05,angle=30/*,sample_inc1_powd2=1*/)
 
 DECLARE
 %{
@@ -42,7 +42,7 @@ double Be_scale;
 INITIALIZE
 %{
 
-Be_scale=Be_length/Be_thickness; /*scale of Be filter length*/
+Be_scale=Be_length/Be_thickness; /*Be filter relative thickness, new_transm=old_transm^Be_scale*/
 printf("Be scale = %lf", Be_scale);
 
 %}
@@ -69,7 +69,7 @@ COMPONENT incoherent = Incoherent(
     target_index=sample_target_index)
 AT (0, 0, 0) RELATIVE sample_arm
 
-/*WHEN sample=1*/
+/*WHEN sample_inc1_powd2=1*/
 
 COMPONENT armBe = Arm()
 AT (0, 0, 0) RELATIVE PREVIOUS
@@ -88,7 +88,7 @@ COMPONENT Be_filter = Filter_gen(
     filename="Be.trm", 
     xwidth=Be_width, 
     yheight=Be_height,
-    scaling=Be_scale)
+    thickness=Be_scale)
 AT (0, 0, Lsb) RELATIVE armBe
 
 COMPONENT armCol = Arm()
