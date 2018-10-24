@@ -4,7 +4,6 @@
 * Written by: Peter Konik
 * Date: 23.10.18
 * Origin: PNPI
-* %INSTRUMENT_SITE: Templates
 *
 * NERA TOF-spectrometer source
 *
@@ -14,6 +13,8 @@
 * source_lambda_max:   [AA] maximal wavelength produced by the source
 * source_pulse_number: [int] number of pulses produced by the source
 * source_optics_dist:  [m] distance between moderator and optics
+* guide_width:         [m] initial guide width
+* guide_height:        [m] initial guide height
 *
 *******************************************************************************/
 DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 10, source_pulse_number=2, source_optics_dist = 5.45, guide_width = 0.05, guide_height = 0.16)
