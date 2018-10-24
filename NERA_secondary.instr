@@ -14,15 +14,36 @@
 * angle: hand with Be filter, analysator and detector[deg]
 *
 *******************************************************************************/
-DEFINE INSTRUMENT template_body_simple(PGz=0.05, PGy=0.05, angle=30,theta=45)
+DEFINE INSTRUMENT template_body_simple(sample_radius=0.05, Be_width=0.05, Be_height=0.05,angle=30)
 
 DECLARE
 %{
-double Lad=0.058; /*meters, analysator-detector */
+double PGz=0.05; 
+double PGy=0.05;
+double sample_focus_radius=0.06; 
+double sample_target_index=3;
+double theta=45; 
+double Col_width=0.05;
+double Col_height=0.05;
+double Col_div=60;
+
+double Be_thickness=0.05; /* length by default, along z-axis*/
+
+double Lsb = 0.317;/*distance between sample and Be filter */
+double Be_length=0.245; /*meters, wanted length of Be filter, along z-axis*/
+double Lbc=0.065; /*distance between end of Be filter and collimator*/
+double Col_length=0.173; /* collimator length */
+double Lca = 0.077; /* distance between collimator and analysator */
+double Lad=0.058; /*meters, distance between analysator and detector */
+
+double Be_scale;
 %}
 
 INITIALIZE
 %{
+
+Be_scale=Be_length/Be_thickness; /*scale of Be filter length*/
+printf("Be scale = %lf", Be_scale);
 
 %}
 
@@ -32,9 +53,7 @@ TRACE
 
 /*SAMPLE*/
 
-COMPONENT armSample = Arm()
-AT (0, 0, 0) RELATIVE sample_arm
-ROTATED (0, angle, 0) RELATIVE sample_arm
+
 
 /*COMPONENT powdern = PowderN(
     reflections="Al.laz", 
@@ -42,39 +61,57 @@ ROTATED (0, angle, 0) RELATIVE sample_arm
     thickness=0.001, 
     p_interact=1, 
     concentric=1)
-AT (0, 0, 0) RELATIVE PREVIOUS*/
+AT (0, 0, 0) RELATIVE sample_arm*/
 
 COMPONENT incoherent = Incoherent(
-    radius=0.05, 
-    focus_r=0.035, 
-    target_index=1)
-AT (0, 0, 0) RELATIVE PREVIOUS
+    radius=sample_radius, 
+    focus_r=sample_focus_radius, 
+    target_index=sample_target_index)
+AT (0, 0, 0) RELATIVE sample_arm
+
+/*WHEN sample=1*/
 
 COMPONENT armBe = Arm()
 AT (0, 0, 0) RELATIVE PREVIOUS
-ROTATED (0, 0, 0) RELATIVE PREVIOUS
+ROTATED (0, angle, 0) RELATIVE PREVIOUS
+
+COMPONENT beforeBe_detector = Monitor_nD(
+    xwidth=0.05, 
+    yheight=0.05, 
+    bins=200, 
+    restore_neutron=1,
+    options="lambda limits=[0.5 10]",
+    filename="beforeBemon")
+AT (0, 0, 0.1) RELATIVE armBe
 
 COMPONENT Be_filter = Filter_gen(
     filename="Be.trm", 
-    xwidth=0.05, 
-    yheight=0.05,
-/*thickness=0.05m*/
-/*    scaling=0.245/0.05*/
-    scaling=4.9)
-AT (0, 0, 0.317) RELATIVE armBe
+    xwidth=Be_width, 
+    yheight=Be_height,
+    scaling=Be_scale)
+AT (0, 0, Lsb) RELATIVE armBe
 
 COMPONENT armCol = Arm()
-AT (0, 0, 0.25) RELATIVE PREVIOUS
+AT (0, 0, Be_length+1E-4) RELATIVE Be_filter
 
-COMPONENT Col = Collimator_linear(
+COMPONENT Be_detector = Monitor_nD(
     xwidth=0.05, 
     yheight=0.05, 
-    length=0.173, 
-    divergence=60)
-AT (0, 0, 0) RELATIVE PREVIOUS
+    bins=200, 
+    restore_neutron=1,
+    options="lambda limits=[0.5 10]",
+    filename="Bemon")
+AT (0, 0, 1E-4) RELATIVE armCol
+
+COMPONENT Col = Collimator_linear(
+    xwidth=Col_width, 
+    yheight=Col_height, 
+    length=Col_length, 
+    divergence=Col_div)
+AT (0, 0, Lbc) RELATIVE armCol
 
 COMPONENT arm = Arm()
-AT (0, 0, 0.077+0.174) RELATIVE armCol	
+AT (0, 0, Col_length+Lca+1E-4) RELATIVE PREVIOUS	
 
 
 COMPONENT PGmon = Monochromator_flat( 
@@ -98,8 +135,17 @@ COMPONENT INSdetector = Monitor_nD(
     bins=200, 
     restore_neutron=1,
     options="lambda limits=[0.5 10]",
-    filename="INSmon")
+    filename="INSmonL")
 AT (0, 0, Lad) RELATIVE arm2
+
+COMPONENT INSEdetector = Monitor_nD(
+    xwidth=0.05, 
+    yheight=0.05, 
+    bins=200, 
+    restore_neutron=1,
+    options="energy",
+    filename="INSmonE")
+AT (0, 0, 1E-4) RELATIVE PREVIOUS
 
 
 FINALLY
