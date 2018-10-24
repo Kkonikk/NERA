@@ -43,7 +43,7 @@ INITIALIZE
 %{
 
 Be_scale=Be_length/Be_thickness; /*Be filter relative thickness, new_transm=old_transm^Be_scale*/
-printf("Be scale = %lf", Be_scale);
+//printf("Be scale = %lf", Be_scale);
 
 %}
 
