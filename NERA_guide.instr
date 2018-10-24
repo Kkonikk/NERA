@@ -21,7 +21,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera()
+DEFINE INSTRUMENT Nera(Edes = 140,chop_width_1 = 0.065, chop_width_2 = 0.101)
 
 DECLARE
 %{
@@ -42,13 +42,17 @@ double guide_length_after_2chop = 103; //change and put formula here
 double distance_before_sample = 0.5;
 
 //chopper
-double chop_rad_1 = 0.24, chop_freq = 2.5, chop_slit_numb = 1;
+double chop_rad_1 = 0.24, chop_freq = 2.5, chop_slit_numb = 1, chop_length = 0.48;
+double LT0, phase_T0;
+double toffset = 0;
 
 %}
 
 INITIALIZE
 %{
 guide_length_before_2chop = 26.95 - source_optics_dist - distrance_after_1chop - distance_after_guide_to_2chop;
+LT0 = source_optics_dist - chop_length/2-0.001;
+phase_T0 = (LT0)/(sqrt(Edes)*SE2V)+toffset;
 /*linh1 = 2.5 + guide_swiss_2 + guide_swiss_3;
 linh2 = 2.5 + guide_swiss_3;
 linh3 = 2.5;*/
@@ -59,28 +63,29 @@ TRACE
 %include "NERA_source.instr"
 
 /* ******************************* Background chopper 1  *************************************/
+/*
 COMPONENT diskchopper = Slit(
     xwidth=guide_width, 
     yheight=guide_height)
 AT (0, 0, 0) RELATIVE Guide_start_arm
+*/
 
-/*
 COMPONENT monitor_nd_lambda1 = Monitor_nD(
     xwidth=guide_width, yheight=guide_height, bins=100, restore_neutron=1, 
     options="lambda limits = [0 20]")
 AT (0, 0, -0.25) RELATIVE Guide_start_arm
 
-COMPONENT t0_chopp=Vertical_T0a(len=0.48,w1=0.08,w2=0.101,nu=T0_nu,delta=0.0,tc=phase_T0,
+COMPONENT t0_chopp=Vertical_T0a(len=chop_length,w1=chop_width_1,w2=chop_width_2,nu=chop_freq,delta=0.0,tc=phase_T0,
                  ymin=-0.045,ymax=0.045)
 AT (0, 0, 0) RELATIVE Guide_start_arm
-T0_nu=90
-phase_T0=(LT0)/(sqrt(Edes)*SE2V)+toffset;
-LT0=8.77;
-Edes=50
-toffset=pow(10,ch_y)/1.0e6
+
+
+//toffset=pow(10,ch_y)/1.0e6;
  //determine emission time of certain energy neutrons after the prompt pulse
-   ch_x=log10(Edes*1e-3);  
-ch_y=-0.4420*ch_x*(1+tanh((ch_x+1.1197)/0.4042))/2-0.1235*ch_x*(1-tanh((ch_x+1.1197)/0.4042))/2-0.4189*tanh((ch_x+1.1197)/0.4042)+0.5612;
+//   ch_x=log10(Edes*1e-3);  
+//ch_y=-0.4420*ch_x*(1+tanh((ch_x+1.1197)/0.4042))/2-0.1235*ch_x*(1-tanh((ch_x+1.1197)/0.4042))/2-0.4189*tanh((ch_x+1.1197)/0.4042)+0.5612;
+//Edes = 50;
+//LT0 = 8.77;w1=0.08;w2=0.101;
 
 COMPONENT monitor_nd_lambda2 = Monitor_nD(
     xwidth=guide_width, yheight=guide_height, bins=100, restore_neutron=1, 
@@ -101,13 +106,14 @@ AT (0, 0, 0) RELATIVE PREVIOUS
 
 
 /* ******************************* Guide between choppers  *************************************/
-
+/*
 COMPONENT  CG_1 = Guide_gravity(
     w1 = guide_width, h1 = guide_height,  l = guide_length_before_2chop, mleft  = m_w, mright = m_w, 
 mtop = m_h, mbottom = m_h, G = -9.81)
   AT (0, 0, distrance_after_1chop) RELATIVE diskchopper
 
 /* ******************************* Background chopper 2  *************************************/
+/*
 COMPONENT diskchopper2 = Slit(
     xwidth=guide_width, 
     yheight=guide_height)
@@ -147,7 +153,7 @@ COMPONENT monitor_nd_lambda2 = Monitor_nD(
 AT (0, 0, chop_rad_1*2 + 0.05) RELATIVE monitor_nd_lambda1
 
 /* ******************************* Guide_swiss_end_without_wavy  *************************************/
-
+/*
 COMPONENT  CG_2 = Guide_gravity(
     w1 = guide_width, h1 = guide_height,  l = guide_length_after_2chop - guide_swiss, mleft  = m_w, mright = m_w, 
 mtop = m_h, mbottom = m_h, G = -9.81)
@@ -195,7 +201,7 @@ COMPONENT guide_tapering = Guide_tapering(
 AT (0, 0, guide_length_after_2chop - guide_swiss+0.001) RELATIVE PREVIOUS
 
 /* ******************************* Sample  *************************************/
-
+/*
 COMPONENT monitor_nd_xy = Monitor_nD(
     xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
     options="x y")
