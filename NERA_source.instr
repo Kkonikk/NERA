@@ -17,12 +17,12 @@
 * guide_height:        [m] initial guide height
 *
 *******************************************************************************/
-DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 20, source_pulse_number=2, source_optics_dist = 5.45, guide_width = 0.05, guide_height = 0.16)
+DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 20, source_pulse_number=2, source_optics_dist = 5.61, guide_width = 0.05, guide_height = 0.16)
 
 DECLARE
 %{
-double source_I = 1e16, source_T = 300;
-double source_height=0.4, source_width=0.4; //check and change
+double source_I = 1e16, source_T = 330;
+double source_height=0.4, source_width=0.15; //check and change
 
 double pulse_length = 340; //in microsec
 double T; //for defining the number of pulse
@@ -71,6 +71,31 @@ COMPONENT source_time_mon_many_pulses = Monitor_nD(
     bins=100, 
     options="time limits = [0 1]")
 AT (0, 0, 0.00011) RELATIVE origin
+
+COMPONENT slit1 = Slit(
+    xwidth=0.22, 
+    yheight=0.42)
+AT (0, 0, 0.675) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=0.22, 
+    yheight=0.42)
+AT (0, 0, 0.38) RELATIVE PREVIOUS
+
+COMPONENT slit3 = Slit(
+    xwidth=0.3, 
+    yheight=0.42)
+AT (0, 0, 0.635) RELATIVE PREVIOUS
+
+COMPONENT slit4 = Slit(
+    xwidth=0.36, 
+    yheight=0.42)
+AT (0, 0, 0.36) RELATIVE PREVIOUS
+
+COMPONENT slit5 = Slit(
+    xwidth=0.46, 
+    yheight=0.42)
+AT (0, 0, 0.44) RELATIVE PREVIOUS
 
 COMPONENT Guide_start_arm = Arm()
 AT (0, 0, source_optics_dist) RELATIVE origin
