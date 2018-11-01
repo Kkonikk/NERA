@@ -1,28 +1,17 @@
 /*******************************************************************************
 *         McStas instrument definition URL=http://www.mcstas.org
 *
-* Instrument: test (rename also the example and DEFINE lines below)
+* Instrument: NERA_secondary.instr
 *
-* %Identification
-* Written by: Your name (email)
-* Date: Current Date
-* Origin: Your institution
+* Written by: Peter Konik & Anita Petrova
+* Date: 31/10/2018
+* Origin: SPbGU
 * %INSTRUMENT_SITE: Templates
 *
-* Instrument short description
+* DUBNA TOF spectrometer
 *
-* %Description
-* Instrument longer description (type, elements, usage...)
-*
-* Example: mcrun test.instr <parameters=values>
-*
-* once your instrument is written and functional:
-* - replace INSTRUMENT_SITE entry above with your Institution name as a single word
-* - rename the instrument name after DEFINE INSTRUMENT below
-* - update the parameter help in the following Parameters section
-* - update the instrument description, and better add a usage example with a
-*     sensible parameter set.
-*
+* secondary spectrometer
+*configuration 1: sample-analysator-selector
 * %Parameters
 *
 * %Link
@@ -36,17 +25,23 @@ DECLARE
 %{
 double nu;
 double alpha=0.32;
-double alpha_eff, sel_length, sel_radius, sel_angle;
+double alpha_eff, sel_length, sel_radius, sel_angle, sel_depth, sel_nslit;
+double sel_z;
 %}
 
 INITIALIZE
 %{
+sel_z=0.74;
+
+sel_nslit=500;
 sel_angle=28.3008; //[deg]
 sel_length=0.03; //[m]
 sel_radius=0.3;//[m]
 alpha_eff=alpha+sel_angle*sel_length/sel_radius;
 
-nu = 3956*3.15008*DEG2RAD/2/PI/lambda/0.031;
+sel_depth=sel_length+1E-3;
+
+nu = 3956*alpha_eff*DEG2RAD/2/PI/lambda/sel_depth;
 	printf("Selector: %f [Hz] , alpha_eff= %f \n", nu, alpha_eff);
 %}
 
@@ -85,14 +80,14 @@ AT (0, 0, 0.2) RELATIVE Mono_arm2
 COMPONENT v_selector = V_selector(
     xwidth=0.2, 
     yheight=0.1, 
-    zdepth=0.0031, 
-    length=0.03,
-    radius=0.3, 
-    alpha=0.32,
-    nslit=500, 
+    zdepth=sel_depth, 
+    length=sel_length,
+    radius=sel_radius, 
+    alpha=alpha,
+    nslit=sel_nslit, 
     nu=nu)
-AT (0, 0, 0.74) RELATIVE Mono_arm2
-ROTATED (0, -28.3008, 0) RELATIVE Mono_arm2
+AT (0, 0, sel_z) RELATIVE Mono_arm2
+ROTATED (0, -sel_angle, 0) RELATIVE Mono_arm2
 
 COMPONENT Selector_place = Monitor_nD(
     xwidth=0.5, 
