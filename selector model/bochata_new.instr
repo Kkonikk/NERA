@@ -27,17 +27,23 @@ double nu;
 double alpha=0.32;
 double alpha_eff, sel_length, sel_radius, sel_angle, sel_depth, sel_nslit;
 double sel_z;
+double z0, x0;
 %}
 
 INITIALIZE
 %{
-sel_z=0.74;
-
+z0=0.65; 
+x0=-0.35;
+//sel_z=0.74;
+sel_z=sqrt(z0*z0+x0*x0);
+	printf("selz = %f [m], counted selz = %f [m] \n", sqrt(z0*z0+x0*x0), sel_z);
+//sel_angle=28.3008; //[deg]
+sel_angle=atan(x0/z0)*RAD2DEG;
+	printf("tilt angle = %f  [deg], counted = %f [deg] \n", atan(x0/z0)*RAD2DEG, sel_angle);
 sel_nslit=500;
-sel_angle=28.3008; //[deg]
 sel_length=0.03; //[m]
 sel_radius=0.3;//[m]
-alpha_eff=alpha+sel_angle*sel_length/sel_radius;
+alpha_eff=alpha-sel_angle*sel_length/sel_radius;
 
 sel_depth=sel_length+1E-3;
 
@@ -87,7 +93,7 @@ COMPONENT v_selector = V_selector(
     nslit=sel_nslit, 
     nu=nu)
 AT (0, 0, sel_z) RELATIVE Mono_arm2
-ROTATED (0, -sel_angle, 0) RELATIVE Mono_arm2
+ROTATED (0, sel_angle, 0) RELATIVE Mono_arm2
 
 COMPONENT Selector_place = Monitor_nD(
     xwidth=0.5, 
