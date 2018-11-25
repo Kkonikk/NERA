@@ -1,0 +1,170 @@
+/*******************************************************************************
+*         McStas instrument definition URL=http://www.mcstas.org
+*
+* Instrument: NERA_secondary.instr
+*
+* Written by: Peter Konik & Anita Petrova
+* Date: 31/10/2018
+* Origin: SPbGU
+* %INSTRUMENT_SITE: Templates
+*
+* DUBNA TOF spectrometer
+*
+* secondary spectrometer
+*configuration 1: sample-analysator-selector
+* %Parameters
+*
+* %Link
+* A reference/HTML link for more information
+*
+* %End
+*******************************************************************************/
+DEFINE INSTRUMENT Last_try(lambda=4.7,focusy=0.01, focusx=0.1, p_inc=0.1, p_interact=0.8, p_transmit=0.1)
+
+DECLARE
+%{
+double nu; //scan
+double alpha=0.32; //scan
+double alpha_eff, sel_length, sel_radius, sel_angle, sel_depth, sel_nslit;
+double sel_z;
+double z0, x0;
+%}
+
+INITIALIZE
+%{
+z0=0.65; 
+x0=-0.35;
+//sel_z=0.74;
+sel_z=sqrt(z0*z0+x0*x0);
+	printf("selz = %f [m], counted selz = %f [m] \n", sqrt(z0*z0+x0*x0), sel_z);
+//sel_angle=28.3008; //[deg]
+sel_angle=atan(x0/z0)*RAD2DEG-22;
+	printf("tilt angle = %f  [deg], counted = %f [deg] \n", atan(x0/z0)*RAD2DEG, sel_angle);
+sel_nslit=500;
+sel_length=0.03; //[m]
+sel_radius=0.3;//[m]
+alpha_eff=alpha-sel_angle*sel_length/sel_radius;
+
+sel_depth=sel_length+1E-3;
+
+nu = 3956*alpha_eff*DEG2RAD/2/PI/lambda/sel_depth;
+	printf("Selector: %f [Hz] , alpha_eff= %f \n", nu, alpha_eff);
+%}
+
+TRACE
+
+COMPONENT Origin = Progress_bar()
+  AT (0,0,0) ABSOLUTE
+
+COMPONENT Source = Source_gen(
+    yheight=0.01, 
+    xwidth=0.01, 
+    T1=55, 
+    Lmin=1, 
+    Lmax=5, focus_yh=focusy,focus_xw=focusx, dist=0.74)
+AT (0, 0, 0) RELATIVE Origin
+
+COMPONENT Source_mon = Monitor_nD(
+    xwidth=0.1, 
+    yheight=0.1, 
+    options="lambda limits = [0 7] bins=200")
+AT (0, 0, 0.2) RELATIVE Origin
+
+COMPONENT Mono_arm = Arm()
+AT (0, 0, 0.74) RELATIVE Origin
+
+SPLIT COMPONENT Ana = Monochromator_curved(
+    NV=10, NH=10,
+    DM=3.355, RH= 1.04)
+AT (0, 0, 0) RELATIVE Mono_arm
+ROTATED (0, 45, 0) RELATIVE Mono_arm
+EXTEND
+%{
+  if (!SCATTERED) ABSORB;
+%}
+
+
+COMPONENT Mono_arm2 = Arm()
+AT (0, 0, 0) RELATIVE Mono_arm
+ROTATED (0, 90, 0) RELATIVE Mono_arm
+
+COMPONENT Before_selector = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.2, 
+    options="lambda limits = [0 7] bins=200")
+AT (0, 0, 0.2) RELATIVE Mono_arm2
+
+/*COMPONENT v_selector = V_selector(
+    xwidth=0.2, 
+    yheight=0.1, 
+    zdepth=sel_depth, 
+    length=sel_length,
+    radius=sel_radius, 
+    alpha=alpha,
+    nslit=sel_nslit, 
+    nu=nu)
+AT (0, 0, sel_z) RELATIVE Mono_arm2
+ROTATED (0, sel_angle, 0) RELATIVE Mono_arm2*/
+
+/*COMPONENT Be_powder = PowderN(
+    format=Lazy, 
+    reflections="Be.laz", 
+    radius=0.05, 
+    yheight=0.1, 
+    p_inc=p_inc, 
+    p_transmit=p_transmit, 
+    p_interact=p_interact)
+AT (0, 0, sel_z) RELATIVE Mono_arm2*/
+
+COMPONENT Be_powder = Isotropic_Sqw(
+	Sqw_coh="Sqw_iD531032.sqw",
+	T=10,
+	p_interact=0.9,
+	sigma_coh=7.75,
+	sigma_inc=-1,
+	xwidth=0.1, 
+	yheight=0.2,
+	zdepth=0.1)
+AT (0, 0, sel_z) RELATIVE Mono_arm2
+EXTEND
+%{
+  if (!SCATTERED) ABSORB;
+%}
+
+/*COMPONENT Selector_place = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.5, 
+    options="x bins=100 y bins = 200")
+AT (0, 0, 1.74) RELATIVE Mono_arm2*/
+
+COMPONENT Sample_banana = Monitor_nD(
+    yheight=0.3, 
+    radius=0.3, 
+    options="banana, theta limits=[-130 130], bins=500",
+    restore_neutron=1)
+AT (0, 0, 0) RELATIVE Be_powder
+
+COMPONENT Sample_banana_lambda = Monitor_nD(
+    yheight=0.3, 
+    radius=0.31, 
+    options="banana, theta limits=[-130 130], bins=500, lambda limits=[1 7]",
+    restore_neutron=1)
+AT (0, 0, 0) RELATIVE Be_powder
+
+COMPONENT Sample_Sqw = Monitor_Sqw(
+	yheight=0.3, 
+	radius=0.27,
+	bins=500,
+	options="banana")
+AT (0, 0, 0) RELATIVE Be_powder
+
+COMPONENT After_selector = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.2, 
+    options="lambda limits = [0 7] bins=200")
+AT (0, 0, 0.4) RELATIVE Be_powder
+                                    
+FINALLY
+%{
+%}
+END
