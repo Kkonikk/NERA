@@ -1,6 +1,6 @@
 model = mccode('NERA_ell_guide.instr');
 
-
+i=1;
 for h = 0.01:0.02:0.31
     fix(model, 'all');
 
