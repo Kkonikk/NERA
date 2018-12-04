@@ -53,6 +53,7 @@ double LT0, phase_T0;
 double toffset = 0;
 double chop_freq = 2.5;
 double delta;
+double l_guide;
 %}
 
 INITIALIZE
@@ -76,7 +77,7 @@ AT (0, 0, -0.16) RELATIVE Guide_start_arm
 COMPONENT  CG_0 = Guide_gravity(
     w1 = guide_width, h1 = guide_height,  l = l_guide, mleft  = m_w, mright = m_w, 
 mtop = m_h, mbottom = m_h, G = -9.81)
-  AT (0, 0, 0) RELATIVE slit_backgr_chop
+  AT (0, 0, 0) RELATIVE Guide_start_arm
   
   
 
@@ -85,7 +86,7 @@ COMPONENT CG_1 = Guide_tapering(
     option="elliptical", 
     w1=guide_width, 
     h1=guide_height, 
-    l=L_tap, 
+    l=l_tap, 
     linw=linw, 
     loutw=loutw, 
     linh=linh, 
@@ -93,10 +94,10 @@ COMPONENT CG_1 = Guide_tapering(
     mx=m_w, 
     my=m_h, 
     segno=1000)
-AT (0, 0, 0) RELATIVE Guide_start_arm
+AT (0, 0, l_guide+0.001) RELATIVE CG_0
 
 COMPONENT guide_end = Arm()
-AT (0, 0, L_tap) RELATIVE PREVIOUS
+AT (0, 0, l_tap+0.001) RELATIVE PREVIOUS
 
 /* ******************************* Sample  *************************************/
 /*
