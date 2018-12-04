@@ -98,7 +98,7 @@ AT (0, 0, 103.09) RELATIVE PREVIOUS
 
 	COMPONENT monitor_nd_lambda = Monitor_nD(
 	    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
-	    options="lambda limits = [0 5]")
+	    options="dx limits = [-2 2] dy limits = [-2 2]", filename="lambda_mon")
 	AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
 
 /*

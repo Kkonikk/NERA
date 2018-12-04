@@ -12,11 +12,11 @@ model.source_lambda_max = 5.0;
 
 %model.loutw = 'free'; model.loutw = [0 0.38 5];
 %model.linw = 'free'; model.linw = [0 5 10];
-model.loutw=0;
+model.lout=0;
 model.linw=0;
-model.guide_height = 'free'; model.guide_height = [0.01 0.2 0.3];
-model.linh = 'free'; model.linh = [0 10 20];
-model.louth = 'free'; model.louth = [0 0.35 5];
+model.guide_height = 'free'; model.guide_height = [0.01 0.1 0.25];
+model.linh = 'free'; model.louth = [0 0.38 5];
+model.louth = 'free'; model.linh = [0 5 10];
 
 [parameters, fval, status, output]=fmax(model,[], ...
 'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
