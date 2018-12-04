@@ -117,15 +117,15 @@ ROTATED (0, sel_angle, 0) RELATIVE Mono_arm2*/
 AT (0, 0, sel_z) RELATIVE Mono_arm2*/
 
 COMPONENT Be_Sqw = Isotropic_Sqw(
-	Sqw_coh="Be_data.sqw",
+	Sqw_coh="Be_data_T80_final.sqw",
 	Sqw_inc="",
-	T=80,
+	T=0,
 	p_interact=-1,
 	sigma_coh=7.63,
 	sigma_inc=0.00181,
 	verbose=1,
-	classical=-1,
-	norm=-1,
+	classical=0,
+	norm=1/18.8108,
 	xwidth=0.1, 
 	yheight=0.1,
 	zdepth=zdepth)
