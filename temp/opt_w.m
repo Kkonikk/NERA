@@ -1,7 +1,7 @@
 model = mccode('NERA_ell_guide.instr');
 
 i=1;
-for h = 0.01:0.02:0.31
+for h = 0.01:0.04:0.31
     fix(model, 'all');
 
 	model.sample_size = 0.03;
@@ -23,14 +23,13 @@ for h = 0.01:0.02:0.31
 	model.louth = 'free'; model.louth = [0 0.35 5];
 
 	[parameters, fval, status, output]=fmax(model,[], ...
-	'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
+	'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=50', nan);
 
-	B(i) = output.parsBest;
+	B(i) = {output.parsBest};
 	a = model(parameters,nan);
 	a1 = iData(a);
 	a2 = sum(a1,0);
 
-    A(i) = model(parameters, nan);
     I(i) = a2;
     i = i+1;
 end

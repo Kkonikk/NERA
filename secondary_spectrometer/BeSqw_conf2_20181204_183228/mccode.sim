@@ -1,0 +1,168 @@
+McStas simulation description file for Last_try.
+Date:    Tue Dec  4 18:32:28 2018
+Program: McStas 2.4.1 - Jun. 26, 2017
+
+begin instrument: Last_try
+  File: /media/konik/a09e43d5-7f1d-47d7-b0ae-2df53071d43b/JOB/NERA/secondary_spectrometer/BeSqw_conf2_20181204_183228/mccode
+  Source: BeSqw_conf2.instr
+  Parameters:  lambda(double) focusy(double) focusx(double) zdepth(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /media/konik/a09e43d5-7f1d-47d7-b0ae-2df53071d43b/JOB/NERA/secondary_spectrometer/BeSqw_conf2_20181204_183228
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.4.1 - Jun. 26, 2017
+  Instrument: BeSqw_conf2.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1543966130
+  Directory: /media/konik/a09e43d5-7f1d-47d7-b0ae-2df53071d43b/JOB/NERA/secondary_spectrometer/BeSqw_conf2_20181204_183228
+  Param: lambda=4.7
+  Param: focusy=0.01
+  Param: focusx=0.1
+  Param: zdepth=0.005
+end simulation
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: Source_mon
+  position: 0 0 0.2
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: Source_mon_1543937548.L
+  statistics: X0=3.0845; dX=0.835042;
+  signal: Min=0; Max=2.49897e-05; Mean=7.70631e-06;
+  values: 0.00154126 1.78525e-06 1e+06
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 7
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: Before_filter
+  position: 0.2 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: Before_filter_1543937548.L
+  statistics: X0=3.17422; dX=1.19344;
+  signal: Min=0; Max=4.32131e-06; Mean=5.97723e-08;
+  values: 1.19545e-05 4.7401e-08 107179
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 7
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: MonL_afterBe
+  position: 1.73824 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: MonL_afterBe_1543937548.L
+  statistics: X0=3.17175; dX=1.1925;
+  signal: Min=0; Max=4.21286e-06; Mean=5.82152e-08;
+  values: 1.1643e-05 4.68062e-08 104319
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 7
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: MonL_2order2_47
+  position: 1.73834 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: MonL_2order2_47_1543937548.L
+  statistics: X0=4.74769; dX=0.028645;
+  signal: Min=0; Max=6.55431e-08; Mean=2.0821e-08;
+  values: 4.1642e-06 1.86658e-08 49794
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 4.65 4.85
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: MonL_2order2_35
+  position: 1.73844 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: MonL_2order2_35_1543937548.L
+  statistics: X0=2.37425; dX=0.0143807;
+  signal: Min=0; Max=1.69938e-07; Mean=3.35662e-08;
+  values: 6.71324e-06 4.25193e-08 24930
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 2.3 2.45
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: MonL_3order1_56
+  position: 1.73854 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: MonL_3order1_56_1543937548.L
+  statistics: X0=1.58336; dX=0.00968944;
+  signal: Min=0; Max=1.90077e-08; Mean=3.74049e-09;
+  values: 7.48099e-07 5.78568e-09 16767
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 1.5167 1.6167
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec  4 18:32:31 2018 (1543937551)
+  type: array_1d(200)
+  Source: Last_try (BeSqw_conf2.instr)
+  component: MonL_4order1_175
+  position: 1.73864 0 0.74
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: MonL_4order1_175_1543937548.L
+  statistics: X0=1.18785; dX=0.00726797;
+  signal: Min=0; Max=4.12373e-10; Mean=5.66952e-11;
+  values: 1.1339e-08 1.01135e-10 12748
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 1.125 1.225
+  variables: L I I_err N
+end data
