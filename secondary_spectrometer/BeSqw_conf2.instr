@@ -141,7 +141,7 @@ AT (0, 0, sel_z) RELATIVE Mono_arm2
     yheight=0.5, 
     options="x bins=100 y bins = 200")
 AT (0, 0, 1.74) RELATIVE Mono_arm2*/
-
+/*
 COMPONENT Banana_afterBe = Monitor_nD(
     yheight=0.3, 
     radius=0.3, 
@@ -162,30 +162,36 @@ COMPONENT Mon_Sqw = Monitor_Sqw(
 	bins=500,
 	options="banana")
 AT (0, 0, 0) RELATIVE Be_Sqw
-
+*/
 COMPONENT MonL_afterBe= Monitor_nD(
     xwidth=0.5, 
     yheight=0.2, 
     options="lambda limits = [0 7] bins=200")
-AT (0, 0, 0.4) RELATIVE Be_Sqw
+AT (0, 0, 1) RELATIVE Be_Sqw
+
+COMPONENT MonL_2order2_47= Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.2, 
+    options="lambda limits = [4.65 4.85] bins=200")
+AT (0, 0, 1+1e-4) RELATIVE Be_Sqw
                                     
 COMPONENT MonL_2order2_35= Monitor_nD(
     xwidth=0.5, 
     yheight=0.2, 
-    options="lambda limits = [2.3 2.4] bins=200")
-AT (0, 0, 1e-4) RELATIVE PREVIOUS
+    options="lambda limits = [2.3 2.45] bins=200")
+AT (0, 0, 1+2e-4) RELATIVE Be_Sqw
 
 COMPONENT MonL_3order1_56= Monitor_nD(
     xwidth=0.5, 
     yheight=0.2, 
-    options="lambda limits = [1.5 1.6] bins=200")
-AT (0, 0, 1e-4) RELATIVE PREVIOUS
+    options="lambda limits = [1.5167 1.6167] bins=200")
+AT (0, 0, 1+3e-4) RELATIVE Be_Sqw
 
 COMPONENT MonL_4order1_175= Monitor_nD(
     xwidth=0.5, 
     yheight=0.2, 
-    options="lambda limits = [1.1 1.2] bins=200")
-AT (0, 0, 1e-4) RELATIVE PREVIOUS
+    options="lambda limits = [1.1250 1.2250] bins=200")
+AT (0, 0, 1+4e-4) RELATIVE Be_Sqw
 
 FINALLY
 %{
