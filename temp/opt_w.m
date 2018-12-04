@@ -25,7 +25,7 @@ for h = 0.01:0.02:0.31
 	[parameters, fval, status, output]=fmax(model,[], ...
 	'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
 
-	output.parsBest
+	B(i) = output.parsBest;
 	a = model(parameters,nan);
 	a1 = iData(a);
 	a2 = sum(a1,0);
