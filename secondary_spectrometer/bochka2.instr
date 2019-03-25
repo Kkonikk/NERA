@@ -1,0 +1,519 @@
+/*******************************************************************************
+* Instrument: NERA modified
+*
+* %I
+* Written by: Anita Petrova (ani_petrova@mail.ru)
+* Date: 24/03/2019
+* Origin: Saint Petersburg State University
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+*******************************************************************************/
+DEFINE INSTRUMENT NERA(mosh = 30, mosv = 30, Sdist = 0.1)
+
+DECLARE
+%{
+double monoc1x, monoc1z, alpha1;
+double monoc2x, monoc2z, alpha2;
+double monoc3x, monoc3z, alpha3;
+double monoc4x, monoc4z, alpha4;
+double monoc5x, monoc5z, alpha5;
+double monoc6x, monoc6z, alpha6;
+double monoc7x, monoc7z, alpha7;
+double monoc8x, monoc8z, alpha8;
+double monoc9x, monoc9z, alpha9;
+double monoc10x, monoc10z, alpha10;
+double monoc11x, monoc11z, alpha11;
+double monoc12x, monoc12z, alpha12;
+double monoc13x, monoc13z, alpha13;
+double monoc14x, monoc14z, alpha14;
+double monoc15x, monoc15z, alpha15;
+double monoc16x, monoc16z, alpha16;
+double monoc17x, monoc17z, alpha17;
+double monoc18x, monoc18z, alpha18;
+double monoc19x, monoc19z, alpha19;
+double monoc20x, monoc20z, alpha20;
+double monoc21x, monoc21z, alpha21;
+double monoc22x, monoc22z, alpha22;
+double monoc23x, monoc23z, alpha23;
+double monoc24x, monoc24z, alpha24;
+double monoc25x, monoc25z, alpha25;
+double monoc26x, monoc26z, alpha26;
+double monoc27x, monoc27z, alpha27;
+double monoc28x, monoc28z, alpha28;
+double monoc29x, monoc29z, alpha29;
+double monoc30x, monoc30z, alpha30;
+
+%}
+
+INITIALIZE
+%{
+//z = x2, x = y2
+monoc1z = 0.707107;
+monoc1x = 0.707107;
+alpha1 = 0;
+
+monoc2z = 0.683438395;
+monoc2x = 0.707005236;
+alpha2 = 0.971021931;
+
+monoc3z = 0.635516495;
+monoc3x = 0.706129439;
+alpha3 = 3.012787504;
+
+monoc4z = 0.611268503;
+monoc4x = 0.705309811;
+alpha4 = 4.08561678;
+
+monoc5z = 0.5868357;
+monoc5x = 0.70420284;
+alpha5 = 5.194428908;
+
+monoc6z = 0.562225543;
+monoc6x = 0.702781928;
+alpha6 = 6.340191746;
+
+monoc7z = 0.537447864;
+monoc7x = 0.701018952;
+alpha7 = 7.523820439;
+
+monoc8z = 0.512515175;
+monoc8x = 0.69888433;
+alpha8 = 8.746162263;
+
+monoc9z = 0.487442993;
+monoc9x = 0.696347132;
+alpha9 = 10.0079798;
+
+monoc10z = 0.462250164;
+monoc10x = 0.693375245;
+alpha10 = 11.30993247;
+
+monoc11z = 0.4369592;
+monoc11x = 0.689935578;
+alpha11 = 12.6525565;
+
+monoc12z = 0.411596604;
+monoc12x = 0.685994341;
+alpha12 = 14.03624347;
+
+monoc13z = 0.386193181;
+monoc13x = 0.681517379;
+alpha13 = 15.46121774;
+
+monoc14z = 0.360784314;
+monoc14x = 0.676470588;
+alpha14 = 16.92751306;
+
+monoc15z = 0.335410197;
+monoc15x = 0.670820393;
+alpha15 = 18.43494882;
+
+monoc16z = 0.310116008;
+monoc16x = 0.664534303;
+alpha16 = 19.98310652;
+
+monoc17z = 0.284951997;
+monoc17x = 0.657581531;
+alpha17 = 21.57130719;
+
+monoc18z = 0.259973473;
+monoc18x = 0.649933684;
+alpha18 = 23.19859051;
+
+monoc19z = 0.235240677;
+monoc19x = 0.641565483;
+alpha19 = 24.86369657;
+
+monoc20z = 0.210818511;
+monoc20x = 0.632455532;
+alpha20 = 26.56505118;
+
+monoc21z = 0.186776126;
+monoc21x = 0.622587085;
+alpha21 = 28.30075577;
+
+monoc22z = 0.163186345;
+monoc22x = 0.611948795;
+alpha22 = 30.06858282;
+
+monoc23z = 0.14012493;
+monoc23x = 0.600535413;
+alpha23 = 31.86597769;
+
+monoc24z = 0.117669681;
+monoc24x = 0.588348405;
+alpha24 = 33.69006753;
+
+monoc25z = 0.095899409;
+monoc25x = 0.575396456;
+alpha25 = 35.53767779;
+
+monoc26z = 0.074892775;
+monoc26x = 0.56169581;
+alpha26 = 37.40535663;
+
+monoc27z = 0.054727045;
+monoc27x = 0.547270455;
+alpha27 = 39.28940686;
+
+monoc28z = 0.035476806;
+monoc28x = 0.532152084;
+alpha28 = 41.18592517;
+
+monoc29z = 0.017212662;
+monoc29x = 0.516379869;
+alpha29 = 43.09084757;
+
+monoc30z = 3.06287E-17;
+monoc30x = 0.5;
+alpha30 = 45;
+
+
+%}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+TRACE
+
+COMPONENT Origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT source = Source_gen(
+    dist=Sdist, 
+    focus_aw=40, 
+    focus_ah=12, 
+    lambda0=4.74, 
+    dlambda=0.2, 
+    yheight=0.01, 
+    xwidth=0.01)
+AT (0, 0, 0) RELATIVE PREVIOUS
+ROTATED (0, 60, 0) RELATIVE PREVIOUS
+
+COMPONENT armSample = Arm()
+AT (0, 0, Sdist) RELATIVE source
+ROTATED (0, 45, 0) RELATIVE Origin
+
+COMPONENT origin = Arm()
+AT (0, 0, Sdist) RELATIVE source
+ROTATED (0, 0, 0) RELATIVE Origin
+
+COMPONENT MSource = Monitor_nD(
+    xwidth=0.2, 
+    yheight=0.2, 
+    bins=200, 
+    options="x,y")
+AT (0, 0, 1e-3) RELATIVE armSample
+
+//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////ANALYSERS
+COMPONENT armMono1 = Arm()
+AT (monoc1x, 0, monoc1z) RELATIVE origin
+ROTATED (0, alpha1, 0) RELATIVE armSample
+
+COMPONENT Mono1 = Monochromator_flat(
+    zwidth=0.015, 
+    yheight=0.1, 
+    mosaich=mosh, 
+    mosaicv=mosv, 
+    DM=3.355)
+AT (0, 0, 0) RELATIVE armMono1
+ROTATED (0, -45, 0) RELATIVE armMono1
+GROUP Monocs
+/////////////////////////////////////////////////
+COMPONENT armMono2 = Arm()
+AT (monoc2x, 0, monoc2z) RELATIVE origin
+ROTATED (0, alpha2, 0) RELATIVE armSample
+
+COMPONENT Mono2 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono2
+ROTATED (0, -45, 0) RELATIVE armMono2
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono3 = Arm()
+AT (monoc3x, 0, monoc3z) RELATIVE origin
+ROTATED (0, alpha3, 0) RELATIVE armSample
+
+COMPONENT Mono3 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono3
+ROTATED (0, -45, 0) RELATIVE armMono3
+GROUP Monocs
+/////////////////////////////////////////////
+COMPONENT armMono4 = Arm()
+AT (monoc4x, 0, monoc4z) RELATIVE origin
+ROTATED (0, alpha4, 0) RELATIVE armSample
+
+COMPONENT Mono4 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono4
+ROTATED (0, -45, 0) RELATIVE armMono4
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono5 = Arm()
+AT (monoc5x, 0, monoc5z) RELATIVE origin
+ROTATED (0, alpha5, 0) RELATIVE armSample
+
+COMPONENT Mono5 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono5
+ROTATED (0, -45, 0) RELATIVE armMono5
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono6 = Arm()
+AT (monoc6x, 0, monoc6z) RELATIVE origin
+ROTATED (0, alpha6, 0) RELATIVE armSample
+
+COMPONENT Mono6 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono6
+ROTATED (0, -45, 0) RELATIVE armMono6
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono7 = Arm()
+AT (monoc7x, 0, monoc7z) RELATIVE origin
+ROTATED (0, alpha7, 0) RELATIVE armSample
+
+COMPONENT Mono7 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono7
+ROTATED (0, -45, 0) RELATIVE armMono7
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono8 = Arm()
+AT (monoc8x, 0, monoc8z) RELATIVE origin
+ROTATED (0, alpha8, 0) RELATIVE armSample
+
+COMPONENT Mono8 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono8
+ROTATED (0, -45, 0) RELATIVE armMono8
+GROUP Monocs
+///////////////////////////////////////////////
+COMPONENT armMono9 = Arm()
+AT (monoc9x, 0, monoc9z) RELATIVE origin
+ROTATED (0, alpha9, 0) RELATIVE armSample
+
+COMPONENT Mono9 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono9
+ROTATED (0, -45, 0) RELATIVE armMono9
+GROUP Monocs
+/////////////////////////////////////////////
+COMPONENT armMono10 = Arm()
+AT (monoc10x, 0, monoc10z) RELATIVE origin
+ROTATED (0, alpha10, 0) RELATIVE armSample
+
+COMPONENT Mono10 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono10
+ROTATED (0, -45, 0) RELATIVE armMono10
+GROUP Monocs
+////////////////////////////////////////////////
+COMPONENT armMono11 = Arm()
+AT (monoc11x, 0, monoc11z) RELATIVE origin
+ROTATED (0, alpha11, 0) RELATIVE armSample
+
+COMPONENT Mono11 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono11
+ROTATED (0, -45, 0) RELATIVE armMono11
+GROUP Monocs
+////////////////////////////////////////////////
+COMPONENT armMono12 = Arm()
+AT (monoc12x, 0, monoc12z) RELATIVE origin
+ROTATED (0, alpha12, 0) RELATIVE armSample
+
+COMPONENT Mono12 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono12
+ROTATED (0, -45, 0) RELATIVE armMono12
+GROUP Monocs
+///////////////////////////////////////////////
+COMPONENT armMono13 = Arm()
+AT (monoc13x, 0, monoc13z) RELATIVE origin
+ROTATED (0, alpha13, 0) RELATIVE armSample
+
+COMPONENT Mono13 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono13
+ROTATED (0, -45, 0) RELATIVE armMono13
+GROUP Monocs
+
+//////////////////////////////////////////////
+COMPONENT armMono14 = Arm()
+AT (monoc14x, 0, monoc14z) RELATIVE origin
+ROTATED (0, alpha14, 0) RELATIVE armSample
+
+COMPONENT Mono14 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono14
+ROTATED (0, -45, 0) RELATIVE armMono14
+GROUP Monocs
+///////////////////////////////////////////////
+COMPONENT armMono15 = Arm()
+AT (monoc15x, 0, monoc15z) RELATIVE origin
+ROTATED (0, alpha15, 0) RELATIVE armSample
+
+COMPONENT Mono15 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono15
+ROTATED (0, -45, 0) RELATIVE armMono15
+GROUP Monocs
+////////////////////////////////////////////////
+COMPONENT armMono16 = Arm()
+AT (monoc16x, 0, monoc16z) RELATIVE origin
+ROTATED (0, alpha16, 0) RELATIVE armSample
+
+COMPONENT Mono16 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono16
+ROTATED (0, -45, 0) RELATIVE armMono16
+GROUP Monocs
+/////////////////////////////////////////////////
+COMPONENT armMono17 = Arm()
+AT (monoc17x, 0, monoc17z) RELATIVE origin
+ROTATED (0, alpha17, 0) RELATIVE armSample
+
+COMPONENT Mono17 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono17
+ROTATED (0, -45, 0) RELATIVE armMono17
+GROUP Monocs
+///////////////////////////////////////////////
+COMPONENT armMono18 = Arm()
+AT (monoc18x, 0, monoc18z) RELATIVE origin
+ROTATED (0, alpha18, 0) RELATIVE armSample
+
+COMPONENT Mono18 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono18
+ROTATED (0, -45, 0) RELATIVE armMono18
+GROUP Monocs
+//////////////////////////////////////////////////
+COMPONENT armMono19 = Arm()
+AT (monoc19x, 0, monoc19z) RELATIVE origin
+ROTATED (0, alpha19, 0) RELATIVE armSample
+
+COMPONENT Mono19 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono19
+ROTATED (0, -45, 0) RELATIVE armMono19
+GROUP Monocs
+////////////////////////////////////////////////
+COMPONENT armMono20 = Arm()
+AT (monoc20x, 0, monoc20z) RELATIVE origin
+ROTATED (0, alpha20, 0) RELATIVE armSample
+
+COMPONENT Mono20 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono20
+ROTATED (0, -45, 0) RELATIVE armMono20
+GROUP Monocs
+///////////////////////////////////////////////////
+COMPONENT armMono21 = Arm()
+AT (monoc21x, 0, monoc21z) RELATIVE origin
+ROTATED (0, alpha21, 0) RELATIVE armSample
+
+COMPONENT Mono21 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono21
+ROTATED (0, -45, 0) RELATIVE armMono21
+GROUP Monocs
+///////////////////////////////////////////////////
+COMPONENT armMono22 = Arm()
+AT (monoc22x, 0, monoc22z) RELATIVE origin
+ROTATED (0, alpha22, 0) RELATIVE armSample
+
+COMPONENT Mono22 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono22
+ROTATED (0, -45, 0) RELATIVE armMono22
+GROUP Monocs
+/////////////////////////////////////////////////
+COMPONENT armMono23 = Arm()
+AT (monoc23x, 0, monoc23z) RELATIVE origin
+ROTATED (0, alpha23, 0) RELATIVE armSample
+
+COMPONENT Mono23 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono23
+ROTATED (0, -45, 0) RELATIVE armMono23
+GROUP Monocs
+/////////////////////////////////////////////////
+COMPONENT armMono24 = Arm()
+AT (monoc24x, 0, monoc24z) RELATIVE origin
+ROTATED (0, alpha24, 0) RELATIVE armSample
+
+COMPONENT Mono24 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono24
+ROTATED (0, -45, 0) RELATIVE armMono24
+GROUP Monocs
+///////////////////////////////////////////////
+COMPONENT armMono25 = Arm()
+AT (monoc25x, 0, monoc25z) RELATIVE origin
+ROTATED (0, alpha25, 0) RELATIVE armSample
+
+COMPONENT Mono25 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono25
+ROTATED (0, -45, 0) RELATIVE armMono25
+GROUP Monocs
+//////////////////////////////////////////////
+COMPONENT armMono26 = Arm()
+AT (monoc26x, 0, monoc26z) RELATIVE origin
+ROTATED (0, alpha26, 0) RELATIVE armSample
+
+COMPONENT Mono26 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono26
+ROTATED (0, -45, 0) RELATIVE armMono26
+GROUP Monocs
+////////////////////////////////////////////////
+COMPONENT armMono27 = Arm()
+AT (monoc27x, 0, monoc27z) RELATIVE origin
+ROTATED (0, alpha27, 0) RELATIVE armSample
+
+COMPONENT Mono27 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono27
+ROTATED (0, -45, 0) RELATIVE armMono27
+GROUP Monocs
+////////////////////////////////////////////
+COMPONENT armMono28 = Arm()
+AT (monoc28x, 0, monoc28z) RELATIVE origin
+ROTATED (0, alpha28, 0) RELATIVE armSample
+
+COMPONENT Mono28 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono28
+ROTATED (0, -45, 0) RELATIVE armMono28
+GROUP Monocs
+////////////////////////////////////////////////////
+COMPONENT armMono29 = Arm()
+AT (monoc29x, 0, monoc29z) RELATIVE origin
+ROTATED (0, alpha29, 0) RELATIVE armSample
+
+COMPONENT Mono29 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono29
+ROTATED (0, -45, 0) RELATIVE armMono29
+GROUP Monocs
+/////////////////////////////////////////////////////
+COMPONENT armMono30 = Arm()
+AT (monoc30x, 0, monoc30z) RELATIVE origin
+ROTATED (0, alpha30, 0) RELATIVE armSample
+
+COMPONENT Mono30 = COPY(Mono1)()
+AT (0, 0, 0) RELATIVE armMono30
+ROTATED (0, -45, 0) RELATIVE armMono30
+GROUP Monocs
+
+//PSD DETECTOR
+COMPONENT PSDanalyser = Monitor_nD(
+    xwidth=0.3, 
+    yheight=0.1, 
+    bins=200, 
+    options="x,y")
+AT (0.5, 0, 0.5) RELATIVE origin
+ROTATED (0, 90, 0) RELATIVE armSample
+
+COMPONENT Lanalyser = Monitor_nD(
+    xwidth=0.3, 
+    yheight=0.1, 
+    bins=200, 
+    options="lambda limits=[0 8]")
+AT (0, 0, 0) RELATIVE PREVIOUS
+
+
+
+
+
+
+
+
+
+
+
+FINALLY
+%{
+%}
+
+END
