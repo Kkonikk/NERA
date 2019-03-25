@@ -1,0 +1,108 @@
+/*******************************************************************************
+* Instrument: NERA_source.instr
+*
+* Written by: Yurii Kireenko
+* Date: 23.10.18
+* Origin: PNPI
+* %INSTRUMENT_SITE: Templates
+*
+* NERA TOF-spectrometer guide
+*
+* IBR-2M guide for channel 7
+*
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_pulse_number: [int] number of pulses produced by the source
+* source_optics_dist:  [m] distance between moderator and optics
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Nera(linh = 12.257,louth = 1.290,linw = 4.861,loutw = 0.4175,m_side = 6,m_top = 6 , sample_size = 0.03)
+
+DECLARE
+%{
+
+double distance_before_sample = 0.35;
+double total_length = 109.05;
+double ell_length; 
+
+%}
+
+INITIALIZE
+%{
+ell_length = total_length - source_optics_dist - distance_before_sample;
+%}
+
+TRACE
+
+%include "NERA_source.instr"
+
+/* ******************************* Background chopper 1  *************************************/
+COMPONENT slit_guide_entr = Slit(
+    xwidth=guide_width, 
+    yheight=guide_height)
+AT (0, 0, 0) RELATIVE Guide_start_arm
+
+COMPONENT guide_ellipt = Guide_tapering(
+    option="elliptical", 
+    w1 = guide_width, 
+    h1 = guide_height, 
+    l = ell_length, 
+    linh = linh, 
+    louth = louth,
+    linw = linw,
+    loutw = loutw,
+    mx=m_side,
+    my=m_top)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT guide_end = Arm()
+AT (0, 0, ell_length+0.001) RELATIVE PREVIOUS
+
+/* ******************************* Sample  *************************************/
+
+COMPONENT monitor_nd_xy = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="x")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_xy2 = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="x y")
+AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
+
+COMPONENT monitor_nd_xy3 = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="dx limits=[-2 2] dy limits=[-2 2]")
+AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
+/*
+COMPONENT monitor_nd_lambda = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="lambda limits = [0 20]")
+AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
+
+COMPONENT monitor_nd_dxdy = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="dx limits = [-1 1] dy limits = [-1 1]")
+AT (0, 0, distance_before_sample+0.002) RELATIVE guide_end
+
+COMPONENT monitor_nd_t = Monitor_nD(
+    xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
+    options="t")
+AT (0, 0, distance_before_sample+0.003) RELATIVE guide_end*/
+
+COMPONENT sample_arm = Arm()
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+/* ******************************* end  *************************************/
+
+FINALLY
+%{
+//printf("floats: %4.2f",LT0);
+%}
+
+END
