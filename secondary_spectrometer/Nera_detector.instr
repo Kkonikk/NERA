@@ -211,12 +211,12 @@ COMPONENT armSample = Arm()
 AT (0, 0, 0) RELATIVE sample_arm
 ROTATED (0, 45, 0) RELATIVE sample_arm
 
-COMPONENT res_sample = Res_sample(
+/*COMPONENT res_sample = Res_sample(
     thickness=0.001, 
     radius=0.03, 
     focus_r=0.05, 
-    E0=3, 
-    dE=1.2, 
+    E0=3.6, 
+    dE=0, 
     target_x=0.3, 
     target_y=0, 
     target_z=0.5, 
@@ -226,6 +226,18 @@ COMPONENT res_sample = Res_sample(
     yheight=0.1, 
     zdepth=0, 
     target_index=0)
+AT (0, 0, 0) RELATIVE armSample
+ROTATED (0, 0, 0) RELATIVE armSample*/
+
+COMPONENT incoherent = Incoherent(
+    radius=0.03, 
+    yheight=0.1, 
+    thickness=0.001, 
+    target_x=0.3, 
+    target_z=0.5, 
+    focus_aw=35, 
+    focus_ah=12, 
+    Etrans=0.0036)
 AT (0, 0, 0) RELATIVE armSample
 ROTATED (0, 0, 0) RELATIVE armSample
 
