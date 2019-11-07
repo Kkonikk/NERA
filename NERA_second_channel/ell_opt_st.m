@@ -4,13 +4,13 @@ fix(model, 'all');
 model.sample_size=0.03;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
-model.guide_length_st = 10;
+model.guide_length_st = 70;
 
 model.guide_width_st = 'free'; model.guide_width_st = [0.01 0.2 0.4];
 model.guide_height_st = 'free'; model.guide_height_st = [0.01 0.2 0.4];
 
 
-model.ell_length = 'free'; model.ell_length = [0.5 10 60];
+model.ell_length = 'free'; model.ell_length = [0.5 10 30];
 model.loutw = 'free'; model.loutw = [0 0.38 5];
 model.linw = 'free'; model.linw = [0 12.3 20];
 model.linh = 'free'; model.linh = [0 12.3 20];
