@@ -1,0 +1,158 @@
+McStas simulation description file for Nera.
+Date:    Thu Nov  7 11:19:28 2019
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_20191107_111923/mccode
+  Source: NERA_guide.instr
+  Parameters:  linh(double) louth(double) linw(double) loutw(double) source_lambda_min(double) source_lambda_max(double) source_pulse_number(double) guide_width(double) guide_height(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_20191107_111923
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_guide.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1573119918
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_20191107_111923
+  Nodes: 4
+  Param: linh=10.5
+  Param: louth=0.5
+  Param: linw=10.5
+  Param: loutw=0.5
+  Param: source_lambda_min=0.1
+  Param: source_lambda_max=5
+  Param: source_pulse_number=2
+  Param: guide_width=0.05
+  Param: guide_height=0.16
+end simulation
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_1d(100)
+  Source: Nera (NERA_guide.instr)
+  component: source_time_mon_one_pulse
+  position: 0 0 0.0001
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_one_pulse_1573114768.t
+  statistics: X0=0.000169672; dX=9.82219e-05;
+  signal: Min=0; Max=1.49883e+12; Mean=1.0735e+12;
+  values: 1.0735e+14 2.63444e+11 500002
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 0.00045
+  variables: t I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_1d(100)
+  Source: Nera (NERA_guide.instr)
+  component: source_time_mon_many_pulses
+  position: 0 0 0.00011
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_many_pulses_1573114768.t
+  statistics: X0=0.105; dX=0.1;
+  signal: Min=0; Max=1.0735e+14; Mean=2.14699e+12;
+  values: 2.14699e+14 3.72601e+11 1e+06
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 1
+  variables: t I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide.instr)
+  component: monitor_nd_xy
+  position: 0 0 105.361
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 1000000
+  filename: monitor_nd_xy_1573114768.x_y
+  statistics: X0=3.23765e-05; dX=0.004977; Y0=-7.34405e-05; dY=0.0110366;
+  signal: Min=0; Max=6.84194e+10; Mean=6.64544e+08;
+  values: 6.64544e+12 4.45663e+10 226150
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.1 0.1 -0.1 0.1
+  variables: I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_1d(100)
+  Source: Nera (NERA_guide.instr)
+  component: monitor_nd_lambda
+  position: 0 0 105.362
+  title: Wavelength [Angs] monitor
+  Ncount: 1000000
+  filename: monitor_nd_lambda_1573114768.L
+  statistics: X0=1.93266; dX=0.884168;
+  signal: Min=0; Max=8.47642e+11; Mean=6.64544e+10;
+  values: 6.64544e+12 4.45663e+10 226150
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 20
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide.instr)
+  component: monitor_nd_dxdy
+  position: 0 0 105.363
+  title:  Intensity Divergence Divergence Monitor (Square) per bin
+  Ncount: 1000000
+  filename: monitor_nd_dxdy_1573114768.hd_vd
+  statistics: X0=2.14522e-06; dX=0.484158; Y0=0.00235474; dY=0.530556;
+  signal: Min=0; Max=4.23748e+09; Mean=4.47991e+08;
+  values: 4.47991e+12 4.1825e+10 33645
+  xvar: Ho
+  yvar: Ve
+  xlabel: Hor. Divergence [deg]
+  ylabel: Vert. Divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -1 1 -1 1
+  variables: I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 11:19:32 2019 (1573114772)
+  type: array_1d(100)
+  Source: Nera (NERA_guide.instr)
+  component: monitor_nd_t
+  position: 0 0 105.364
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: monitor_nd_t_1573114768.t
+  statistics: X0=0.0481792; dX=0.0184683;
+  signal: Min=0; Max=8.92016e+10; Mean=3.13857e+10;
+  values: 3.13857e+12 3.13768e+10 53136
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 0.1
+  variables: t I I_err N
+end data

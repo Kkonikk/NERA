@@ -1,0 +1,103 @@
+/*******************************************************************************
+* Instrument: NERA_source.instr
+*
+* Written by: Peter Konik
+* Date: 23.10.18
+* Origin: PNPI
+*
+* NERA TOF-spectrometer source
+*
+* IBR-2M source for channel 7
+*
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_pulse_number: [int] number of pulses produced by the source
+* source_optics_dist:  [m] distance between moderator and optics
+* guide_width:         [m] initial guide width
+* guide_height:        [m] initial guide height
+*
+*******************************************************************************/
+DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 20, source_pulse_number=2, guide_width = 0.05, guide_height = 0.16)
+
+DECLARE
+%{
+double source_I = 1e16, source_T = 330;
+double source_height=0.2, source_width=0.15; //check and change
+
+double pulse_length = 340; //in microsec
+double T; //for defining the number of pulse
+double source_freq = 5; //in Hz
+double source_pulse_number_help;
+double source_optics_dist = 4.2;
+%}
+
+INITIALIZE
+%{
+source_pulse_number_help = source_pulse_number;
+source_I = source_I*source_pulse_number/4/PI;
+%}
+
+TRACE
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT Source = Source_gen(
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    I1=source_I, 
+    yheight=source_height, 
+    xwidth=source_width, 
+    T1=source_T, 
+    Lmin=source_lambda_min, 
+    Lmax=source_lambda_max)
+AT (0, 0, 0) RELATIVE origin
+EXTEND
+%{
+T = floor(rand01()*source_pulse_number_help);
+t = rand01()*pulse_length*1e-6 + T*1/source_freq;
+%}
+
+COMPONENT source_time_mon_one_pulse = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.5, 
+    bins=100, 
+    options="time limits = [0 0.00045]")
+AT (0, 0, 0.0001) RELATIVE origin
+
+COMPONENT source_time_mon_many_pulses = Monitor_nD(
+    xwidth=0.5, 
+    yheight=0.5, 
+    bins=100, 
+    options="time limits = [0 1]")
+AT (0, 0, 0.00011) RELATIVE origin
+
+COMPONENT slit1 = Slit(
+    xwidth=0.18, 
+    yheight=0.42)
+AT (0, 0, 1.21) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=0.28, 
+    yheight=0.42)
+AT (0, 0, 1.73) RELATIVE origin
+
+COMPONENT slit3 = Slit(
+    xwidth=0.37, 
+    yheight=0.42)
+AT (0, 0, 2.1) RELATIVE origin
+
+COMPONENT slit4 = Slit(
+    xwidth=0.47, 
+    yheight=0.42)
+AT (0, 0, 2.52) RELATIVE origin
+
+COMPONENT Guide_start_arm = Arm()
+AT (0, 0, source_optics_dist) RELATIVE origin
+
+FINALLY
+%{
+%}
+
+END
