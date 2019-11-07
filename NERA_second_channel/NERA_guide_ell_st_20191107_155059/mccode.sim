@@ -1,0 +1,104 @@
+McStas simulation description file for Nera.
+Date:    Thu Nov  7 15:50:59 2019
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_ell_st_20191107_155059/mccode
+  Source: NERA_guide_ell_st.instr
+  Parameters:  ell_length(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double) guide_width_st(double) guide_height_st(double) guide_length_st(double) linh2(double) louth2(double) linw2(double) loutw2(double) source_lambda_min(double) source_lambda_max(double) source_pulse_number(double) guide_width(double) guide_height(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_ell_st_20191107_155059
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_guide_ell_st.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1573143890
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_ell_st_20191107_155059
+  Param: ell_length=1.969
+  Param: linh=17.98
+  Param: louth=3.995
+  Param: linw=0.4758
+  Param: loutw=3.844
+  Param: sample_size=0.03
+  Param: guide_width_st=0.147
+  Param: guide_height_st=0.151
+  Param: guide_length_st=40
+  Param: linh2=18.73
+  Param: louth2=1.27
+  Param: linw2=18.5
+  Param: loutw2=0.8897
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: source_pulse_number=2
+  Param: guide_width=0.1452
+  Param: guide_height=0.2919
+end simulation
+
+begin data
+  Date: Thu Nov  7 15:51:13 2019 (1573131073)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_ell_st.instr)
+  component: source_time_mon_one_pulse
+  position: 0 0 0.0001
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_one_pulse_1573131059.t
+  statistics: X0=0.000170072; dX=9.8167e-05;
+  signal: Min=0; Max=1.72292e+12; Mean=1.25431e+12;
+  values: 1.25431e+14 2.20164e+11 499771
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 0.00045
+  variables: t I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 15:51:13 2019 (1573131073)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_ell_st.instr)
+  component: source_time_mon_many_pulses
+  position: 0 0 0.00011
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_many_pulses_1573131059.t
+  statistics: X0=0.10483; dX=0.0999999;
+  signal: Min=0; Max=1.25431e+14; Mean=2.50436e+12;
+  values: 2.50436e+14 3.10983e+11 1e+06
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 1
+  variables: t I I_err N
+end data
+
+begin data
+  Date: Thu Nov  7 15:51:13 2019 (1573131073)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide_ell_st.instr)
+  component: monitor_nd_xy
+  position: 0 0 105.37
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 1000000
+  filename: monitor_nd_xy_1573131059.x_y
+  statistics: X0=-7.90928e-05; dX=0.00858605; Y0=-0.000131188; dY=0.0087693;
+  signal: Min=0; Max=1.28661e+09; Mean=1.08344e+08;
+  values: 1.08344e+12 1.634e+10 10243
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.015 0.015 -0.015 0.015
+  variables: I I_err N
+end data
