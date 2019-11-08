@@ -1,10 +1,10 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: NERA_guide.instr (Nera)
- * Date:       Thu Nov  7 11:20:53 2019
- * File:       ./NERA_guide.c
- * Compile:    cc -o Nera.out ./NERA_guide.c 
+ * Instrument: NERA_guide_ell_st_3part_parabol.instr (Nera)
+ * Date:       Fri Nov  8 12:19:24 2019
+ * File:       ./NERA_guide_ell_st_3part_parabol.c
+ * Compile:    cc -o Nera.out ./NERA_guide_ell_st_3part_parabol.c 
  * CFLAGS=
  */
 
@@ -692,7 +692,7 @@ NXhandle nxhandle;
 #endif /* MCCODE_R_H */
 /* End of file "mccode-r.h". */
 
-#line 695 "./NERA_guide.c"
+#line 695 "./NERA_guide_ell_st_3part_parabol.c"
 
 #line 1 "mcstas-r.h"
 /*******************************************************************************
@@ -925,7 +925,7 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 #endif /* MCSTAS_R_H */
 /* End of file "mcstas-r.h". */
 
-#line 928 "./NERA_guide.c"
+#line 928 "./NERA_guide_ell_st_3part_parabol.c"
 
 #line 1 "mccode-r.c"
 /*******************************************************************************
@@ -4944,7 +4944,7 @@ void neutronics_main_(float *inx, float *iny, float *inz, float *invx, float *in
 /* End of file "mccode-r.c". */
 /* End of file "mccode-r.c". */
 
-#line 4947 "./NERA_guide.c"
+#line 4947 "./NERA_guide_ell_st_3part_parabol.c"
 
 #line 1 "mcstas-r.c"
 /*******************************************************************************
@@ -5304,7 +5304,7 @@ plane_intersect(double *t, double x, double y, double z,
 #endif /* !MCSTAS_H */
 /* End of file "mcstas-r.c". */
 
-#line 5307 "./NERA_guide.c"
+#line 5307 "./NERA_guide_ell_st_3part_parabol.c"
 #ifdef MC_TRACE_ENABLED
 int mctraceenabled = 1;
 #else
@@ -5313,7 +5313,7 @@ int mctraceenabled = 0;
 #define MCSTAS "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../"
 int mcdefaultmain = 1;
 char mcinstrument_name[] = "Nera";
-char mcinstrument_source[] = "NERA_guide.instr";
+char mcinstrument_source[] = "NERA_guide_ell_st_3part_parabol.instr";
 char *mcinstrument_exe=NULL; /* will be set to argv[0] in main */
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 void mcinit(void);
@@ -6800,7 +6800,368 @@ char *str_dup_numeric(char *orig)
   }
 #endif
 
-#line 6803 "./NERA_guide.c"
+#line 6803 "./NERA_guide_ell_st_3part_parabol.c"
+
+/* Shared user declarations for all components 'Guide_gravity'. */
+#line 124 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
+/*****************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Library: share/ref-lib.h
+*
+* %Identification
+* Written by: Peter Christiansen
+* Date: August, 2006
+* Origin: RISOE
+* Release: McStas 1.10
+* Version: $Revision$
+*
+* Commonly used reflection functions are declared in this file which
+* are used by some guide and mirror components.
+*
+* Depends on read_table-lib
+*
+* Usage: within SHARE
+* %include "ref-lib"
+*
+****************************************************************************/
+
+
+#ifndef REF_LIB_H
+#define REF_LIB_H "$Revision$"
+
+void StdReflecFunc(double, double*, double*);
+void TableReflecFunc(double, t_Table*, double*);
+
+#endif
+
+/* end of ref-lib.h */
+/****************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Library: share/ref-lib.c
+*
+* %Identification
+* Written by: Peter Christiansen
+* Date: August, 2006
+* Origin: RISOE
+* Release: McStas 1.10
+* Version: $Revision$
+*
+* Commonly used reflection functions are declared in this file which
+* are used by some guide and mirror components.
+*
+* Variable names have prefix 'mc_ref_' for 'McStas Reflection' 
+* to avoid conflicts
+*
+* Usage: within SHARE
+* %include "ref-lib"
+*
+****************************************************************************/
+
+#ifndef REF_LIB_H
+#include "ref-lib.h"
+#endif
+
+#ifndef READ_TABLE_LIB_H
+#include "read_table-lib.h"
+#include "read_table-lib.c"
+#endif
+
+/****************************************************************************
+* void StdReflecFunc(double q, double *par, double *r)
+* 
+* The McStas standard analytic parametrization of the reflectivity.
+* The parameters are:
+* R0:      [1]    Low-angle reflectivity
+* Qc:      [AA-1] Critical scattering vector
+* alpha:   [AA]   Slope of reflectivity
+* m:       [1]    m-value of material. Zero means completely absorbing.
+* W:       [AA-1] Width of supermirror cut-off
+*****************************************************************************/
+void StdReflecFunc(double mc_pol_q, double *mc_pol_par, double *mc_pol_r) {
+    double R0    = mc_pol_par[0];
+    double Qc    = mc_pol_par[1];
+    double alpha = mc_pol_par[2];
+    double m     = mc_pol_par[3];
+    double W     = mc_pol_par[4];
+    double beta  = 0;
+    mc_pol_q     = fabs(mc_pol_q);
+    double arg;
+        
+    /* Simpler parametrization from Henrik Jacobsen uses these values that depend on m only.
+       double m_value=m*0.9853+0.1978;
+       double W=-0.0002*m_value+0.0022;
+       double alpha=0.2304*m_value+5.0944;
+       double beta=-7.6251*m_value+68.1137; 
+       If W and alpha are set to 0, use Henrik's approach for estimating these parameters
+       and apply the formulation:
+       arg = R0*0.5*(1-tanh(arg))*(1-alpha*(q-Qc)+beta*(q-Qc)*(q-Qc));
+    */  
+    if (W==0 && alpha==0) {
+      m=m*0.9853+0.1978;
+      W=-0.0002*m+0.0022;
+      alpha=0.2304*m+5.0944;
+      beta=-7.6251*m+68.1137;
+      if (m<=3) {
+	alpha=m;
+	beta=0;
+      }
+    }
+    
+    arg = W > 0 ? (mc_pol_q - m*Qc)/W : 11;
+
+    if (arg > 10 || m <= 0 || Qc <=0 || R0 <= 0) {
+      *mc_pol_r = 0;
+      return;
+    }
+    
+    if (m < 1) { Qc *= m; m=1; }
+    
+    if(mc_pol_q <= Qc) {      
+      *mc_pol_r = R0;
+      return;
+    }
+    
+    
+    *mc_pol_r = R0*0.5*(1 - tanh(arg))*(1 - alpha*(mc_pol_q - Qc) + beta*(mc_pol_q - Qc)*(mc_pol_q - Qc));
+    
+    return;
+  }
+
+/****************************************************************************
+* void TableReflecFunc(double q, t_Table *par, double *r) {
+* 
+* Looks up the reflectivity in a table using the routines in read_table-lib.
+*****************************************************************************/
+void TableReflecFunc(double mc_pol_q, t_Table *mc_pol_par, double *mc_pol_r) {
+    
+  *mc_pol_r = Table_Value(*mc_pol_par, mc_pol_q, 1);
+  if(*mc_pol_r>1)
+    *mc_pol_r = 1;
+  return;
+}
+
+/* end of ref-lib.c */
+
+#ifndef Gravity_guide_Version
+#define Gravity_guide_Version "$Revision$"
+
+#ifndef PROP_GRAV_DT
+#error McStas : You need PROP_GRAV_DT (McStas >= 1.4.3) to run this component
+#endif
+
+/*
+* G:       (m/s^2) Gravitation acceleration along y axis [-9.81]
+* Gx:      (m/s^2) Gravitation acceleration along x axis [0]
+* Gy:      (m/s^2) Gravitation acceleration along y axis [-9.81]
+* Gz:      (m/s^2) Gravitation acceleration along z axis [0]
+* mh:      (1)    m-value of material for left/right vert. mirrors
+* mv:      (1)    m-value of material for top/bottom horz. mirrors
+* mx:      (1)    m-value of material for left/right vert. mirrors
+* my:      (1)    m-value of material for top/bottom horz. mirrors
+*/
+
+  typedef struct Gravity_guide_Vars
+  {
+    double gx;
+    double gy;
+    double gz;
+    double nx[6], ny[6], nz[6];
+    double wx[6], wy[6], wz[6];
+    double A[6], norm_n2[6], norm_n[6];
+    long   N_reflection[7];
+    double w1c, h1c;
+    double w2c, h2c;
+    double M[5];
+    double Alpha[5];
+    double nzC[5], norm_n2xy[5], Axy[5];
+    double wav_lr, wav_tb, wav_z;
+    double chamfer_z, chamfer_lr, chamfer_tb;
+    char   compcurname[256];
+    double fc_freq, fc_phase;
+    double warnings;
+  } Gravity_guide_Vars_type;
+
+  void Gravity_guide_Init(Gravity_guide_Vars_type *aVars,
+    MCNUM a_w1, MCNUM a_h1, MCNUM a_w2, MCNUM a_h2, MCNUM a_l, MCNUM a_R0,
+    MCNUM a_Qc, MCNUM a_alpha, MCNUM a_m, MCNUM a_W, MCNUM a_nslit, MCNUM a_d,
+    MCNUM a_Gx, MCNUM a_Gy, MCNUM a_Gz,
+    MCNUM a_mleft, MCNUM a_mright, MCNUM a_mtop, MCNUM a_mbottom, MCNUM a_nhslit,
+    MCNUM a_wavy_lr, MCNUM a_wavy_tb, MCNUM a_wavy_z, MCNUM a_wavy,
+    MCNUM a_chamfers_z, MCNUM a_chamfers_lr, MCNUM a_chamfers_tb, MCNUM a_chamfers,
+    MCNUM a_nu, MCNUM a_phase, MCNUM a_aleft, MCNUM a_aright, MCNUM a_atop, MCNUM a_abottom)
+  {
+    int i;
+
+    for (i=0; i<7; aVars->N_reflection[i++] = 0);
+    for (i=0; i<5; aVars->M[i++] = 0);
+    for (i=0; i<5; aVars->Alpha[i++] = 0);
+
+    aVars->gx = a_Gx; /* The gravitation vector in the current component axis system */
+    aVars->gy = a_Gy;
+    aVars->gz = a_Gz;
+    aVars->warnings=0;
+
+    if (a_nslit <= 0 || a_nhslit <= 0) { fprintf(stderr,"%s: Fatal: no channel in this guide (nhslit or nslit=0).\n", aVars->compcurname); exit(-1); }
+    if (a_d < 0) { fprintf(stderr,"%s: Fatal: subdividing walls have negative thickness in this guide (d<0).\n", aVars->compcurname); exit(-1); }
+    aVars->w1c = (a_w1 - (a_nslit-1) *a_d)/(double)a_nslit;
+    aVars->w2c = (a_w2 - (a_nslit-1) *a_d)/(double)a_nslit;
+    aVars->h1c = (a_h1 - (a_nhslit-1)*a_d)/(double)a_nhslit;
+    aVars->h2c = (a_h2 - (a_nhslit-1)*a_d)/(double)a_nhslit;
+
+    for (i=0; i <= 4;   aVars->M[i++]=a_m);
+    for (i=0; i <= 4;   aVars->Alpha[i++]=a_alpha);
+    if (a_mleft   >= 0) aVars->M[1] =a_mleft  ;
+    if (a_mright  >= 0) aVars->M[2] =a_mright ;
+    if (a_mtop    >= 0) aVars->M[3] =a_mtop   ;
+    if (a_mbottom >= 0) aVars->M[4] =a_mbottom;
+    if (a_aleft   >= 0) aVars->Alpha[1] =a_aleft  ;
+    if (a_aright  >= 0) aVars->Alpha[2] =a_aright ;
+    if (a_atop    >= 0) aVars->Alpha[3] =a_atop   ;
+    if (a_abottom >= 0) aVars->Alpha[4] =a_abottom;
+
+    /* n: normal vectors to surfaces */
+    aVars->nx[1] =  a_l; aVars->ny[1] =  0;   aVars->nz[1] =  0.5*(aVars->w2c-aVars->w1c);  /* 1:+X left       */
+    aVars->nx[2] = -a_l; aVars->ny[2] =  0;   aVars->nz[2] = -aVars->nz[1];             /* 2:-X right      */
+    aVars->nx[3] =  0;   aVars->ny[3] =  a_l; aVars->nz[3] =  0.5*(aVars->h2c-aVars->h1c);  /* 3:+Y top        */
+    aVars->nx[4] =  0;   aVars->ny[4] = -a_l; aVars->nz[4] = -aVars->nz[3];             /* 4:-Y bottom     */
+    aVars->nx[5] =  0;   aVars->ny[5] =  0;   aVars->nz[5] =  a_l;                      /* 5:+Z exit       */
+    aVars->nx[0] =  0;   aVars->ny[0] =  0;   aVars->nz[0] = -a_l;                      /* 0:Z0 input      */
+    /* w: a point on these surfaces */
+    aVars->wx[1] = +(aVars->w1c)/2; aVars->wy[1] =  0;              aVars->wz[1] = 0;   /* 1:+X left       */
+    aVars->wx[2] = -(aVars->w1c)/2; aVars->wy[2] =  0;              aVars->wz[2] = 0;   /* 2:-X right      */
+    aVars->wx[3] =  0;              aVars->wy[3] = +(aVars->h1c)/2; aVars->wz[3] = 0;   /* 3:+Y top        */
+    aVars->wx[4] =  0;              aVars->wy[4] = -(aVars->h1c)/2; aVars->wz[4] = 0;   /* 4:-Y bottom     */
+    aVars->wx[5] =  0;              aVars->wy[5] =  0;              aVars->wz[5] = a_l; /* 5:+Z exit       */
+    aVars->wx[0] =  0;              aVars->wy[0] =  0;              aVars->wz[0] = 0;   /* 0:Z0 input      */
+
+    for (i=0; i <= 5; i++)
+    {
+      aVars->A[i] = scalar_prod(aVars->nx[i], aVars->ny[i], aVars->nz[i], aVars->gx, aVars->gy, aVars->gz)/2;
+      aVars->norm_n2[i] = aVars->nx[i]*aVars->nx[i] + aVars->ny[i]*aVars->ny[i] + aVars->nz[i]*aVars->nz[i];
+      if (aVars->norm_n2[i] <= 0)
+        { fprintf(stderr,"%s: Fatal: normal vector norm %i is null/negative ! check guide dimensions.\n", aVars->compcurname, i); exit(-1); } /* should never occur */
+      else
+        aVars->norm_n[i] = sqrt(aVars->norm_n2[i]);
+    }
+    /* partial computations for l/r/t/b sides, to save computing time */
+    for (i=1; i <= 4; i++)
+    { /* stores nz that changes in case non box element (focus/defocus) */
+      aVars->nzC[i]      =  aVars->nz[i]; /* partial xy terms */
+      aVars->norm_n2xy[i]=  aVars->nx[i]*aVars->nx[i] + aVars->ny[i]*aVars->ny[i];
+      aVars->Axy[i]      = (aVars->nx[i]*aVars->gx    + aVars->ny[i]*aVars->gy)/2;
+    }
+    /* handle waviness init */
+    if (a_wavy && (!a_wavy_tb && !a_wavy_lr && !a_wavy_z))
+    { aVars->wav_tb=aVars->wav_lr=aVars->wav_z=a_wavy; }
+    else
+    { aVars->wav_tb=a_wavy_tb; aVars->wav_lr=a_wavy_lr; aVars->wav_z=a_wavy_z; }
+    aVars->wav_tb *= DEG2RAD/(sqrt(8*log(2)));   /* Convert from deg FWHM to rad Gaussian sigma */
+    aVars->wav_lr *= DEG2RAD/(sqrt(8*log(2)));
+    aVars->wav_z  *= DEG2RAD/(sqrt(8*log(2)));
+    /* handle chamfers init */
+    if (a_chamfers && (!a_chamfers_z && !a_chamfers_lr && !a_chamfers_tb))
+    { aVars->chamfer_z=aVars->chamfer_lr=aVars->chamfer_tb=a_chamfers; }
+    else
+    {
+      aVars->chamfer_z=a_chamfers_z;
+      aVars->chamfer_lr=a_chamfers_lr;
+      aVars->chamfer_tb=a_chamfers_tb;
+    }
+
+    aVars->fc_freq  = a_nu;
+    aVars->fc_phase = a_phase;
+  }
+
+  int Gravity_guide_Trace(double *dt,
+        Gravity_guide_Vars_type *aVars,
+        double cx, double cy, double cz,
+        double cvx, double cvy, double cvz,
+        double cxnum, double cxk, double cynum, double cyk,
+        double *cnx, double *cny,double *cnz)
+  {
+    double B, C;
+    int    ret=0;
+    int    side=0;
+    double n1;
+    double dt0, dt_min=0;
+    int    i;
+    double loc_num, loc_nslit;
+    int    i_slope=3;
+
+    /* look if there is a previous intersection with guide sides */
+    /* A = 0.5 n.g; B = n.v; C = n.(r-W); */
+    /* 5=+Z side: n=(0, 0, -l) ; W = (0, 0, l) (at z=l, guide exit)*/
+    B = aVars->nz[5]*cvz; C = aVars->nz[5]*(cz - aVars->wz[5]);
+    ret = solve_2nd_order(&dt0, NULL, aVars->A[5], B, C);
+    if (ret && dt0>1e-10) { dt_min = dt0; side=5; }
+
+    loc_num = cynum; loc_nslit = cyk;
+    for (i=4; i>0; i--)
+    {
+      if (i == 2) { i_slope=1; loc_num = cxnum; loc_nslit = cxk; }
+
+      if (aVars->nzC[i_slope] != 0) {
+        n1 = loc_nslit - 2*(loc_num);  /* slope of l/r/u/d sides depends on the channel ! */
+        loc_num++; /* use partial computations to alter nz and A */
+        aVars->nz[i]= aVars->nzC[i]*n1;
+        aVars->A[i] = aVars->Axy[i] + aVars->nz[i]*aVars->gz/2;
+      }
+      if (i < 3)
+      {      B = aVars->nx[i]*cvx + aVars->nz[i]*cvz; C = aVars->nx[i]*(cx-aVars->wx[i]) + aVars->nz[i]*cz; }
+      else { B = aVars->ny[i]*cvy + aVars->nz[i]*cvz; C = aVars->ny[i]*(cy-aVars->wy[i]) + aVars->nz[i]*cz; }
+      ret = solve_2nd_order(&dt0, NULL, aVars->A[i], B, C);
+      if (ret && dt0>1e-10 && (dt0<dt_min || !dt_min))
+      { dt_min = dt0; side=i;
+        if (aVars->nzC[i] != 0)
+        { aVars->norm_n2[i] = aVars->norm_n2xy[i] + aVars->nz[i]*aVars->nz[i];
+          aVars->norm_n[i]  = sqrt(aVars->norm_n2[i]); }
+      }
+     }
+
+    *dt = dt_min;
+    /* handles waviness: rotate n vector */
+    if (side > 0 && side < 5 && (aVars->wav_z || aVars->wav_lr || aVars->wav_tb))
+    {
+      double nt_x, nt_y, nt_z;  /* transverse vector */
+      double nn_x, nn_y, nn_z;  /* normal vector (tmp) */
+      double phi;
+      /* normal vector n_z = [ 0,0,1], n_t = n x n_z; */
+      vec_prod(nt_x,nt_y,nt_z, aVars->nx[side],aVars->ny[side],aVars->nz[side], 0,0,1);
+      /* rotate n with angle wavy_z around n_t -> nn */
+      if (aVars->wav_z) {
+        phi = aVars->wav_z;
+        rotate(nn_x,nn_y,nn_z, aVars->nx[side],aVars->ny[side],aVars->nz[side], aVars->wav_z*randnorm(), nt_x,nt_y,nt_z);
+      } else { nn_x=aVars->nx[side]; nn_y=aVars->ny[side]; nn_z=aVars->nz[side]; }
+      /* rotate n with angle wavy_{x|y} around n_z -> nt */
+      phi = (side <=2) ? aVars->wav_lr : aVars->wav_tb;
+      if (phi) {
+        rotate(nt_x,nt_y,nt_z, nn_x,nn_y,nn_z, phi*randnorm(), 0,0,1);
+      } else { nt_x=nn_x; nt_y=nn_y; nt_z=nn_z; }
+      *cnx=nt_x; *cny=nt_y; *cnz=nt_z;
+    } else
+    { *cnx=aVars->nx[side]; *cny=aVars->ny[side]; *cnz=aVars->nz[side]; }
+    return (side);
+  }
+
+
+
+#endif
+#line 7159 "./NERA_guide_ell_st_3part_parabol.c"
+
+/* Shared user declarations for all components 'Guide_tapering'. */
+#line 91 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+
+#line 7164 "./NERA_guide_ell_st_3part_parabol.c"
 
 /* Shared user declarations for all components 'Monitor_nD'. */
 #line 214 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
@@ -9735,164 +10096,11 @@ void off_display(off_struct data)
 
 /* end of interoff-lib.c */
 
-#line 9738 "./NERA_guide.c"
-
-/* Shared user declarations for all components 'Guide_tapering'. */
-#line 91 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
-/*****************************************************************************
-*
-* McStas, neutron ray-tracing package
-*         Copyright 1997-2006, All rights reserved
-*         Risoe National Laboratory, Roskilde, Denmark
-*         Institut Laue Langevin, Grenoble, France
-*
-* Library: share/ref-lib.h
-*
-* %Identification
-* Written by: Peter Christiansen
-* Date: August, 2006
-* Origin: RISOE
-* Release: McStas 1.10
-* Version: $Revision$
-*
-* Commonly used reflection functions are declared in this file which
-* are used by some guide and mirror components.
-*
-* Depends on read_table-lib
-*
-* Usage: within SHARE
-* %include "ref-lib"
-*
-****************************************************************************/
-
-
-#ifndef REF_LIB_H
-#define REF_LIB_H "$Revision$"
-
-void StdReflecFunc(double, double*, double*);
-void TableReflecFunc(double, t_Table*, double*);
-
-#endif
-
-/* end of ref-lib.h */
-/****************************************************************************
-*
-* McStas, neutron ray-tracing package
-*         Copyright 1997-2006, All rights reserved
-*         Risoe National Laboratory, Roskilde, Denmark
-*         Institut Laue Langevin, Grenoble, France
-*
-* Library: share/ref-lib.c
-*
-* %Identification
-* Written by: Peter Christiansen
-* Date: August, 2006
-* Origin: RISOE
-* Release: McStas 1.10
-* Version: $Revision$
-*
-* Commonly used reflection functions are declared in this file which
-* are used by some guide and mirror components.
-*
-* Variable names have prefix 'mc_ref_' for 'McStas Reflection' 
-* to avoid conflicts
-*
-* Usage: within SHARE
-* %include "ref-lib"
-*
-****************************************************************************/
-
-#ifndef REF_LIB_H
-#include "ref-lib.h"
-#endif
-
-#ifndef READ_TABLE_LIB_H
-#include "read_table-lib.h"
-#include "read_table-lib.c"
-#endif
-
-/****************************************************************************
-* void StdReflecFunc(double q, double *par, double *r)
-* 
-* The McStas standard analytic parametrization of the reflectivity.
-* The parameters are:
-* R0:      [1]    Low-angle reflectivity
-* Qc:      [AA-1] Critical scattering vector
-* alpha:   [AA]   Slope of reflectivity
-* m:       [1]    m-value of material. Zero means completely absorbing.
-* W:       [AA-1] Width of supermirror cut-off
-*****************************************************************************/
-void StdReflecFunc(double mc_pol_q, double *mc_pol_par, double *mc_pol_r) {
-    double R0    = mc_pol_par[0];
-    double Qc    = mc_pol_par[1];
-    double alpha = mc_pol_par[2];
-    double m     = mc_pol_par[3];
-    double W     = mc_pol_par[4];
-    double beta  = 0;
-    mc_pol_q     = fabs(mc_pol_q);
-    double arg;
-        
-    /* Simpler parametrization from Henrik Jacobsen uses these values that depend on m only.
-       double m_value=m*0.9853+0.1978;
-       double W=-0.0002*m_value+0.0022;
-       double alpha=0.2304*m_value+5.0944;
-       double beta=-7.6251*m_value+68.1137; 
-       If W and alpha are set to 0, use Henrik's approach for estimating these parameters
-       and apply the formulation:
-       arg = R0*0.5*(1-tanh(arg))*(1-alpha*(q-Qc)+beta*(q-Qc)*(q-Qc));
-    */  
-    if (W==0 && alpha==0) {
-      m=m*0.9853+0.1978;
-      W=-0.0002*m+0.0022;
-      alpha=0.2304*m+5.0944;
-      beta=-7.6251*m+68.1137;
-      if (m<=3) {
-	alpha=m;
-	beta=0;
-      }
-    }
-    
-    arg = W > 0 ? (mc_pol_q - m*Qc)/W : 11;
-
-    if (arg > 10 || m <= 0 || Qc <=0 || R0 <= 0) {
-      *mc_pol_r = 0;
-      return;
-    }
-    
-    if (m < 1) { Qc *= m; m=1; }
-    
-    if(mc_pol_q <= Qc) {      
-      *mc_pol_r = R0;
-      return;
-    }
-    
-    
-    *mc_pol_r = R0*0.5*(1 - tanh(arg))*(1 - alpha*(mc_pol_q - Qc) + beta*(mc_pol_q - Qc)*(mc_pol_q - Qc));
-    
-    return;
-  }
-
-/****************************************************************************
-* void TableReflecFunc(double q, t_Table *par, double *r) {
-* 
-* Looks up the reflectivity in a table using the routines in read_table-lib.
-*****************************************************************************/
-void TableReflecFunc(double mc_pol_q, t_Table *mc_pol_par, double *mc_pol_r) {
-    
-  *mc_pol_r = Table_Value(*mc_pol_par, mc_pol_q, 1);
-  if(*mc_pol_r>1)
-    *mc_pol_r = 1;
-  return;
-}
-
-/* end of ref-lib.c */
-
-#line 9890 "./NERA_guide.c"
+#line 10099 "./NERA_guide_ell_st_3part_parabol.c"
 
 /* Instrument parameters. */
-MCNUM mciplinh;
+MCNUM mcipell_length;
 MCNUM mciplouth;
-MCNUM mciplinw;
 MCNUM mciploutw;
 MCNUM mcipsample_size;
 MCNUM mcipsource_lambda_min;
@@ -9901,12 +10109,11 @@ MCNUM mcipsource_pulse_number;
 MCNUM mcipguide_width;
 MCNUM mcipguide_height;
 
-#define mcNUMIPAR 10
-int mcnumipar = 10;
+#define mcNUMIPAR 9
+int mcnumipar = 9;
 struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
-  "linh", &mciplinh, instr_type_double, "10.5", 
+  "ell_length", &mcipell_length, instr_type_double, "10", 
   "louth", &mciplouth, instr_type_double, "0.5", 
-  "linw", &mciplinw, instr_type_double, "10.5", 
   "loutw", &mciploutw, instr_type_double, "0.5", 
   "sample_size", &mcipsample_size, instr_type_double, "0.01", 
   "source_lambda_min", &mcipsource_lambda_min, instr_type_double, "0.1", 
@@ -9922,9 +10129,8 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
-#define linh mciplinh
+#define ell_length mcipell_length
 #define louth mciplouth
-#define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
 #define source_lambda_min mcipsource_lambda_min
@@ -9942,9 +10148,10 @@ double source_freq = 5; //in Hz
 double source_pulse_number_help;
 double source_optics_dist = 4.2;
 
-double ell_length = 100.8;
+double total_length = 100.8;
 double m_side = 6, m_top = 6;
 double distance_before_sample = 0.35;
+double guide_length_st;
 
 
 //background chopper
@@ -9960,7 +10167,7 @@ double chop_freq = 2.5;
 double delta;
 //temp
 //double delta = 0, chop_width_1 = 0.234, chop_width_2 = 0.235, chop_backgr_on = 1,chop_lambda_on = 1, Edes = 100,toffset = 0.013;
-#line 9963 "./NERA_guide.c"
+#line 10170 "./NERA_guide_ell_st_3part_parabol.c"
 #undef guide_height
 #undef guide_width
 #undef source_pulse_number
@@ -9968,9 +10175,8 @@ double delta;
 #undef source_lambda_min
 #undef sample_size
 #undef loutw
-#undef linw
 #undef louth
-#undef linh
+#undef ell_length
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -9978,17 +10184,17 @@ double delta;
 
 /* neutron state table at each component input (local coords) */
 /* [x, y, z, vx, vy, vz, t, sx, sy, sz, p] */
-MCNUM mccomp_storein[11*14];
+MCNUM mccomp_storein[11*13];
 /* Components position table (absolute and relative coords) */
-Coords mccomp_posa[14];
-Coords mccomp_posr[14];
+Coords mccomp_posa[13];
+Coords mccomp_posr[13];
 /* Counter for each comp to check for inactive ones */
-MCNUM  mcNCounter[14];
-MCNUM  mcPCounter[14];
-MCNUM  mcP2Counter[14];
-#define mcNUMCOMP 13 /* number of components */
+MCNUM  mcNCounter[13];
+MCNUM  mcPCounter[13];
+MCNUM  mcP2Counter[13];
+#define mcNUMCOMP 12 /* number of components */
 /* Counter for PROP ABSORB */
-MCNUM  mcAbsorbProp[14];
+MCNUM  mcAbsorbProp[13];
 /* Flag true when previous component acted on the neutron (SCATTER) */
 MCNUM mcScattered=0;
 /* Flag true when neutron should be restored (RESTORE) */
@@ -10033,61 +10239,7 @@ MCNUM mccSource_I3;
 MCNUM mccSource_zdepth;
 int mccSource_target_index;
 
-/* Definition parameters for component 'source_time_mon_one_pulse' [3]. */
-#define mccsource_time_mon_one_pulse_user1 FLT_MAX
-#define mccsource_time_mon_one_pulse_user2 FLT_MAX
-#define mccsource_time_mon_one_pulse_user3 FLT_MAX
-/* Setting parameters for component 'source_time_mon_one_pulse' [3]. */
-MCNUM mccsource_time_mon_one_pulse_xwidth;
-MCNUM mccsource_time_mon_one_pulse_yheight;
-MCNUM mccsource_time_mon_one_pulse_zdepth;
-MCNUM mccsource_time_mon_one_pulse_xmin;
-MCNUM mccsource_time_mon_one_pulse_xmax;
-MCNUM mccsource_time_mon_one_pulse_ymin;
-MCNUM mccsource_time_mon_one_pulse_ymax;
-MCNUM mccsource_time_mon_one_pulse_zmin;
-MCNUM mccsource_time_mon_one_pulse_zmax;
-MCNUM mccsource_time_mon_one_pulse_bins;
-MCNUM mccsource_time_mon_one_pulse_min;
-MCNUM mccsource_time_mon_one_pulse_max;
-MCNUM mccsource_time_mon_one_pulse_restore_neutron;
-MCNUM mccsource_time_mon_one_pulse_radius;
-char mccsource_time_mon_one_pulse_options[16384];
-char mccsource_time_mon_one_pulse_filename[16384];
-char mccsource_time_mon_one_pulse_geometry[16384];
-char mccsource_time_mon_one_pulse_username1[16384];
-char mccsource_time_mon_one_pulse_username2[16384];
-char mccsource_time_mon_one_pulse_username3[16384];
-int mccsource_time_mon_one_pulse_nowritefile;
-
-/* Definition parameters for component 'source_time_mon_many_pulses' [4]. */
-#define mccsource_time_mon_many_pulses_user1 FLT_MAX
-#define mccsource_time_mon_many_pulses_user2 FLT_MAX
-#define mccsource_time_mon_many_pulses_user3 FLT_MAX
-/* Setting parameters for component 'source_time_mon_many_pulses' [4]. */
-MCNUM mccsource_time_mon_many_pulses_xwidth;
-MCNUM mccsource_time_mon_many_pulses_yheight;
-MCNUM mccsource_time_mon_many_pulses_zdepth;
-MCNUM mccsource_time_mon_many_pulses_xmin;
-MCNUM mccsource_time_mon_many_pulses_xmax;
-MCNUM mccsource_time_mon_many_pulses_ymin;
-MCNUM mccsource_time_mon_many_pulses_ymax;
-MCNUM mccsource_time_mon_many_pulses_zmin;
-MCNUM mccsource_time_mon_many_pulses_zmax;
-MCNUM mccsource_time_mon_many_pulses_bins;
-MCNUM mccsource_time_mon_many_pulses_min;
-MCNUM mccsource_time_mon_many_pulses_max;
-MCNUM mccsource_time_mon_many_pulses_restore_neutron;
-MCNUM mccsource_time_mon_many_pulses_radius;
-char mccsource_time_mon_many_pulses_options[16384];
-char mccsource_time_mon_many_pulses_filename[16384];
-char mccsource_time_mon_many_pulses_geometry[16384];
-char mccsource_time_mon_many_pulses_username1[16384];
-char mccsource_time_mon_many_pulses_username2[16384];
-char mccsource_time_mon_many_pulses_username3[16384];
-int mccsource_time_mon_many_pulses_nowritefile;
-
-/* Setting parameters for component 'slit1' [5]. */
+/* Setting parameters for component 'slit1' [3]. */
 MCNUM mccslit1_xmin;
 MCNUM mccslit1_xmax;
 MCNUM mccslit1_ymin;
@@ -10096,7 +10248,7 @@ MCNUM mccslit1_radius;
 MCNUM mccslit1_xwidth;
 MCNUM mccslit1_yheight;
 
-/* Setting parameters for component 'slit2' [6]. */
+/* Setting parameters for component 'slit2' [4]. */
 MCNUM mccslit2_xmin;
 MCNUM mccslit2_xmax;
 MCNUM mccslit2_ymin;
@@ -10105,7 +10257,7 @@ MCNUM mccslit2_radius;
 MCNUM mccslit2_xwidth;
 MCNUM mccslit2_yheight;
 
-/* Setting parameters for component 'slit3' [7]. */
+/* Setting parameters for component 'slit3' [5]. */
 MCNUM mccslit3_xmin;
 MCNUM mccslit3_xmax;
 MCNUM mccslit3_ymin;
@@ -10114,7 +10266,7 @@ MCNUM mccslit3_radius;
 MCNUM mccslit3_xwidth;
 MCNUM mccslit3_yheight;
 
-/* Setting parameters for component 'slit4' [8]. */
+/* Setting parameters for component 'slit4' [6]. */
 MCNUM mccslit4_xmin;
 MCNUM mccslit4_xmax;
 MCNUM mccslit4_ymin;
@@ -10123,7 +10275,43 @@ MCNUM mccslit4_radius;
 MCNUM mccslit4_xwidth;
 MCNUM mccslit4_yheight;
 
-/* Setting parameters for component 'elliptic_guide' [10]. */
+/* Setting parameters for component 'CG_1' [8]. */
+MCNUM mccCG_1_w1;
+MCNUM mccCG_1_h1;
+MCNUM mccCG_1_w2;
+MCNUM mccCG_1_h2;
+MCNUM mccCG_1_l;
+MCNUM mccCG_1_R0;
+MCNUM mccCG_1_Qc;
+MCNUM mccCG_1_alpha;
+MCNUM mccCG_1_m;
+MCNUM mccCG_1_W;
+MCNUM mccCG_1_nslit;
+MCNUM mccCG_1_d;
+MCNUM mccCG_1_mleft;
+MCNUM mccCG_1_mright;
+MCNUM mccCG_1_mtop;
+MCNUM mccCG_1_mbottom;
+MCNUM mccCG_1_nhslit;
+MCNUM mccCG_1_G;
+MCNUM mccCG_1_aleft;
+MCNUM mccCG_1_aright;
+MCNUM mccCG_1_atop;
+MCNUM mccCG_1_abottom;
+MCNUM mccCG_1_wavy;
+MCNUM mccCG_1_wavy_z;
+MCNUM mccCG_1_wavy_tb;
+MCNUM mccCG_1_wavy_lr;
+MCNUM mccCG_1_chamfers;
+MCNUM mccCG_1_chamfers_z;
+MCNUM mccCG_1_chamfers_lr;
+MCNUM mccCG_1_chamfers_tb;
+MCNUM mccCG_1_nelements;
+MCNUM mccCG_1_nu;
+MCNUM mccCG_1_phase;
+char mccCG_1_reflect[16384];
+
+/* Setting parameters for component 'elliptic_guide' [9]. */
 char mccelliptic_guide_option[16384];
 MCNUM mccelliptic_guide_w1;
 MCNUM mccelliptic_guide_h1;
@@ -10144,11 +10332,11 @@ MCNUM mccelliptic_guide_segno;
 MCNUM mccelliptic_guide_curvature;
 MCNUM mccelliptic_guide_curvature_v;
 
-/* Definition parameters for component 'monitor_nd_xy' [12]. */
+/* Definition parameters for component 'monitor_nd_xy' [11]. */
 #define mccmonitor_nd_xy_user1 FLT_MAX
 #define mccmonitor_nd_xy_user2 FLT_MAX
 #define mccmonitor_nd_xy_user3 FLT_MAX
-/* Setting parameters for component 'monitor_nd_xy' [12]. */
+/* Setting parameters for component 'monitor_nd_xy' [11]. */
 MCNUM mccmonitor_nd_xy_xwidth;
 MCNUM mccmonitor_nd_xy_yheight;
 MCNUM mccmonitor_nd_xy_zdepth;
@@ -10196,7 +10384,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 10199 "./NERA_guide.c"
+#line 10387 "./NERA_guide_ell_st_3part_parabol.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10280,7 +10468,7 @@ time_t CurrentTime;
   double pTable_dymin;
   double pTable_dymax;
 
-#line 10283 "./NERA_guide.c"
+#line 10471 "./NERA_guide_ell_st_3part_parabol.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -10332,150 +10520,10 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'source_time_mon_one_pulse' [3]. */
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-#define xwidth mccsource_time_mon_one_pulse_xwidth
-#define yheight mccsource_time_mon_one_pulse_yheight
-#define zdepth mccsource_time_mon_one_pulse_zdepth
-#define xmin mccsource_time_mon_one_pulse_xmin
-#define xmax mccsource_time_mon_one_pulse_xmax
-#define ymin mccsource_time_mon_one_pulse_ymin
-#define ymax mccsource_time_mon_one_pulse_ymax
-#define zmin mccsource_time_mon_one_pulse_zmin
-#define zmax mccsource_time_mon_one_pulse_zmax
-#define bins mccsource_time_mon_one_pulse_bins
-#define min mccsource_time_mon_one_pulse_min
-#define max mccsource_time_mon_one_pulse_max
-#define restore_neutron mccsource_time_mon_one_pulse_restore_neutron
-#define radius mccsource_time_mon_one_pulse_radius
-#define options mccsource_time_mon_one_pulse_options
-#define filename mccsource_time_mon_one_pulse_filename
-#define geometry mccsource_time_mon_one_pulse_geometry
-#define username1 mccsource_time_mon_one_pulse_username1
-#define username2 mccsource_time_mon_one_pulse_username2
-#define username3 mccsource_time_mon_one_pulse_username3
-#define nowritefile mccsource_time_mon_one_pulse_nowritefile
-#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-  MonitornD_Defines_type DEFS;
-  MonitornD_Variables_type Vars;
-  MCDETECTOR detector;
-  off_struct offdata;
-#line 10372 "./NERA_guide.c"
-#undef nowritefile
-#undef username3
-#undef username2
-#undef username1
-#undef geometry
-#undef filename
-#undef options
-#undef radius
-#undef restore_neutron
-#undef max
-#undef min
-#undef bins
-#undef zmax
-#undef zmin
-#undef ymax
-#undef ymin
-#undef xmax
-#undef xmin
-#undef zdepth
-#undef yheight
-#undef xwidth
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-/* User declarations for component 'source_time_mon_many_pulses' [4]. */
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-#define xwidth mccsource_time_mon_many_pulses_xwidth
-#define yheight mccsource_time_mon_many_pulses_yheight
-#define zdepth mccsource_time_mon_many_pulses_zdepth
-#define xmin mccsource_time_mon_many_pulses_xmin
-#define xmax mccsource_time_mon_many_pulses_xmax
-#define ymin mccsource_time_mon_many_pulses_ymin
-#define ymax mccsource_time_mon_many_pulses_ymax
-#define zmin mccsource_time_mon_many_pulses_zmin
-#define zmax mccsource_time_mon_many_pulses_zmax
-#define bins mccsource_time_mon_many_pulses_bins
-#define min mccsource_time_mon_many_pulses_min
-#define max mccsource_time_mon_many_pulses_max
-#define restore_neutron mccsource_time_mon_many_pulses_restore_neutron
-#define radius mccsource_time_mon_many_pulses_radius
-#define options mccsource_time_mon_many_pulses_options
-#define filename mccsource_time_mon_many_pulses_filename
-#define geometry mccsource_time_mon_many_pulses_geometry
-#define username1 mccsource_time_mon_many_pulses_username1
-#define username2 mccsource_time_mon_many_pulses_username2
-#define username3 mccsource_time_mon_many_pulses_username3
-#define nowritefile mccsource_time_mon_many_pulses_nowritefile
-#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-  MonitornD_Defines_type DEFS;
-  MonitornD_Variables_type Vars;
-  MCDETECTOR detector;
-  off_struct offdata;
-#line 10442 "./NERA_guide.c"
-#undef nowritefile
-#undef username3
-#undef username2
-#undef username1
-#undef geometry
-#undef filename
-#undef options
-#undef radius
-#undef restore_neutron
-#undef max
-#undef min
-#undef bins
-#undef zmax
-#undef zmin
-#undef ymax
-#undef ymin
-#undef xmax
-#undef xmin
-#undef zdepth
-#undef yheight
-#undef xwidth
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-/* User declarations for component 'slit1' [5]. */
+/* User declarations for component 'slit1' [3]. */
 #define mccompcurname  slit1
 #define mccompcurtype  Slit
-#define mccompcurindex 5
+#define mccompcurindex 3
 #define xmin mccslit1_xmin
 #define xmax mccslit1_xmax
 #define ymin mccslit1_ymin
@@ -10494,10 +10542,10 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'slit2' [6]. */
+/* User declarations for component 'slit2' [4]. */
 #define mccompcurname  slit2
 #define mccompcurtype  Slit
-#define mccompcurindex 6
+#define mccompcurindex 4
 #define xmin mccslit2_xmin
 #define xmax mccslit2_xmax
 #define ymin mccslit2_ymin
@@ -10516,10 +10564,10 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'slit3' [7]. */
+/* User declarations for component 'slit3' [5]. */
 #define mccompcurname  slit3
 #define mccompcurtype  Slit
-#define mccompcurindex 7
+#define mccompcurindex 5
 #define xmin mccslit3_xmin
 #define xmax mccslit3_xmax
 #define ymin mccslit3_ymin
@@ -10538,10 +10586,10 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'slit4' [8]. */
+/* User declarations for component 'slit4' [6]. */
 #define mccompcurname  slit4
 #define mccompcurtype  Slit
-#define mccompcurindex 8
+#define mccompcurindex 6
 #define xmin mccslit4_xmin
 #define xmax mccslit4_xmax
 #define ymin mccslit4_ymin
@@ -10560,18 +10608,102 @@ time_t CurrentTime;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'Guide_start_arm' [9]. */
+/* User declarations for component 'Guide_start_arm' [7]. */
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 9
+#define mccompcurindex 7
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'elliptic_guide' [10]. */
+/* User declarations for component 'CG_1' [8]. */
+#define mccompcurname  CG_1
+#define mccompcurtype  Guide_gravity
+#define mccompcurindex 8
+#define GVars mccCG_1_GVars
+#define pTable mccCG_1_pTable
+#define w1 mccCG_1_w1
+#define h1 mccCG_1_h1
+#define w2 mccCG_1_w2
+#define h2 mccCG_1_h2
+#define l mccCG_1_l
+#define R0 mccCG_1_R0
+#define Qc mccCG_1_Qc
+#define alpha mccCG_1_alpha
+#define m mccCG_1_m
+#define W mccCG_1_W
+#define nslit mccCG_1_nslit
+#define d mccCG_1_d
+#define mleft mccCG_1_mleft
+#define mright mccCG_1_mright
+#define mtop mccCG_1_mtop
+#define mbottom mccCG_1_mbottom
+#define nhslit mccCG_1_nhslit
+#define G mccCG_1_G
+#define aleft mccCG_1_aleft
+#define aright mccCG_1_aright
+#define atop mccCG_1_atop
+#define abottom mccCG_1_abottom
+#define wavy mccCG_1_wavy
+#define wavy_z mccCG_1_wavy_z
+#define wavy_tb mccCG_1_wavy_tb
+#define wavy_lr mccCG_1_wavy_lr
+#define chamfers mccCG_1_chamfers
+#define chamfers_z mccCG_1_chamfers_z
+#define chamfers_lr mccCG_1_chamfers_lr
+#define chamfers_tb mccCG_1_chamfers_tb
+#define nelements mccCG_1_nelements
+#define nu mccCG_1_nu
+#define phase mccCG_1_phase
+#define reflect mccCG_1_reflect
+#line 334 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
+  Gravity_guide_Vars_type GVars;
+  t_Table pTable;
+#line 10662 "./NERA_guide_ell_st_3part_parabol.c"
+#undef reflect
+#undef phase
+#undef nu
+#undef nelements
+#undef chamfers_tb
+#undef chamfers_lr
+#undef chamfers_z
+#undef chamfers
+#undef wavy_lr
+#undef wavy_tb
+#undef wavy_z
+#undef wavy
+#undef abottom
+#undef atop
+#undef aright
+#undef aleft
+#undef G
+#undef nhslit
+#undef mbottom
+#undef mtop
+#undef mright
+#undef mleft
+#undef d
+#undef nslit
+#undef W
+#undef m
+#undef alpha
+#undef Qc
+#undef R0
+#undef l
+#undef h2
+#undef w2
+#undef h1
+#undef w1
+#undef pTable
+#undef GVars
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+/* User declarations for component 'elliptic_guide' [9]. */
 #define mccompcurname  elliptic_guide
 #define mccompcurtype  Guide_tapering
-#define mccompcurindex 10
+#define mccompcurindex 9
 #define w1c mccelliptic_guide_w1c
 #define w2c mccelliptic_guide_w2c
 #define ww mccelliptic_guide_ww
@@ -10630,7 +10762,7 @@ time_t CurrentTime;
 #define segno mccelliptic_guide_segno
 #define curvature mccelliptic_guide_curvature
 #define curvature_v mccelliptic_guide_curvature_v
-#line 96 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -10647,7 +10779,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10650 "./NERA_guide.c"
+#line 10782 "./NERA_guide_ell_st_3part_parabol.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -10710,18 +10842,18 @@ double rotation_h, rotation_v;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'guide_end' [11]. */
+/* User declarations for component 'guide_end' [10]. */
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
-#define mccompcurindex 11
+#define mccompcurindex 10
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'monitor_nd_xy' [12]. */
+/* User declarations for component 'monitor_nd_xy' [11]. */
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -10755,7 +10887,7 @@ double rotation_h, rotation_v;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 10758 "./NERA_guide.c"
+#line 10890 "./NERA_guide_ell_st_3part_parabol.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -10792,10 +10924,6 @@ Coords mcposaorigin, mcposrorigin;
 Rotation mcrotaorigin, mcrotrorigin;
 Coords mcposaSource, mcposrSource;
 Rotation mcrotaSource, mcrotrSource;
-Coords mcposasource_time_mon_one_pulse, mcposrsource_time_mon_one_pulse;
-Rotation mcrotasource_time_mon_one_pulse, mcrotrsource_time_mon_one_pulse;
-Coords mcposasource_time_mon_many_pulses, mcposrsource_time_mon_many_pulses;
-Rotation mcrotasource_time_mon_many_pulses, mcrotrsource_time_mon_many_pulses;
 Coords mcposaslit1, mcposrslit1;
 Rotation mcrotaslit1, mcrotrslit1;
 Coords mcposaslit2, mcposrslit2;
@@ -10806,6 +10934,8 @@ Coords mcposaslit4, mcposrslit4;
 Rotation mcrotaslit4, mcrotrslit4;
 Coords mcposaGuide_start_arm, mcposrGuide_start_arm;
 Rotation mcrotaGuide_start_arm, mcrotrGuide_start_arm;
+Coords mcposaCG_1, mcposrCG_1;
+Rotation mcrotaCG_1, mcrotrCG_1;
 Coords mcposaelliptic_guide, mcposrelliptic_guide;
 Rotation mcrotaelliptic_guide, mcrotrelliptic_guide;
 Coords mcposaguide_end, mcposrguide_end;
@@ -10822,9 +10952,8 @@ void mcinit(void) {
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
-#define linh mciplinh
+#define ell_length mcipell_length
 #define louth mciplouth
-#define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
 #define source_lambda_min mcipsource_lambda_min
@@ -10836,11 +10965,12 @@ void mcinit(void) {
 {
 source_pulse_number_help = source_pulse_number;
 source_I = source_I*source_pulse_number/4/PI;
+guide_length_st = total_length-ell_length;
 //LT0 = source_optics_dist +distrance_after_1chop+guide_length_before_2chop+chop_length/2+0.03+0.001;
 //phase_T0 = (LT0)/(sqrt(Edes)*SE2V)+toffset;
 //LT0 = 27.04/7912;
 }
-#line 10843 "./NERA_guide.c"
+#line 10973 "./NERA_guide_ell_st_3part_parabol.c"
 #undef guide_height
 #undef guide_width
 #undef source_pulse_number
@@ -10848,9 +10978,8 @@ source_I = source_I*source_pulse_number/4/PI;
 #undef source_lambda_min
 #undef sample_size
 #undef loutw
-#undef linw
 #undef louth
-#undef linh
+#undef ell_length
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -10868,31 +10997,31 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component origin. */
   /* Setting parameters for component origin. */
   SIG_MESSAGE("origin (Init:SetPar)");
-#line 39 "NERA_guide.instr"
+#line 39 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccorigin_profile, "NULL" ? "NULL" : "", 16384); else mccorigin_profile[0]='\0';
-#line 39 "NERA_guide.instr"
+#line 39 "NERA_guide_ell_st_3part_parabol.instr"
   mccorigin_percent = 10;
-#line 39 "NERA_guide.instr"
+#line 39 "NERA_guide_ell_st_3part_parabol.instr"
   mccorigin_flag_save = 0;
-#line 39 "NERA_guide.instr"
+#line 39 "NERA_guide_ell_st_3part_parabol.instr"
   mccorigin_minutes = 0;
-#line 10879 "./NERA_guide.c"
+#line 11008 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10886 "./NERA_guide.c"
+#line 11015 "./NERA_guide_ell_st_3part_parabol.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
-#line 43 "NERA_guide.instr"
+#line 43 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 43 "NERA_guide.instr"
+#line 43 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 43 "NERA_guide.instr"
+#line 43 "NERA_guide_ell_st_3part_parabol.instr"
     0);
-#line 10895 "./NERA_guide.c"
+#line 11024 "./NERA_guide_ell_st_3part_parabol.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -10903,85 +11032,85 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component Source. */
   /* Setting parameters for component Source. */
   SIG_MESSAGE("Source (Init:SetPar)");
-#line 129 "NERA_guide.instr"
+#line 129 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccSource_flux_file, "NULL" ? "NULL" : "", 16384); else mccSource_flux_file[0]='\0';
-#line 129 "NERA_guide.instr"
+#line 129 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccSource_xdiv_file, "NULL" ? "NULL" : "", 16384); else mccSource_xdiv_file[0]='\0';
-#line 129 "NERA_guide.instr"
+#line 129 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccSource_ydiv_file, "NULL" ? "NULL" : "", 16384); else mccSource_ydiv_file[0]='\0';
-#line 130 "NERA_guide.instr"
+#line 130 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_radius = 0.0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_dist = source_optics_dist;
-#line 47 "NERA_guide.instr"
+#line 47 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_focus_xw = mcipguide_width;
-#line 48 "NERA_guide.instr"
+#line 48 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_focus_yh = mcipguide_height;
-#line 130 "NERA_guide.instr"
+#line 130 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_focus_aw = 0;
-#line 130 "NERA_guide.instr"
+#line 130 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_focus_ah = 0;
-#line 131 "NERA_guide.instr"
+#line 131 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_E0 = 0;
-#line 131 "NERA_guide.instr"
+#line 131 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_dE = 0;
-#line 131 "NERA_guide.instr"
+#line 131 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_lambda0 = 0;
-#line 131 "NERA_guide.instr"
+#line 131 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_dlambda = 0;
-#line 49 "NERA_guide.instr"
+#line 49 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_I1 = source_I;
-#line 50 "NERA_guide.instr"
+#line 50 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_yheight = source_height;
-#line 51 "NERA_guide.instr"
+#line 51 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_xwidth = source_width;
-#line 132 "NERA_guide.instr"
+#line 132 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_verbose = 0;
-#line 52 "NERA_guide.instr"
+#line 52 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_T1 = source_T;
-#line 133 "NERA_guide.instr"
+#line 133 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_flux_file_perAA = 0;
-#line 133 "NERA_guide.instr"
+#line 133 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_flux_file_log = 0;
-#line 53 "NERA_guide.instr"
+#line 53 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_Lmin = mcipsource_lambda_min;
-#line 54 "NERA_guide.instr"
+#line 54 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_Lmax = mcipsource_lambda_max;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_Emin = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_Emax = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_T2 = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_I2 = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_T3 = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_I3 = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_zdepth = 0;
-#line 134 "NERA_guide.instr"
+#line 134 "NERA_guide_ell_st_3part_parabol.instr"
   mccSource_target_index = + 1;
-#line 10966 "./NERA_guide.c"
+#line 11095 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("Source (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10973 "./NERA_guide.c"
+#line 11102 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource, mctr1, mcrotrSource);
   mctc1 = coords_set(
-#line 55 "NERA_guide.instr"
+#line 55 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 55 "NERA_guide.instr"
+#line 55 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 55 "NERA_guide.instr"
+#line 55 "NERA_guide_ell_st_3part_parabol.instr"
     0);
-#line 10984 "./NERA_guide.c"
+#line 11113 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource = coords_add(mcposaorigin, mctc2);
@@ -10992,338 +11121,190 @@ source_I = source_I*source_pulse_number/4/PI;
   mccomp_posr[2] = mcposrSource;
   mcNCounter[2]  = mcPCounter[2] = mcP2Counter[2] = 0;
   mcAbsorbProp[2]= 0;
-    /* Component source_time_mon_one_pulse. */
-  /* Setting parameters for component source_time_mon_one_pulse. */
-  SIG_MESSAGE("source_time_mon_one_pulse (Init:SetPar)");
-#line 63 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_xwidth = 0.5;
-#line 64 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_yheight = 0.5;
-#line 201 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_zdepth = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_xmin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_xmax = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_ymin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_ymax = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_zmin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_zmax = 0;
-#line 65 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_bins = 100;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_min = -1e40;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_max = 1e40;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_restore_neutron = 0;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_radius = 0;
-#line 66 "NERA_guide.instr"
-  if("time limits = [0 0.00045]") strncpy(mccsource_time_mon_one_pulse_options, "time limits = [0 0.00045]" ? "time limits = [0 0.00045]" : "", 16384); else mccsource_time_mon_one_pulse_options[0]='\0';
-#line 204 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_one_pulse_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_filename[0]='\0';
-#line 204 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_one_pulse_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_geometry[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_one_pulse_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username1[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_one_pulse_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username2[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_one_pulse_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username3[0]='\0';
-#line 206 "NERA_guide.instr"
-  mccsource_time_mon_one_pulse_nowritefile = 0;
-#line 11040 "./NERA_guide.c"
-
-  SIG_MESSAGE("source_time_mon_one_pulse (Init:Place/Rotate)");
-  rot_set_rotation(mctr1,
-    (0.0)*DEG2RAD,
-    (0.0)*DEG2RAD,
-    (0.0)*DEG2RAD);
-#line 11047 "./NERA_guide.c"
-  rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_one_pulse);
-  rot_transpose(mcrotaSource, mctr1);
-  rot_mul(mcrotasource_time_mon_one_pulse, mctr1, mcrotrsource_time_mon_one_pulse);
-  mctc1 = coords_set(
-#line 67 "NERA_guide.instr"
-    0,
-#line 67 "NERA_guide.instr"
-    0,
-#line 67 "NERA_guide.instr"
-    0.0001);
-#line 11058 "./NERA_guide.c"
-  rot_transpose(mcrotaorigin, mctr1);
-  mctc2 = rot_apply(mctr1, mctc1);
-  mcposasource_time_mon_one_pulse = coords_add(mcposaorigin, mctc2);
-  mctc1 = coords_sub(mcposaSource, mcposasource_time_mon_one_pulse);
-  mcposrsource_time_mon_one_pulse = rot_apply(mcrotasource_time_mon_one_pulse, mctc1);
-  mcDEBUG_COMPONENT("source_time_mon_one_pulse", mcposasource_time_mon_one_pulse, mcrotasource_time_mon_one_pulse)
-  mccomp_posa[3] = mcposasource_time_mon_one_pulse;
-  mccomp_posr[3] = mcposrsource_time_mon_one_pulse;
-  mcNCounter[3]  = mcPCounter[3] = mcP2Counter[3] = 0;
-  mcAbsorbProp[3]= 0;
-    /* Component source_time_mon_many_pulses. */
-  /* Setting parameters for component source_time_mon_many_pulses. */
-  SIG_MESSAGE("source_time_mon_many_pulses (Init:SetPar)");
-#line 70 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_xwidth = 0.5;
-#line 71 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_yheight = 0.5;
-#line 201 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_zdepth = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_xmin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_xmax = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_ymin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_ymax = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_zmin = 0;
-#line 202 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_zmax = 0;
-#line 72 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_bins = 100;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_min = -1e40;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_max = 1e40;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_restore_neutron = 0;
-#line 203 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_radius = 0;
-#line 73 "NERA_guide.instr"
-  if("time limits = [0 1]") strncpy(mccsource_time_mon_many_pulses_options, "time limits = [0 1]" ? "time limits = [0 1]" : "", 16384); else mccsource_time_mon_many_pulses_options[0]='\0';
-#line 204 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_many_pulses_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_filename[0]='\0';
-#line 204 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_many_pulses_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_geometry[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_many_pulses_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username1[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_many_pulses_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username2[0]='\0';
-#line 205 "NERA_guide.instr"
-  if("NULL") strncpy(mccsource_time_mon_many_pulses_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username3[0]='\0';
-#line 206 "NERA_guide.instr"
-  mccsource_time_mon_many_pulses_nowritefile = 0;
-#line 11114 "./NERA_guide.c"
-
-  SIG_MESSAGE("source_time_mon_many_pulses (Init:Place/Rotate)");
-  rot_set_rotation(mctr1,
-    (0.0)*DEG2RAD,
-    (0.0)*DEG2RAD,
-    (0.0)*DEG2RAD);
-#line 11121 "./NERA_guide.c"
-  rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_many_pulses);
-  rot_transpose(mcrotasource_time_mon_one_pulse, mctr1);
-  rot_mul(mcrotasource_time_mon_many_pulses, mctr1, mcrotrsource_time_mon_many_pulses);
-  mctc1 = coords_set(
-#line 74 "NERA_guide.instr"
-    0,
-#line 74 "NERA_guide.instr"
-    0,
-#line 74 "NERA_guide.instr"
-    0.00011);
-#line 11132 "./NERA_guide.c"
-  rot_transpose(mcrotaorigin, mctr1);
-  mctc2 = rot_apply(mctr1, mctc1);
-  mcposasource_time_mon_many_pulses = coords_add(mcposaorigin, mctc2);
-  mctc1 = coords_sub(mcposasource_time_mon_one_pulse, mcposasource_time_mon_many_pulses);
-  mcposrsource_time_mon_many_pulses = rot_apply(mcrotasource_time_mon_many_pulses, mctc1);
-  mcDEBUG_COMPONENT("source_time_mon_many_pulses", mcposasource_time_mon_many_pulses, mcrotasource_time_mon_many_pulses)
-  mccomp_posa[4] = mcposasource_time_mon_many_pulses;
-  mccomp_posr[4] = mcposrsource_time_mon_many_pulses;
-  mcNCounter[4]  = mcPCounter[4] = mcP2Counter[4] = 0;
-  mcAbsorbProp[4]= 0;
     /* Component slit1. */
   /* Setting parameters for component slit1. */
   SIG_MESSAGE("slit1 (Init:SetPar)");
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_xmin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_xmax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_ymin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_ymax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_radius = 0;
-#line 77 "NERA_guide.instr"
+#line 77 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_xwidth = 0.18;
-#line 78 "NERA_guide.instr"
+#line 78 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit1_yheight = 0.42;
-#line 11160 "./NERA_guide.c"
+#line 11141 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11167 "./NERA_guide.c"
+#line 11148 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
-  rot_transpose(mcrotasource_time_mon_many_pulses, mctr1);
+  rot_transpose(mcrotaSource, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
   mctc1 = coords_set(
-#line 79 "NERA_guide.instr"
+#line 79 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 79 "NERA_guide.instr"
+#line 79 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 79 "NERA_guide.instr"
+#line 79 "NERA_guide_ell_st_3part_parabol.instr"
     1.21);
-#line 11178 "./NERA_guide.c"
+#line 11159 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
-  mctc1 = coords_sub(mcposasource_time_mon_many_pulses, mcposaslit1);
+  mctc1 = coords_sub(mcposaSource, mcposaslit1);
   mcposrslit1 = rot_apply(mcrotaslit1, mctc1);
   mcDEBUG_COMPONENT("slit1", mcposaslit1, mcrotaslit1)
-  mccomp_posa[5] = mcposaslit1;
-  mccomp_posr[5] = mcposrslit1;
-  mcNCounter[5]  = mcPCounter[5] = mcP2Counter[5] = 0;
-  mcAbsorbProp[5]= 0;
+  mccomp_posa[3] = mcposaslit1;
+  mccomp_posr[3] = mcposrslit1;
+  mcNCounter[3]  = mcPCounter[3] = mcP2Counter[3] = 0;
+  mcAbsorbProp[3]= 0;
     /* Component slit2. */
   /* Setting parameters for component slit2. */
   SIG_MESSAGE("slit2 (Init:SetPar)");
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_xmin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_xmax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_ymin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_ymax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_radius = 0;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_xwidth = 0.28;
-#line 83 "NERA_guide.instr"
+#line 83 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit2_yheight = 0.42;
-#line 11206 "./NERA_guide.c"
+#line 11187 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11213 "./NERA_guide.c"
+#line 11194 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
   mctc1 = coords_set(
-#line 84 "NERA_guide.instr"
+#line 84 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 84 "NERA_guide.instr"
+#line 84 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 84 "NERA_guide.instr"
+#line 84 "NERA_guide_ell_st_3part_parabol.instr"
     1.73);
-#line 11224 "./NERA_guide.c"
+#line 11205 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaorigin, mctc2);
   mctc1 = coords_sub(mcposaslit1, mcposaslit2);
   mcposrslit2 = rot_apply(mcrotaslit2, mctc1);
   mcDEBUG_COMPONENT("slit2", mcposaslit2, mcrotaslit2)
-  mccomp_posa[6] = mcposaslit2;
-  mccomp_posr[6] = mcposrslit2;
-  mcNCounter[6]  = mcPCounter[6] = mcP2Counter[6] = 0;
-  mcAbsorbProp[6]= 0;
+  mccomp_posa[4] = mcposaslit2;
+  mccomp_posr[4] = mcposrslit2;
+  mcNCounter[4]  = mcPCounter[4] = mcP2Counter[4] = 0;
+  mcAbsorbProp[4]= 0;
     /* Component slit3. */
   /* Setting parameters for component slit3. */
   SIG_MESSAGE("slit3 (Init:SetPar)");
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_xmin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_xmax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_ymin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_ymax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_radius = 0;
-#line 87 "NERA_guide.instr"
+#line 87 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_xwidth = 0.37;
-#line 88 "NERA_guide.instr"
+#line 88 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit3_yheight = 0.42;
-#line 11252 "./NERA_guide.c"
+#line 11233 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11259 "./NERA_guide.c"
+#line 11240 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
   mctc1 = coords_set(
-#line 89 "NERA_guide.instr"
+#line 89 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 89 "NERA_guide.instr"
+#line 89 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 89 "NERA_guide.instr"
+#line 89 "NERA_guide_ell_st_3part_parabol.instr"
     2.1);
-#line 11270 "./NERA_guide.c"
+#line 11251 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaorigin, mctc2);
   mctc1 = coords_sub(mcposaslit2, mcposaslit3);
   mcposrslit3 = rot_apply(mcrotaslit3, mctc1);
   mcDEBUG_COMPONENT("slit3", mcposaslit3, mcrotaslit3)
-  mccomp_posa[7] = mcposaslit3;
-  mccomp_posr[7] = mcposrslit3;
-  mcNCounter[7]  = mcPCounter[7] = mcP2Counter[7] = 0;
-  mcAbsorbProp[7]= 0;
+  mccomp_posa[5] = mcposaslit3;
+  mccomp_posr[5] = mcposrslit3;
+  mcNCounter[5]  = mcPCounter[5] = mcP2Counter[5] = 0;
+  mcAbsorbProp[5]= 0;
     /* Component slit4. */
   /* Setting parameters for component slit4. */
   SIG_MESSAGE("slit4 (Init:SetPar)");
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_xmin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_xmax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_ymin = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_ymax = 0;
-#line 46 "NERA_guide.instr"
+#line 46 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_radius = 0;
-#line 92 "NERA_guide.instr"
+#line 92 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_xwidth = 0.47;
-#line 93 "NERA_guide.instr"
+#line 93 "NERA_guide_ell_st_3part_parabol.instr"
   mccslit4_yheight = 0.42;
-#line 11298 "./NERA_guide.c"
+#line 11279 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11305 "./NERA_guide.c"
+#line 11286 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
   mctc1 = coords_set(
-#line 94 "NERA_guide.instr"
+#line 94 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 94 "NERA_guide.instr"
+#line 94 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 94 "NERA_guide.instr"
+#line 94 "NERA_guide_ell_st_3part_parabol.instr"
     2.52);
-#line 11316 "./NERA_guide.c"
+#line 11297 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaorigin, mctc2);
   mctc1 = coords_sub(mcposaslit3, mcposaslit4);
   mcposrslit4 = rot_apply(mcrotaslit4, mctc1);
   mcDEBUG_COMPONENT("slit4", mcposaslit4, mcrotaslit4)
-  mccomp_posa[8] = mcposaslit4;
-  mccomp_posr[8] = mcposrslit4;
-  mcNCounter[8]  = mcPCounter[8] = mcP2Counter[8] = 0;
-  mcAbsorbProp[8]= 0;
+  mccomp_posa[6] = mcposaslit4;
+  mccomp_posr[6] = mcposrslit4;
+  mcNCounter[6]  = mcPCounter[6] = mcP2Counter[6] = 0;
+  mcAbsorbProp[6]= 0;
     /* Component Guide_start_arm. */
   /* Setting parameters for component Guide_start_arm. */
   SIG_MESSAGE("Guide_start_arm (Init:SetPar)");
@@ -11333,98 +11314,198 @@ source_I = source_I*source_pulse_number/4/PI;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11336 "./NERA_guide.c"
+#line 11317 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
   mctc1 = coords_set(
-#line 97 "NERA_guide.instr"
+#line 97 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 97 "NERA_guide.instr"
+#line 97 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 97 "NERA_guide.instr"
+#line 97 "NERA_guide_ell_st_3part_parabol.instr"
     source_optics_dist);
-#line 11347 "./NERA_guide.c"
+#line 11328 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
   mctc1 = coords_sub(mcposaslit4, mcposaGuide_start_arm);
   mcposrGuide_start_arm = rot_apply(mcrotaGuide_start_arm, mctc1);
   mcDEBUG_COMPONENT("Guide_start_arm", mcposaGuide_start_arm, mcrotaGuide_start_arm)
-  mccomp_posa[9] = mcposaGuide_start_arm;
-  mccomp_posr[9] = mcposrGuide_start_arm;
-  mcNCounter[9]  = mcPCounter[9] = mcP2Counter[9] = 0;
-  mcAbsorbProp[9]= 0;
+  mccomp_posa[7] = mcposaGuide_start_arm;
+  mccomp_posr[7] = mcposrGuide_start_arm;
+  mcNCounter[7]  = mcPCounter[7] = mcP2Counter[7] = 0;
+  mcAbsorbProp[7]= 0;
+    /* Component CG_1. */
+  /* Setting parameters for component CG_1. */
+  SIG_MESSAGE("CG_1 (Init:SetPar)");
+#line 63 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_w1 = mcipguide_width;
+#line 63 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_h1 = mcipguide_height;
+#line 113 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_w2 = 0;
+#line 113 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_h2 = 0;
+#line 63 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_l = guide_length_st;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_R0 = 0.995;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_Qc = 0.0218;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_alpha = 4.38;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_m = 1.0;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_W = 0.003;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_nslit = 1;
+#line 114 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_d = 0.0005;
+#line 63 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_mleft = 6;
+#line 63 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_mright = 6;
+#line 64 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_mtop = 6;
+#line 64 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_mbottom = 6;
+#line 115 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_nhslit = 1;
+#line 64 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_G = -9.81;
+#line 116 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_aleft = -1;
+#line 116 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_aright = -1;
+#line 116 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_atop = -1;
+#line 116 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_abottom = -1;
+#line 117 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_wavy = 0;
+#line 117 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_wavy_z = 0;
+#line 117 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_wavy_tb = 0;
+#line 117 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_wavy_lr = 0;
+#line 118 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_chamfers = 0;
+#line 118 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_chamfers_z = 0;
+#line 118 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_chamfers_lr = 0;
+#line 118 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_chamfers_tb = 0;
+#line 118 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_nelements = 1;
+#line 119 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_nu = 0;
+#line 119 "NERA_guide_ell_st_3part_parabol.instr"
+  mccCG_1_phase = 0;
+#line 119 "NERA_guide_ell_st_3part_parabol.instr"
+  if("NULL") strncpy(mccCG_1_reflect, "NULL" ? "NULL" : "", 16384); else mccCG_1_reflect[0]='\0';
+#line 11410 "./NERA_guide_ell_st_3part_parabol.c"
+
+  SIG_MESSAGE("CG_1 (Init:Place/Rotate)");
+  rot_set_rotation(mctr1,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD);
+#line 11417 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaCG_1);
+  rot_transpose(mcrotaGuide_start_arm, mctr1);
+  rot_mul(mcrotaCG_1, mctr1, mcrotrCG_1);
+  mctc1 = coords_set(
+#line 65 "NERA_guide_ell_st_3part_parabol.instr"
+    0,
+#line 65 "NERA_guide_ell_st_3part_parabol.instr"
+    0,
+#line 65 "NERA_guide_ell_st_3part_parabol.instr"
+    0.01);
+#line 11428 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_transpose(mcrotaGuide_start_arm, mctr1);
+  mctc2 = rot_apply(mctr1, mctc1);
+  mcposaCG_1 = coords_add(mcposaGuide_start_arm, mctc2);
+  mctc1 = coords_sub(mcposaGuide_start_arm, mcposaCG_1);
+  mcposrCG_1 = rot_apply(mcrotaCG_1, mctc1);
+  mcDEBUG_COMPONENT("CG_1", mcposaCG_1, mcrotaCG_1)
+  mccomp_posa[8] = mcposaCG_1;
+  mccomp_posr[8] = mcposrCG_1;
+  mcNCounter[8]  = mcPCounter[8] = mcP2Counter[8] = 0;
+  mcAbsorbProp[8]= 0;
     /* Component elliptic_guide. */
   /* Setting parameters for component elliptic_guide. */
   SIG_MESSAGE("elliptic_guide (Init:SetPar)");
-#line 60 "NERA_guide.instr"
-  if("elliptical") strncpy(mccelliptic_guide_option, "elliptical" ? "elliptical" : "", 16384); else mccelliptic_guide_option[0]='\0';
-#line 61 "NERA_guide.instr"
+#line 68 "NERA_guide_ell_st_3part_parabol.instr"
+  if("parabolical") strncpy(mccelliptic_guide_option, "parabolical" ? "parabolical" : "", 16384); else mccelliptic_guide_option[0]='\0';
+#line 69 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_w1 = mcipguide_width;
-#line 62 "NERA_guide.instr"
+#line 70 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_h1 = mcipguide_height;
-#line 63 "NERA_guide.instr"
-  mccelliptic_guide_l = ell_length;
-#line 66 "NERA_guide.instr"
-  mccelliptic_guide_linw = mciplinw;
-#line 67 "NERA_guide.instr"
+#line 71 "NERA_guide_ell_st_3part_parabol.instr"
+  mccelliptic_guide_l = mcipell_length;
+#line 81 "NERA_guide_ell_st_3part_parabol.instr"
+  mccelliptic_guide_linw = 0;
+#line 73 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_loutw = mciploutw;
-#line 64 "NERA_guide.instr"
-  mccelliptic_guide_linh = mciplinh;
-#line 65 "NERA_guide.instr"
+#line 81 "NERA_guide_ell_st_3part_parabol.instr"
+  mccelliptic_guide_linh = 0;
+#line 72 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_louth = mciplouth;
-#line 81 "NERA_guide.instr"
+#line 81 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_R0 = 0.99;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_Qcx = 0.021;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_Qcy = 0.021;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_alphax = 6.07;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_alphay = 6.07;
-#line 82 "NERA_guide.instr"
+#line 82 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_W = 0.003;
-#line 68 "NERA_guide.instr"
+#line 74 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_mx = m_side;
-#line 69 "NERA_guide.instr"
+#line 75 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_my = m_top;
-#line 83 "NERA_guide.instr"
+#line 83 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_segno = 800;
-#line 83 "NERA_guide.instr"
+#line 83 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_curvature = 0;
-#line 83 "NERA_guide.instr"
+#line 83 "NERA_guide_ell_st_3part_parabol.instr"
   mccelliptic_guide_curvature_v = 0;
-#line 11399 "./NERA_guide.c"
+#line 11480 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("elliptic_guide (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11406 "./NERA_guide.c"
-  rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaelliptic_guide);
-  rot_transpose(mcrotaGuide_start_arm, mctr1);
+#line 11487 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_mul(mctr1, mcrotaCG_1, mcrotaelliptic_guide);
+  rot_transpose(mcrotaCG_1, mctr1);
   rot_mul(mcrotaelliptic_guide, mctr1, mcrotrelliptic_guide);
   mctc1 = coords_set(
-#line 70 "NERA_guide.instr"
+#line 76 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 70 "NERA_guide.instr"
+#line 76 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 70 "NERA_guide.instr"
-    0.01);
-#line 11417 "./NERA_guide.c"
-  rot_transpose(mcrotaGuide_start_arm, mctr1);
+#line 76 "NERA_guide_ell_st_3part_parabol.instr"
+    guide_length_st + 0.001);
+#line 11498 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_transpose(mcrotaCG_1, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposaelliptic_guide = coords_add(mcposaGuide_start_arm, mctc2);
-  mctc1 = coords_sub(mcposaGuide_start_arm, mcposaelliptic_guide);
+  mcposaelliptic_guide = coords_add(mcposaCG_1, mctc2);
+  mctc1 = coords_sub(mcposaCG_1, mcposaelliptic_guide);
   mcposrelliptic_guide = rot_apply(mcrotaelliptic_guide, mctc1);
   mcDEBUG_COMPONENT("elliptic_guide", mcposaelliptic_guide, mcrotaelliptic_guide)
-  mccomp_posa[10] = mcposaelliptic_guide;
-  mccomp_posr[10] = mcposrelliptic_guide;
-  mcNCounter[10]  = mcPCounter[10] = mcP2Counter[10] = 0;
-  mcAbsorbProp[10]= 0;
+  mccomp_posa[9] = mcposaelliptic_guide;
+  mccomp_posr[9] = mcposrelliptic_guide;
+  mcNCounter[9]  = mcPCounter[9] = mcP2Counter[9] = 0;
+  mcAbsorbProp[9]= 0;
     /* Component guide_end. */
   /* Setting parameters for component guide_end. */
   SIG_MESSAGE("guide_end (Init:SetPar)");
@@ -11434,102 +11515,102 @@ source_I = source_I*source_pulse_number/4/PI;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11437 "./NERA_guide.c"
-  rot_mul(mctr1, mcrotaelliptic_guide, mcrotaguide_end);
+#line 11518 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_mul(mctr1, mcrotaCG_1, mcrotaguide_end);
   rot_transpose(mcrotaelliptic_guide, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
   mctc1 = coords_set(
-#line 73 "NERA_guide.instr"
+#line 80 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 73 "NERA_guide.instr"
+#line 80 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 73 "NERA_guide.instr"
-    ell_length + 0.001);
-#line 11448 "./NERA_guide.c"
-  rot_transpose(mcrotaelliptic_guide, mctr1);
+#line 80 "NERA_guide_ell_st_3part_parabol.instr"
+    total_length + 0.01);
+#line 11529 "./NERA_guide_ell_st_3part_parabol.c"
+  rot_transpose(mcrotaCG_1, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposaguide_end = coords_add(mcposaelliptic_guide, mctc2);
+  mcposaguide_end = coords_add(mcposaCG_1, mctc2);
   mctc1 = coords_sub(mcposaelliptic_guide, mcposaguide_end);
   mcposrguide_end = rot_apply(mcrotaguide_end, mctc1);
   mcDEBUG_COMPONENT("guide_end", mcposaguide_end, mcrotaguide_end)
-  mccomp_posa[11] = mcposaguide_end;
-  mccomp_posr[11] = mcposrguide_end;
-  mcNCounter[11]  = mcPCounter[11] = mcP2Counter[11] = 0;
-  mcAbsorbProp[11]= 0;
+  mccomp_posa[10] = mcposaguide_end;
+  mccomp_posr[10] = mcposrguide_end;
+  mcNCounter[10]  = mcPCounter[10] = mcP2Counter[10] = 0;
+  mcAbsorbProp[10]= 0;
     /* Component monitor_nd_xy. */
   /* Setting parameters for component monitor_nd_xy. */
   SIG_MESSAGE("monitor_nd_xy (Init:SetPar)");
-#line 98 "NERA_guide.instr"
+#line 105 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_xwidth = mcipsample_size;
-#line 98 "NERA_guide.instr"
+#line 105 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_yheight = mcipsample_size;
-#line 201 "NERA_guide.instr"
+#line 201 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_zdepth = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_xmin = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_xmax = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_ymin = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_ymax = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_zmin = 0;
-#line 202 "NERA_guide.instr"
+#line 202 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_zmax = 0;
-#line 98 "NERA_guide.instr"
+#line 105 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_bins = 100;
-#line 203 "NERA_guide.instr"
+#line 203 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_min = -1e40;
-#line 203 "NERA_guide.instr"
+#line 203 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_max = 1e40;
-#line 98 "NERA_guide.instr"
+#line 105 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_restore_neutron = 1;
-#line 203 "NERA_guide.instr"
+#line 203 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_radius = 0;
-#line 99 "NERA_guide.instr"
+#line 106 "NERA_guide_ell_st_3part_parabol.instr"
   if("x y") strncpy(mccmonitor_nd_xy_options, "x y" ? "x y" : "", 16384); else mccmonitor_nd_xy_options[0]='\0';
-#line 204 "NERA_guide.instr"
+#line 204 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_filename[0]='\0';
-#line 204 "NERA_guide.instr"
+#line 204 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_geometry[0]='\0';
-#line 205 "NERA_guide.instr"
+#line 205 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username1[0]='\0';
-#line 205 "NERA_guide.instr"
+#line 205 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username2[0]='\0';
-#line 205 "NERA_guide.instr"
+#line 205 "NERA_guide_ell_st_3part_parabol.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username3[0]='\0';
-#line 206 "NERA_guide.instr"
+#line 206 "NERA_guide_ell_st_3part_parabol.instr"
   mccmonitor_nd_xy_nowritefile = 0;
-#line 11504 "./NERA_guide.c"
+#line 11585 "./NERA_guide_ell_st_3part_parabol.c"
 
   SIG_MESSAGE("monitor_nd_xy (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11511 "./NERA_guide.c"
+#line 11592 "./NERA_guide_ell_st_3part_parabol.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_xy);
   rot_transpose(mcrotaguide_end, mctr1);
   rot_mul(mcrotamonitor_nd_xy, mctr1, mcrotrmonitor_nd_xy);
   mctc1 = coords_set(
-#line 100 "NERA_guide.instr"
+#line 107 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 100 "NERA_guide.instr"
+#line 107 "NERA_guide_ell_st_3part_parabol.instr"
     0,
-#line 100 "NERA_guide.instr"
+#line 107 "NERA_guide_ell_st_3part_parabol.instr"
     distance_before_sample);
-#line 11522 "./NERA_guide.c"
+#line 11603 "./NERA_guide_ell_st_3part_parabol.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_xy = coords_add(mcposaguide_end, mctc2);
   mctc1 = coords_sub(mcposaguide_end, mcposamonitor_nd_xy);
   mcposrmonitor_nd_xy = rot_apply(mcrotamonitor_nd_xy, mctc1);
   mcDEBUG_COMPONENT("monitor_nd_xy", mcposamonitor_nd_xy, mcrotamonitor_nd_xy)
-  mccomp_posa[12] = mcposamonitor_nd_xy;
-  mccomp_posr[12] = mcposrmonitor_nd_xy;
-  mcNCounter[12]  = mcPCounter[12] = mcP2Counter[12] = 0;
-  mcAbsorbProp[12]= 0;
+  mccomp_posa[11] = mcposamonitor_nd_xy;
+  mccomp_posr[11] = mcposrmonitor_nd_xy;
+  mcNCounter[11]  = mcPCounter[11] = mcP2Counter[11] = 0;
+  mcAbsorbProp[11]= 0;
   /* Component initializations. */
   /* Initializations for component origin. */
   SIG_MESSAGE("origin (Init)");
@@ -11556,7 +11637,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 11559 "./NERA_guide.c"
+#line 11640 "./NERA_guide_ell_st_3part_parabol.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -11893,7 +11974,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
       printf("Source_gen: component %s unactivated", NAME_CURRENT_COMP);
   );
 }
-#line 11896 "./NERA_guide.c"
+#line 11977 "./NERA_guide_ell_st_3part_parabol.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -11945,301 +12026,11 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* Initializations for component source_time_mon_one_pulse. */
-  SIG_MESSAGE("source_time_mon_one_pulse (Init)");
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-#define xwidth mccsource_time_mon_one_pulse_xwidth
-#define yheight mccsource_time_mon_one_pulse_yheight
-#define zdepth mccsource_time_mon_one_pulse_zdepth
-#define xmin mccsource_time_mon_one_pulse_xmin
-#define xmax mccsource_time_mon_one_pulse_xmax
-#define ymin mccsource_time_mon_one_pulse_ymin
-#define ymax mccsource_time_mon_one_pulse_ymax
-#define zmin mccsource_time_mon_one_pulse_zmin
-#define zmax mccsource_time_mon_one_pulse_zmax
-#define bins mccsource_time_mon_one_pulse_bins
-#define min mccsource_time_mon_one_pulse_min
-#define max mccsource_time_mon_one_pulse_max
-#define restore_neutron mccsource_time_mon_one_pulse_restore_neutron
-#define radius mccsource_time_mon_one_pulse_radius
-#define options mccsource_time_mon_one_pulse_options
-#define filename mccsource_time_mon_one_pulse_filename
-#define geometry mccsource_time_mon_one_pulse_geometry
-#define username1 mccsource_time_mon_one_pulse_username1
-#define username2 mccsource_time_mon_one_pulse_username2
-#define username3 mccsource_time_mon_one_pulse_username3
-#define nowritefile mccsource_time_mon_one_pulse_nowritefile
-#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  char tmp[CHAR_BUF_LENGTH];
-  strcpy(Vars.compcurname, NAME_CURRENT_COMP);
-  if (options != NULL)
-    strncpy(Vars.option, options, CHAR_BUF_LENGTH);
-  else {
-    strcpy(Vars.option, "x y");
-    printf("Monitor_nD: %s has no option specified. Setting to PSD ('x y') monitor.\n", NAME_CURRENT_COMP);
-  }
-  Vars.compcurpos = POS_A_CURRENT_COMP;
-
-  if (strstr(Vars.option, "source"))
-    strcat(Vars.option, " list, x y z vx vy vz t sx sy sz ");
-
-  if (bins) { sprintf(tmp, " all bins=%ld ", (long)bins); strcat(Vars.option, tmp); }
-  if (min > -FLT_MAX && max < FLT_MAX) { sprintf(tmp, " all limits=[%g %g]", min, max); strcat(Vars.option, tmp); }
-  else if (min > -FLT_MAX) { sprintf(tmp, " all min=%g", min); strcat(Vars.option, tmp); }
-  else if (max <  FLT_MAX) { sprintf(tmp, " all max=%g", max); strcat(Vars.option, tmp); }
-
-  strncpy(Vars.UserName1,
-    username1 && strlen(username1) && strcmp(username1, "0") && strcmp(username1, "NULL") ?
-    username1 : "", 128);
-  strncpy(Vars.UserName2,
-    username2 && strlen(username2) && strcmp(username2, "0") && strcmp(username2, "NULL") ?
-    username2 : "", 128);
-  strncpy(Vars.UserName3,
-    username3 && strlen(username3) && strcmp(username3, "0") && strcmp(username3, "NULL") ?
-    username3 : "", 128);
-  if (radius) {
-    xwidth = zdepth = 2*radius;
-    if (yheight && !strstr(Vars.option, "cylinder") && !strstr(Vars.option, "banana") && !strstr(Vars.option, "sphere"))
-      strcat(Vars.option, " banana");
-    else if (!yheight && !strstr(Vars.option ,"sphere")) {
-      strcat(Vars.option, " sphere");
-      yheight=2*radius;
-    }
-  }
-  int offflag=0;
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-    if (!off_init(  geometry, xwidth, yheight, zdepth, 1, &offdata )) {
-      printf("Monitor_nD: %s could not initiate the OFF geometry %s. \n"
-             "            Defaulting to normal Monitor dimensions.\n",
-             NAME_CURRENT_COMP, geometry);
-      strcpy(geometry, "");
-    } else {
-      offflag=1;
-    }
-
-  if (!radius && !xwidth && !yheight && !zdepth && !xmin && !xmax && !ymin && !ymax &&
-    !strstr(Vars.option, "previous") && (!geometry || !strlen(geometry)))
-    exit(printf("Monitor_nD: %s has no dimension specified. Aborting (radius, xwidth, yheight, zdepth, previous, geometry).\n", NAME_CURRENT_COMP));
-
-  Monitor_nD_Init(&DEFS, &Vars, xwidth, yheight, zdepth, xmin,xmax,ymin,ymax,zmin,zmax,offflag);
-
-  if (Vars.Flag_OFF) {
-    offdata.mantidflag=Vars.Flag_mantid;
-    offdata.mantidoffset=Vars.Coord_Min[Vars.Coord_Number-1];
-  }
-
-
-  if (filename && strlen(filename) && strcmp(filename,"NULL") && strcmp(filename,"0"))
-    strncpy(Vars.Mon_File, filename, 128);
-
-  /* check if user given filename with ext will be used more than once */
-  if ( ((Vars.Flag_Multiple && Vars.Coord_Number > 1) || Vars.Flag_List) && strchr(Vars.Mon_File,'.') )
-  { char *XY; XY = strrchr(Vars.Mon_File,'.'); *XY='_'; }
-
-  if (restore_neutron) Vars.Flag_parallel=1;
-  detector.m = 0;
-
-#ifdef USE_MPI
-MPI_MASTER(
-  if (strstr(Vars.option, "auto") && mpi_node_count > 1)
-    printf("Monitor_nD: %s is using automatic limits option 'auto' together with MPI.\n"
-           "WARNING     this may create incorrect distributions (but integrated flux will be right).\n", NAME_CURRENT_COMP);
-);
-#endif
-}
-#line 12060 "./NERA_guide.c"
-#undef nowritefile
-#undef username3
-#undef username2
-#undef username1
-#undef geometry
-#undef filename
-#undef options
-#undef radius
-#undef restore_neutron
-#undef max
-#undef min
-#undef bins
-#undef zmax
-#undef zmin
-#undef ymax
-#undef ymin
-#undef xmax
-#undef xmin
-#undef zdepth
-#undef yheight
-#undef xwidth
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-  /* Initializations for component source_time_mon_many_pulses. */
-  SIG_MESSAGE("source_time_mon_many_pulses (Init)");
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-#define xwidth mccsource_time_mon_many_pulses_xwidth
-#define yheight mccsource_time_mon_many_pulses_yheight
-#define zdepth mccsource_time_mon_many_pulses_zdepth
-#define xmin mccsource_time_mon_many_pulses_xmin
-#define xmax mccsource_time_mon_many_pulses_xmax
-#define ymin mccsource_time_mon_many_pulses_ymin
-#define ymax mccsource_time_mon_many_pulses_ymax
-#define zmin mccsource_time_mon_many_pulses_zmin
-#define zmax mccsource_time_mon_many_pulses_zmax
-#define bins mccsource_time_mon_many_pulses_bins
-#define min mccsource_time_mon_many_pulses_min
-#define max mccsource_time_mon_many_pulses_max
-#define restore_neutron mccsource_time_mon_many_pulses_restore_neutron
-#define radius mccsource_time_mon_many_pulses_radius
-#define options mccsource_time_mon_many_pulses_options
-#define filename mccsource_time_mon_many_pulses_filename
-#define geometry mccsource_time_mon_many_pulses_geometry
-#define username1 mccsource_time_mon_many_pulses_username1
-#define username2 mccsource_time_mon_many_pulses_username2
-#define username3 mccsource_time_mon_many_pulses_username3
-#define nowritefile mccsource_time_mon_many_pulses_nowritefile
-#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  char tmp[CHAR_BUF_LENGTH];
-  strcpy(Vars.compcurname, NAME_CURRENT_COMP);
-  if (options != NULL)
-    strncpy(Vars.option, options, CHAR_BUF_LENGTH);
-  else {
-    strcpy(Vars.option, "x y");
-    printf("Monitor_nD: %s has no option specified. Setting to PSD ('x y') monitor.\n", NAME_CURRENT_COMP);
-  }
-  Vars.compcurpos = POS_A_CURRENT_COMP;
-
-  if (strstr(Vars.option, "source"))
-    strcat(Vars.option, " list, x y z vx vy vz t sx sy sz ");
-
-  if (bins) { sprintf(tmp, " all bins=%ld ", (long)bins); strcat(Vars.option, tmp); }
-  if (min > -FLT_MAX && max < FLT_MAX) { sprintf(tmp, " all limits=[%g %g]", min, max); strcat(Vars.option, tmp); }
-  else if (min > -FLT_MAX) { sprintf(tmp, " all min=%g", min); strcat(Vars.option, tmp); }
-  else if (max <  FLT_MAX) { sprintf(tmp, " all max=%g", max); strcat(Vars.option, tmp); }
-
-  strncpy(Vars.UserName1,
-    username1 && strlen(username1) && strcmp(username1, "0") && strcmp(username1, "NULL") ?
-    username1 : "", 128);
-  strncpy(Vars.UserName2,
-    username2 && strlen(username2) && strcmp(username2, "0") && strcmp(username2, "NULL") ?
-    username2 : "", 128);
-  strncpy(Vars.UserName3,
-    username3 && strlen(username3) && strcmp(username3, "0") && strcmp(username3, "NULL") ?
-    username3 : "", 128);
-  if (radius) {
-    xwidth = zdepth = 2*radius;
-    if (yheight && !strstr(Vars.option, "cylinder") && !strstr(Vars.option, "banana") && !strstr(Vars.option, "sphere"))
-      strcat(Vars.option, " banana");
-    else if (!yheight && !strstr(Vars.option ,"sphere")) {
-      strcat(Vars.option, " sphere");
-      yheight=2*radius;
-    }
-  }
-  int offflag=0;
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-    if (!off_init(  geometry, xwidth, yheight, zdepth, 1, &offdata )) {
-      printf("Monitor_nD: %s could not initiate the OFF geometry %s. \n"
-             "            Defaulting to normal Monitor dimensions.\n",
-             NAME_CURRENT_COMP, geometry);
-      strcpy(geometry, "");
-    } else {
-      offflag=1;
-    }
-
-  if (!radius && !xwidth && !yheight && !zdepth && !xmin && !xmax && !ymin && !ymax &&
-    !strstr(Vars.option, "previous") && (!geometry || !strlen(geometry)))
-    exit(printf("Monitor_nD: %s has no dimension specified. Aborting (radius, xwidth, yheight, zdepth, previous, geometry).\n", NAME_CURRENT_COMP));
-
-  Monitor_nD_Init(&DEFS, &Vars, xwidth, yheight, zdepth, xmin,xmax,ymin,ymax,zmin,zmax,offflag);
-
-  if (Vars.Flag_OFF) {
-    offdata.mantidflag=Vars.Flag_mantid;
-    offdata.mantidoffset=Vars.Coord_Min[Vars.Coord_Number-1];
-  }
-
-
-  if (filename && strlen(filename) && strcmp(filename,"NULL") && strcmp(filename,"0"))
-    strncpy(Vars.Mon_File, filename, 128);
-
-  /* check if user given filename with ext will be used more than once */
-  if ( ((Vars.Flag_Multiple && Vars.Coord_Number > 1) || Vars.Flag_List) && strchr(Vars.Mon_File,'.') )
-  { char *XY; XY = strrchr(Vars.Mon_File,'.'); *XY='_'; }
-
-  if (restore_neutron) Vars.Flag_parallel=1;
-  detector.m = 0;
-
-#ifdef USE_MPI
-MPI_MASTER(
-  if (strstr(Vars.option, "auto") && mpi_node_count > 1)
-    printf("Monitor_nD: %s is using automatic limits option 'auto' together with MPI.\n"
-           "WARNING     this may create incorrect distributions (but integrated flux will be right).\n", NAME_CURRENT_COMP);
-);
-#endif
-}
-#line 12205 "./NERA_guide.c"
-#undef nowritefile
-#undef username3
-#undef username2
-#undef username1
-#undef geometry
-#undef filename
-#undef options
-#undef radius
-#undef restore_neutron
-#undef max
-#undef min
-#undef bins
-#undef zmax
-#undef zmin
-#undef ymax
-#undef ymin
-#undef xmax
-#undef xmin
-#undef zdepth
-#undef yheight
-#undef xwidth
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
   /* Initializations for component slit1. */
   SIG_MESSAGE("slit1 (Init)");
 #define mccompcurname  slit1
 #define mccompcurtype  Slit
-#define mccompcurindex 5
+#define mccompcurindex 3
 #define xmin mccslit1_xmin
 #define xmax mccslit1_xmax
 #define ymin mccslit1_ymin
@@ -12267,7 +12058,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12270 "./NERA_guide.c"
+#line 12061 "./NERA_guide_ell_st_3part_parabol.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12283,7 +12074,7 @@ if (xwidth > 0)  {
   SIG_MESSAGE("slit2 (Init)");
 #define mccompcurname  slit2
 #define mccompcurtype  Slit
-#define mccompcurindex 6
+#define mccompcurindex 4
 #define xmin mccslit2_xmin
 #define xmax mccslit2_xmax
 #define ymin mccslit2_ymin
@@ -12311,7 +12102,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12314 "./NERA_guide.c"
+#line 12105 "./NERA_guide_ell_st_3part_parabol.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12327,7 +12118,7 @@ if (xwidth > 0)  {
   SIG_MESSAGE("slit3 (Init)");
 #define mccompcurname  slit3
 #define mccompcurtype  Slit
-#define mccompcurindex 7
+#define mccompcurindex 5
 #define xmin mccslit3_xmin
 #define xmax mccslit3_xmax
 #define ymin mccslit3_ymin
@@ -12355,7 +12146,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12358 "./NERA_guide.c"
+#line 12149 "./NERA_guide_ell_st_3part_parabol.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12371,7 +12162,7 @@ if (xwidth > 0)  {
   SIG_MESSAGE("slit4 (Init)");
 #define mccompcurname  slit4
 #define mccompcurtype  Slit
-#define mccompcurindex 8
+#define mccompcurindex 6
 #define xmin mccslit4_xmin
 #define xmax mccslit4_xmax
 #define ymin mccslit4_ymin
@@ -12399,7 +12190,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12402 "./NERA_guide.c"
+#line 12193 "./NERA_guide_ell_st_3part_parabol.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12414,11 +12205,145 @@ if (xwidth > 0)  {
   /* Initializations for component Guide_start_arm. */
   SIG_MESSAGE("Guide_start_arm (Init)");
 
+  /* Initializations for component CG_1. */
+  SIG_MESSAGE("CG_1 (Init)");
+#define mccompcurname  CG_1
+#define mccompcurtype  Guide_gravity
+#define mccompcurindex 8
+#define GVars mccCG_1_GVars
+#define pTable mccCG_1_pTable
+#define w1 mccCG_1_w1
+#define h1 mccCG_1_h1
+#define w2 mccCG_1_w2
+#define h2 mccCG_1_h2
+#define l mccCG_1_l
+#define R0 mccCG_1_R0
+#define Qc mccCG_1_Qc
+#define alpha mccCG_1_alpha
+#define m mccCG_1_m
+#define W mccCG_1_W
+#define nslit mccCG_1_nslit
+#define d mccCG_1_d
+#define mleft mccCG_1_mleft
+#define mright mccCG_1_mright
+#define mtop mccCG_1_mtop
+#define mbottom mccCG_1_mbottom
+#define nhslit mccCG_1_nhslit
+#define G mccCG_1_G
+#define aleft mccCG_1_aleft
+#define aright mccCG_1_aright
+#define atop mccCG_1_atop
+#define abottom mccCG_1_abottom
+#define wavy mccCG_1_wavy
+#define wavy_z mccCG_1_wavy_z
+#define wavy_tb mccCG_1_wavy_tb
+#define wavy_lr mccCG_1_wavy_lr
+#define chamfers mccCG_1_chamfers
+#define chamfers_z mccCG_1_chamfers_z
+#define chamfers_lr mccCG_1_chamfers_lr
+#define chamfers_tb mccCG_1_chamfers_tb
+#define nelements mccCG_1_nelements
+#define nu mccCG_1_nu
+#define phase mccCG_1_phase
+#define reflect mccCG_1_reflect
+#line 339 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
+{
+  double Gx=0, Gy=-GRAVITY, Gz=0;
+  Coords mcLocG;
+  int i;
+
+  if (reflect && strlen(reflect) && strcmp(reflect,"NULL") && strcmp(reflect,"0")) {
+    if (Table_Read(&pTable, reflect, 1) <= 0) /* read 1st block data from file into pTable */
+      exit(fprintf(stderr,"Guide_gravity: %s: can not read file %s\n", NAME_CURRENT_COMP, reflect));
+  } else {
+    if (W < 0 || R0 < 0 || Qc < 0)
+    { fprintf(stderr,"Guide_gravity: %s: W R0 Qc must be >0.\n", NAME_CURRENT_COMP);
+      exit(-1); }
+  }
+
+  if (nslit <= 0 || nhslit <= 0)
+  { fprintf(stderr,"Guide_gravity: %s: nslit nhslit must be >0.\n", NAME_CURRENT_COMP);
+    exit(-1); }
+
+  if (!w1 || !h1)
+  { fprintf(stderr,"Guide_gravity: %s: input window is closed (w1=h1=0).\n", NAME_CURRENT_COMP);
+    exit(-1); }
+
+  if (d*nslit > w1) exit(fprintf(stderr, "Guide_gravity: %s: absorbing walls fill input window. No space left for transmission (d*nslit > w1).\n", NAME_CURRENT_COMP));
+
+  if (!w2) w2=w1;
+  if (!h2) h2=h1;
+
+  if (mcgravitation) G=-GRAVITY;
+  mcLocG = rot_apply(ROT_A_CURRENT_COMP, coords_set(0,G,0));
+  coords_get(mcLocG, &Gx, &Gy, &Gz);
+
+  strcpy(GVars.compcurname, NAME_CURRENT_COMP);
+
+  if (l > 0 && nelements > 0) {
+
+    Gravity_guide_Init(&GVars,
+      w1, h1, w2, h2, l, R0,
+      Qc, alpha, m, W, nslit, d,
+      Gx, Gy, Gz, mleft, mright, mtop,
+      mbottom, nhslit, wavy_lr, wavy_tb, wavy_z, wavy,
+      chamfers_z, chamfers_lr, chamfers_tb, chamfers,nu,phase,aleft,aright,atop,abottom);
+    if (!G) for (i=0; i<5; GVars.A[i++] = 0);
+    if (GVars.fc_freq != 0 || GVars.fc_phase != 0) {
+      if (w1 != w2 || h1 != h2)
+      exit(fprintf(stderr,"Guide_gravity: %s: rotating slit pack must be straight (w1=w2 and h1=h2).\n", NAME_CURRENT_COMP));
+      printf("Guide_gravity: %s: Fermi Chopper mode: frequency=%g [Hz] phase=%g [deg]\n",
+        NAME_CURRENT_COMP, GVars.fc_freq, GVars.fc_phase);
+    }
+  } else printf("Guide_gravity: %s: unactivated (l=0 or nelements=0)\n", NAME_CURRENT_COMP);
+
+}
+#line 12301 "./NERA_guide_ell_st_3part_parabol.c"
+#undef reflect
+#undef phase
+#undef nu
+#undef nelements
+#undef chamfers_tb
+#undef chamfers_lr
+#undef chamfers_z
+#undef chamfers
+#undef wavy_lr
+#undef wavy_tb
+#undef wavy_z
+#undef wavy
+#undef abottom
+#undef atop
+#undef aright
+#undef aleft
+#undef G
+#undef nhslit
+#undef mbottom
+#undef mtop
+#undef mright
+#undef mleft
+#undef d
+#undef nslit
+#undef W
+#undef m
+#undef alpha
+#undef Qc
+#undef R0
+#undef l
+#undef h2
+#undef w2
+#undef h1
+#undef w1
+#undef pTable
+#undef GVars
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
   /* Initializations for component elliptic_guide. */
   SIG_MESSAGE("elliptic_guide (Init)");
 #define mccompcurname  elliptic_guide
 #define mccompcurtype  Guide_tapering
-#define mccompcurindex 10
+#define mccompcurindex 9
 #define w1c mccelliptic_guide_w1c
 #define w2c mccelliptic_guide_w2c
 #define ww mccelliptic_guide_ww
@@ -12477,7 +12402,7 @@ if (xwidth > 0)  {
 #define segno mccelliptic_guide_segno
 #define curvature mccelliptic_guide_curvature
 #define curvature_v mccelliptic_guide_curvature_v
-#line 115 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -12813,7 +12738,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 12816 "./NERA_guide.c"
+#line 12741 "./NERA_guide_ell_st_3part_parabol.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -12883,7 +12808,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   SIG_MESSAGE("monitor_nd_xy (Init)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -12991,7 +12916,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 12994 "./NERA_guide.c"
+#line 12919 "./NERA_guide_ell_st_3part_parabol.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -13177,7 +13102,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 13180 "./NERA_guide.c"
+#line 13105 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -13425,13 +13350,13 @@ int target_index = mccSource_target_index;
     SCATTER;
   }
 }
-#line 13428 "./NERA_guide.c"
+#line 13353 "./NERA_guide_ell_st_3part_parabol.c"
 /* 'Source=Source_gen()' component instance extend code */
     SIG_MESSAGE("Source (Trace:Extend)");
 #line 58 "NERA_source.instr"
 T = floor(rand01()*source_pulse_number_help);
 t = rand01()*pulse_length*1e-6 + T*1/source_freq;
-#line 13434 "./NERA_guide.c"
+#line 13359 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -13493,627 +13418,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component source_time_mon_one_pulse [3] */
-  mccoordschange(mcposrsource_time_mon_one_pulse, mcrotrsource_time_mon_one_pulse,
-    &mcnlx,
-    &mcnly,
-    &mcnlz,
-    &mcnlvx,
-    &mcnlvy,
-    &mcnlvz,
-    &mcnlsx,
-    &mcnlsy,
-    &mcnlsz);
-  /* define label inside component source_time_mon_one_pulse (without coords transformations) */
-  mcJumpTrace_source_time_mon_one_pulse:
-  SIG_MESSAGE("source_time_mon_one_pulse (Trace)");
-  mcDEBUG_COMP("source_time_mon_one_pulse")
-  mcDEBUG_STATE(
-    mcnlx,
-    mcnly,
-    mcnlz,
-    mcnlvx,
-    mcnlvy,
-    mcnlvz,
-    mcnlt,
-    mcnlsx,
-    mcnlsy,
-    mcnlsz,
-    mcnlp)
-#define x mcnlx
-#define y mcnly
-#define z mcnlz
-#define vx mcnlvx
-#define vy mcnlvy
-#define vz mcnlvz
-#define t mcnlt
-#define sx mcnlsx
-#define sy mcnlsy
-#define sz mcnlsz
-#define p mcnlp
-
-#define mcabsorbComp mcabsorbCompsource_time_mon_one_pulse
-  STORE_NEUTRON(3,
-    mcnlx,
-    mcnly,
-    mcnlz,
-    mcnlvx,
-    mcnlvy,
-    mcnlvz,
-    mcnlt,
-    mcnlsx,
-    mcnlsy,
-    mcnlsz,
-    mcnlp);
-  mcScattered=0;
-  mcRestore=0;
-  mcNCounter[3]++;
-  mcPCounter[3] += p;
-  mcP2Counter[3] += p*p;
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
-MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
-MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
-MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
-MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
-MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
-MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
-MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
-MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
-MCNUM bins = mccsource_time_mon_one_pulse_bins;
-MCNUM min = mccsource_time_mon_one_pulse_min;
-MCNUM max = mccsource_time_mon_one_pulse_max;
-MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
-MCNUM radius = mccsource_time_mon_one_pulse_radius;
-char* options = mccsource_time_mon_one_pulse_options;
-char* filename = mccsource_time_mon_one_pulse_filename;
-char* geometry = mccsource_time_mon_one_pulse_geometry;
-char* username1 = mccsource_time_mon_one_pulse_username1;
-char* username2 = mccsource_time_mon_one_pulse_username2;
-char* username3 = mccsource_time_mon_one_pulse_username3;
-int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  double  XY=0;
-  double  t0 = 0;
-  double  t1 = 0;
-  double  pp;
-  int     intersect   = 0;
-  char    Flag_Restore = 0;
-
-  if (user1 != FLT_MAX) Vars.UserVariable1 = user1;
-  if (user2 != FLT_MAX) Vars.UserVariable2 = user2;
-  if (user3 != FLT_MAX) Vars.UserVariable3 = user3;
-
-  /* this is done automatically
-    STORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-  */
-
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-  {
-    /* determine intersections with object */
-    intersect = off_intersect_all(&t0, &t1, NULL, NULL,
-       x,y,z, vx, vy, vz, &offdata );
-    if (Vars.Flag_mantid) {
-      if(intersect) {
-        Vars.OFF_polyidx=(offdata.intersects[offdata.nextintersect]).index;
-      } else {
-        Vars.OFF_polyidx=-1;
-      }
-    }
-  }
-  else if ( (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
-            || (abs(Vars.Flag_Shape) == DEFS.SHAPE_DISK) ) /* square xy or disk xy */
-  {
-    // propagate to xy plane and find intersection
-    // make sure the event is recoverable afterwards
-    t0 = t;
-    ALLOW_BACKPROP;
-    PROP_Z0;
-    if ( (t>=t0) && (z==0.0) ) // forward propagation to xy plane was successful
-    {
-      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
-      {
-        // square xy
-        intersect = (x>=Vars.mxmin && x<=Vars.mxmax && y>=Vars.mymin && y<=Vars.mymax);
-      }
-      else
-      {
-        // disk xy
-        intersect = (SQR(x) + SQR(y)) <= SQR(Vars.Sphere_Radius);
-      }
-    }
-    else
-    {
-      intersect=0;
-    }
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) /* sphere */
-  {
-    intersect = sphere_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius);
-  /*      intersect = (intersect && t0 > 0); */
-  }
-  else if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)) /* cylinder */
-  {
-    intersect = cylinder_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius, Vars.Cylinder_Height);
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) /* box */
-  {
-    intersect = box_intersect(&t0, &t1, x, y, z, vx, vy, vz,
-                              fabs(Vars.mxmax-Vars.mxmin), fabs(Vars.mymax-Vars.mymin), fabs(Vars.mzmax-Vars.mzmin));
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_PREVIOUS) /* previous comp */
-  { intersect = 1; }
-
-  if (intersect)
-  {
-    if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND)
-     || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)
-     || (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) )
-    {
-      /* check if we have to remove the top/bottom with BANANA shape */
-      if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA) && (intersect != 1)) {
-        double y0,y1;
-        /* propagate to intersection point as temporary variable to check top/bottom */
-        y0 = y+t0*vy;
-        y1 = y+t1*vy;
-        if (fabs(y0) >= Vars.Cylinder_Height/2*0.99) t0 = t1;
-        if (fabs(y1) >= Vars.Cylinder_Height/2*0.99) t1 = t0;
-      }
-      if (t0 < 0 && t1 > 0)
-        t0 = t;  /* neutron was already inside ! */
-      if (t1 < 0 && t0 > 0) /* neutron exit before entering !! */
-        t1 = t;
-      /* t0 is now time of incoming intersection with the detection area */
-      if ((Vars.Flag_Shape < 0) && (t1 > 0))
-        PROP_DT(t1); /* t1 outgoing beam */
-      else
-        PROP_DT(t0); /* t0 incoming beam */
-      /* Final test if we are on lid / bottom of banana/sphere */
-      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA || abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) {
-        if (fabs(y) >= Vars.Cylinder_Height/2*0.99) {
-          intersect=0;
-          Flag_Restore=1;
-        }
-      }
-    }
-  }
-
-  if (intersect)
-  {
-    /* Now get the data to monitor: current or keep from PreMonitor */
-    if (Vars.Flag_UsePreMonitor != 1)
-    {
-      Vars.cp  = p;
-      Vars.cx  = x;
-      Vars.cvx = vx;
-      Vars.csx = sx;
-      Vars.cy  = y;
-      Vars.cvy = vy;
-      Vars.csy = sy;
-      Vars.cz  = z;
-      Vars.cvz = vz;
-      Vars.csz = sz;
-      Vars.ct  = t;
-    }
-
-    if ((Vars.He3_pressure > 0) && (t1 != t0) && ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX)))
-    {
-      XY = exp(-7.417*Vars.He3_pressure*fabs(t1-t0)*2*PI*K2V);
-      /* will monitor the absorbed part */
-      Vars.cp *= 1-XY;
-      /* and modify the neutron weight after monitor, only remains 1-p_detect */
-      p *= XY;
-    }
-
-    if (Vars.Flag_capture)
-    {
-      XY = sqrt(Vars.cvx*Vars.cvx+Vars.cvy*Vars.cvy+Vars.cvz*Vars.cvz);
-      XY *= V2K;
-      if (XY != 0) XY = 2*PI/XY; /* lambda. lambda(2200 m/2) = 1.7985 Angs  */
-      Vars.cp *= XY/1.7985;
-    }
-
-    pp = Monitor_nD_Trace(&DEFS, &Vars);
-    if (pp==0.0)
-    { ABSORB;
-    }
-    else if(pp==1)
-    {
-      SCATTER;
-    }
-
-    if (Vars.Flag_parallel) /* back to neutron state before detection */
-      Flag_Restore = 1;
-  } /* end if intersection */
-  else {
-    if (Vars.Flag_Absorb && !Vars.Flag_parallel)
-    {
-      // restore neutron ray before absorbing for correct mcdisplay
-      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-      ABSORB;
-    }
-    else Flag_Restore = 1;  /* no intersection, back to previous state */
-  }
-
-  if (Flag_Restore)
-  {
-    RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-  }
-}
-#line 13754 "./NERA_guide.c"
-}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-  /* Label for restoring  neutron */
-  mcabsorbCompsource_time_mon_one_pulse:
-  if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(3,
-      mcnlx,
-      mcnly,
-      mcnlz,
-      mcnlvx,
-      mcnlvy,
-      mcnlvz,
-      mcnlt,
-      mcnlsx,
-      mcnlsy,
-      mcnlsz,
-      mcnlp); }
-#undef mcabsorbComp
-#undef p
-#undef sz
-#undef sy
-#undef sx
-#undef t
-#undef vz
-#undef vy
-#undef vx
-#undef z
-#undef y
-#undef x
-  mcDEBUG_STATE(
-mcnlx,
-mcnly,
-mcnlz,
-mcnlvx,
-mcnlvy,
-mcnlvz,
-mcnlt,
-mcnlsx,
-mcnlsy,
-mcnlsz,
-mcnlp)
-
-  /* TRACE Component source_time_mon_many_pulses [4] */
-  mccoordschange(mcposrsource_time_mon_many_pulses, mcrotrsource_time_mon_many_pulses,
-    &mcnlx,
-    &mcnly,
-    &mcnlz,
-    &mcnlvx,
-    &mcnlvy,
-    &mcnlvz,
-    &mcnlsx,
-    &mcnlsy,
-    &mcnlsz);
-  /* define label inside component source_time_mon_many_pulses (without coords transformations) */
-  mcJumpTrace_source_time_mon_many_pulses:
-  SIG_MESSAGE("source_time_mon_many_pulses (Trace)");
-  mcDEBUG_COMP("source_time_mon_many_pulses")
-  mcDEBUG_STATE(
-    mcnlx,
-    mcnly,
-    mcnlz,
-    mcnlvx,
-    mcnlvy,
-    mcnlvz,
-    mcnlt,
-    mcnlsx,
-    mcnlsy,
-    mcnlsz,
-    mcnlp)
-#define x mcnlx
-#define y mcnly
-#define z mcnlz
-#define vx mcnlvx
-#define vy mcnlvy
-#define vz mcnlvz
-#define t mcnlt
-#define sx mcnlsx
-#define sy mcnlsy
-#define sz mcnlsz
-#define p mcnlp
-
-#define mcabsorbComp mcabsorbCompsource_time_mon_many_pulses
-  STORE_NEUTRON(4,
-    mcnlx,
-    mcnly,
-    mcnlz,
-    mcnlvx,
-    mcnlvy,
-    mcnlvz,
-    mcnlt,
-    mcnlsx,
-    mcnlsy,
-    mcnlsz,
-    mcnlp);
-  mcScattered=0;
-  mcRestore=0;
-  mcNCounter[4]++;
-  mcPCounter[4] += p;
-  mcP2Counter[4] += p*p;
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
-MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
-MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
-MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
-MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
-MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
-MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
-MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
-MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
-MCNUM bins = mccsource_time_mon_many_pulses_bins;
-MCNUM min = mccsource_time_mon_many_pulses_min;
-MCNUM max = mccsource_time_mon_many_pulses_max;
-MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
-MCNUM radius = mccsource_time_mon_many_pulses_radius;
-char* options = mccsource_time_mon_many_pulses_options;
-char* filename = mccsource_time_mon_many_pulses_filename;
-char* geometry = mccsource_time_mon_many_pulses_geometry;
-char* username1 = mccsource_time_mon_many_pulses_username1;
-char* username2 = mccsource_time_mon_many_pulses_username2;
-char* username3 = mccsource_time_mon_many_pulses_username3;
-int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  double  XY=0;
-  double  t0 = 0;
-  double  t1 = 0;
-  double  pp;
-  int     intersect   = 0;
-  char    Flag_Restore = 0;
-
-  if (user1 != FLT_MAX) Vars.UserVariable1 = user1;
-  if (user2 != FLT_MAX) Vars.UserVariable2 = user2;
-  if (user3 != FLT_MAX) Vars.UserVariable3 = user3;
-
-  /* this is done automatically
-    STORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-  */
-
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-  {
-    /* determine intersections with object */
-    intersect = off_intersect_all(&t0, &t1, NULL, NULL,
-       x,y,z, vx, vy, vz, &offdata );
-    if (Vars.Flag_mantid) {
-      if(intersect) {
-        Vars.OFF_polyidx=(offdata.intersects[offdata.nextintersect]).index;
-      } else {
-        Vars.OFF_polyidx=-1;
-      }
-    }
-  }
-  else if ( (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
-            || (abs(Vars.Flag_Shape) == DEFS.SHAPE_DISK) ) /* square xy or disk xy */
-  {
-    // propagate to xy plane and find intersection
-    // make sure the event is recoverable afterwards
-    t0 = t;
-    ALLOW_BACKPROP;
-    PROP_Z0;
-    if ( (t>=t0) && (z==0.0) ) // forward propagation to xy plane was successful
-    {
-      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
-      {
-        // square xy
-        intersect = (x>=Vars.mxmin && x<=Vars.mxmax && y>=Vars.mymin && y<=Vars.mymax);
-      }
-      else
-      {
-        // disk xy
-        intersect = (SQR(x) + SQR(y)) <= SQR(Vars.Sphere_Radius);
-      }
-    }
-    else
-    {
-      intersect=0;
-    }
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) /* sphere */
-  {
-    intersect = sphere_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius);
-  /*      intersect = (intersect && t0 > 0); */
-  }
-  else if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)) /* cylinder */
-  {
-    intersect = cylinder_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius, Vars.Cylinder_Height);
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) /* box */
-  {
-    intersect = box_intersect(&t0, &t1, x, y, z, vx, vy, vz,
-                              fabs(Vars.mxmax-Vars.mxmin), fabs(Vars.mymax-Vars.mymin), fabs(Vars.mzmax-Vars.mzmin));
-  }
-  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_PREVIOUS) /* previous comp */
-  { intersect = 1; }
-
-  if (intersect)
-  {
-    if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND)
-     || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)
-     || (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) )
-    {
-      /* check if we have to remove the top/bottom with BANANA shape */
-      if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA) && (intersect != 1)) {
-        double y0,y1;
-        /* propagate to intersection point as temporary variable to check top/bottom */
-        y0 = y+t0*vy;
-        y1 = y+t1*vy;
-        if (fabs(y0) >= Vars.Cylinder_Height/2*0.99) t0 = t1;
-        if (fabs(y1) >= Vars.Cylinder_Height/2*0.99) t1 = t0;
-      }
-      if (t0 < 0 && t1 > 0)
-        t0 = t;  /* neutron was already inside ! */
-      if (t1 < 0 && t0 > 0) /* neutron exit before entering !! */
-        t1 = t;
-      /* t0 is now time of incoming intersection with the detection area */
-      if ((Vars.Flag_Shape < 0) && (t1 > 0))
-        PROP_DT(t1); /* t1 outgoing beam */
-      else
-        PROP_DT(t0); /* t0 incoming beam */
-      /* Final test if we are on lid / bottom of banana/sphere */
-      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA || abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) {
-        if (fabs(y) >= Vars.Cylinder_Height/2*0.99) {
-          intersect=0;
-          Flag_Restore=1;
-        }
-      }
-    }
-  }
-
-  if (intersect)
-  {
-    /* Now get the data to monitor: current or keep from PreMonitor */
-    if (Vars.Flag_UsePreMonitor != 1)
-    {
-      Vars.cp  = p;
-      Vars.cx  = x;
-      Vars.cvx = vx;
-      Vars.csx = sx;
-      Vars.cy  = y;
-      Vars.cvy = vy;
-      Vars.csy = sy;
-      Vars.cz  = z;
-      Vars.cvz = vz;
-      Vars.csz = sz;
-      Vars.ct  = t;
-    }
-
-    if ((Vars.He3_pressure > 0) && (t1 != t0) && ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX)))
-    {
-      XY = exp(-7.417*Vars.He3_pressure*fabs(t1-t0)*2*PI*K2V);
-      /* will monitor the absorbed part */
-      Vars.cp *= 1-XY;
-      /* and modify the neutron weight after monitor, only remains 1-p_detect */
-      p *= XY;
-    }
-
-    if (Vars.Flag_capture)
-    {
-      XY = sqrt(Vars.cvx*Vars.cvx+Vars.cvy*Vars.cvy+Vars.cvz*Vars.cvz);
-      XY *= V2K;
-      if (XY != 0) XY = 2*PI/XY; /* lambda. lambda(2200 m/2) = 1.7985 Angs  */
-      Vars.cp *= XY/1.7985;
-    }
-
-    pp = Monitor_nD_Trace(&DEFS, &Vars);
-    if (pp==0.0)
-    { ABSORB;
-    }
-    else if(pp==1)
-    {
-      SCATTER;
-    }
-
-    if (Vars.Flag_parallel) /* back to neutron state before detection */
-      Flag_Restore = 1;
-  } /* end if intersection */
-  else {
-    if (Vars.Flag_Absorb && !Vars.Flag_parallel)
-    {
-      // restore neutron ray before absorbing for correct mcdisplay
-      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-      ABSORB;
-    }
-    else Flag_Restore = 1;  /* no intersection, back to previous state */
-  }
-
-  if (Flag_Restore)
-  {
-    RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
-  }
-}
-#line 14064 "./NERA_guide.c"
-}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-  /* Label for restoring  neutron */
-  mcabsorbCompsource_time_mon_many_pulses:
-  if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(4,
-      mcnlx,
-      mcnly,
-      mcnlz,
-      mcnlvx,
-      mcnlvy,
-      mcnlvz,
-      mcnlt,
-      mcnlsx,
-      mcnlsy,
-      mcnlsz,
-      mcnlp); }
-#undef mcabsorbComp
-#undef p
-#undef sz
-#undef sy
-#undef sx
-#undef t
-#undef vz
-#undef vy
-#undef vx
-#undef z
-#undef y
-#undef x
-  mcDEBUG_STATE(
-mcnlx,
-mcnly,
-mcnlz,
-mcnlvx,
-mcnlvy,
-mcnlvz,
-mcnlt,
-mcnlsx,
-mcnlsy,
-mcnlsz,
-mcnlp)
-
-  /* TRACE Component slit1 [5] */
+  /* TRACE Component slit1 [3] */
   mccoordschange(mcposrslit1, mcrotrslit1,
     &mcnlx,
     &mcnly,
@@ -14153,7 +13458,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompslit1
-  STORE_NEUTRON(5,
+  STORE_NEUTRON(3,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14167,12 +13472,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[5]++;
-  mcPCounter[5] += p;
-  mcP2Counter[5] += p*p;
+  mcNCounter[3]++;
+  mcPCounter[3] += p;
+  mcP2Counter[3] += p*p;
 #define mccompcurname  slit1
 #define mccompcurtype  Slit
-#define mccompcurindex 5
+#define mccompcurindex 3
 {   /* Declarations of slit1=Slit() SETTING parameters. */
 MCNUM xmin = mccslit1_xmin;
 MCNUM xmax = mccslit1_xmax;
@@ -14190,7 +13495,7 @@ MCNUM yheight = mccslit1_yheight;
     else
         SCATTER;
 }
-#line 14193 "./NERA_guide.c"
+#line 13498 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14198,7 +13503,7 @@ MCNUM yheight = mccslit1_yheight;
   /* Label for restoring  neutron */
   mcabsorbCompslit1:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(5,
+  { RESTORE_NEUTRON(3,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14235,7 +13540,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component slit2 [6] */
+  /* TRACE Component slit2 [4] */
   mccoordschange(mcposrslit2, mcrotrslit2,
     &mcnlx,
     &mcnly,
@@ -14275,7 +13580,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompslit2
-  STORE_NEUTRON(6,
+  STORE_NEUTRON(4,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14289,12 +13594,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[6]++;
-  mcPCounter[6] += p;
-  mcP2Counter[6] += p*p;
+  mcNCounter[4]++;
+  mcPCounter[4] += p;
+  mcP2Counter[4] += p*p;
 #define mccompcurname  slit2
 #define mccompcurtype  Slit
-#define mccompcurindex 6
+#define mccompcurindex 4
 {   /* Declarations of slit2=Slit() SETTING parameters. */
 MCNUM xmin = mccslit2_xmin;
 MCNUM xmax = mccslit2_xmax;
@@ -14312,7 +13617,7 @@ MCNUM yheight = mccslit2_yheight;
     else
         SCATTER;
 }
-#line 14315 "./NERA_guide.c"
+#line 13620 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14320,7 +13625,7 @@ MCNUM yheight = mccslit2_yheight;
   /* Label for restoring  neutron */
   mcabsorbCompslit2:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(6,
+  { RESTORE_NEUTRON(4,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14357,7 +13662,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component slit3 [7] */
+  /* TRACE Component slit3 [5] */
   mccoordschange(mcposrslit3, mcrotrslit3,
     &mcnlx,
     &mcnly,
@@ -14397,7 +13702,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompslit3
-  STORE_NEUTRON(7,
+  STORE_NEUTRON(5,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14411,12 +13716,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[7]++;
-  mcPCounter[7] += p;
-  mcP2Counter[7] += p*p;
+  mcNCounter[5]++;
+  mcPCounter[5] += p;
+  mcP2Counter[5] += p*p;
 #define mccompcurname  slit3
 #define mccompcurtype  Slit
-#define mccompcurindex 7
+#define mccompcurindex 5
 {   /* Declarations of slit3=Slit() SETTING parameters. */
 MCNUM xmin = mccslit3_xmin;
 MCNUM xmax = mccslit3_xmax;
@@ -14434,7 +13739,7 @@ MCNUM yheight = mccslit3_yheight;
     else
         SCATTER;
 }
-#line 14437 "./NERA_guide.c"
+#line 13742 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14442,7 +13747,7 @@ MCNUM yheight = mccslit3_yheight;
   /* Label for restoring  neutron */
   mcabsorbCompslit3:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(7,
+  { RESTORE_NEUTRON(5,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14479,7 +13784,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component slit4 [8] */
+  /* TRACE Component slit4 [6] */
   mccoordschange(mcposrslit4, mcrotrslit4,
     &mcnlx,
     &mcnly,
@@ -14519,7 +13824,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompslit4
-  STORE_NEUTRON(8,
+  STORE_NEUTRON(6,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14533,12 +13838,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[8]++;
-  mcPCounter[8] += p;
-  mcP2Counter[8] += p*p;
+  mcNCounter[6]++;
+  mcPCounter[6] += p;
+  mcP2Counter[6] += p*p;
 #define mccompcurname  slit4
 #define mccompcurtype  Slit
-#define mccompcurindex 8
+#define mccompcurindex 6
 {   /* Declarations of slit4=Slit() SETTING parameters. */
 MCNUM xmin = mccslit4_xmin;
 MCNUM xmax = mccslit4_xmax;
@@ -14556,7 +13861,7 @@ MCNUM yheight = mccslit4_yheight;
     else
         SCATTER;
 }
-#line 14559 "./NERA_guide.c"
+#line 13864 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14564,7 +13869,7 @@ MCNUM yheight = mccslit4_yheight;
   /* Label for restoring  neutron */
   mcabsorbCompslit4:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(8,
+  { RESTORE_NEUTRON(6,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14601,7 +13906,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component Guide_start_arm [9] */
+  /* TRACE Component Guide_start_arm [7] */
   mccoordschange(mcposrGuide_start_arm, mcrotrGuide_start_arm,
     &mcnlx,
     &mcnly,
@@ -14641,7 +13946,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompGuide_start_arm
-  STORE_NEUTRON(9,
+  STORE_NEUTRON(7,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14655,19 +13960,19 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[9]++;
-  mcPCounter[9] += p;
-  mcP2Counter[9] += p*p;
+  mcNCounter[7]++;
+  mcPCounter[7] += p;
+  mcP2Counter[7] += p*p;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 9
+#define mccompcurindex 7
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
   mcabsorbCompGuide_start_arm:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(9,
+  { RESTORE_NEUTRON(7,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14704,7 +14009,320 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component elliptic_guide [10] */
+  /* TRACE Component CG_1 [8] */
+  mccoordschange(mcposrCG_1, mcrotrCG_1,
+    &mcnlx,
+    &mcnly,
+    &mcnlz,
+    &mcnlvx,
+    &mcnlvy,
+    &mcnlvz,
+    &mcnlsx,
+    &mcnlsy,
+    &mcnlsz);
+  /* define label inside component CG_1 (without coords transformations) */
+  mcJumpTrace_CG_1:
+  SIG_MESSAGE("CG_1 (Trace)");
+  mcDEBUG_COMP("CG_1")
+  mcDEBUG_STATE(
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp)
+#define x mcnlx
+#define y mcnly
+#define z mcnlz
+#define vx mcnlvx
+#define vy mcnlvy
+#define vz mcnlvz
+#define t mcnlt
+#define sx mcnlsx
+#define sy mcnlsy
+#define sz mcnlsz
+#define p mcnlp
+
+#define mcabsorbComp mcabsorbCompCG_1
+  STORE_NEUTRON(8,
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp);
+  mcScattered=0;
+  mcRestore=0;
+  mcNCounter[8]++;
+  mcPCounter[8] += p;
+  mcP2Counter[8] += p*p;
+#define mccompcurname  CG_1
+#define mccompcurtype  Guide_gravity
+#define mccompcurindex 8
+#define GVars mccCG_1_GVars
+#define pTable mccCG_1_pTable
+{   /* Declarations of CG_1=Guide_gravity() SETTING parameters. */
+MCNUM w1 = mccCG_1_w1;
+MCNUM h1 = mccCG_1_h1;
+MCNUM w2 = mccCG_1_w2;
+MCNUM h2 = mccCG_1_h2;
+MCNUM l = mccCG_1_l;
+MCNUM R0 = mccCG_1_R0;
+MCNUM Qc = mccCG_1_Qc;
+MCNUM alpha = mccCG_1_alpha;
+MCNUM m = mccCG_1_m;
+MCNUM W = mccCG_1_W;
+MCNUM nslit = mccCG_1_nslit;
+MCNUM d = mccCG_1_d;
+MCNUM mleft = mccCG_1_mleft;
+MCNUM mright = mccCG_1_mright;
+MCNUM mtop = mccCG_1_mtop;
+MCNUM mbottom = mccCG_1_mbottom;
+MCNUM nhslit = mccCG_1_nhslit;
+MCNUM G = mccCG_1_G;
+MCNUM aleft = mccCG_1_aleft;
+MCNUM aright = mccCG_1_aright;
+MCNUM atop = mccCG_1_atop;
+MCNUM abottom = mccCG_1_abottom;
+MCNUM wavy = mccCG_1_wavy;
+MCNUM wavy_z = mccCG_1_wavy_z;
+MCNUM wavy_tb = mccCG_1_wavy_tb;
+MCNUM wavy_lr = mccCG_1_wavy_lr;
+MCNUM chamfers = mccCG_1_chamfers;
+MCNUM chamfers_z = mccCG_1_chamfers_z;
+MCNUM chamfers_lr = mccCG_1_chamfers_lr;
+MCNUM chamfers_tb = mccCG_1_chamfers_tb;
+MCNUM nelements = mccCG_1_nelements;
+MCNUM nu = mccCG_1_nu;
+MCNUM phase = mccCG_1_phase;
+char* reflect = mccCG_1_reflect;
+#line 392 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
+{
+  if (l > 0 && nelements > 0) {
+    double B, C, dt;
+    int    ret, bounces = 0, i=0;
+    double this_width, this_height;
+    double angle=0;
+
+    if (GVars.fc_freq != 0 || GVars.fc_phase != 0) { /* rotate neutron w/r to guide element */
+      /* approximation of rotating straight Fermi Chopper */
+      Coords   X = coords_set(x,y,z-l/2);  /* current coordinates of neutron in centered static frame */
+      Rotation R;
+      double dt=(-z+l/2)/vz; /* time shift to each center of slit package */
+      angle=fmod(360*GVars.fc_freq*(t+dt)+GVars.fc_phase, 360); /* in deg */
+      /* modify angle so that Z0 guide side is always in front of incoming neutron */
+      if (angle > 90 && angle < 270) { angle -= 180; }
+      angle *= DEG2RAD;
+      rot_set_rotation(R, 0, -angle, 0); /* will rotate neutron instead of comp: negative side */
+      /* apply rotation to centered coordinates */
+      Coords   RX = rot_apply(R, X);
+      coords_get(RX, &x, &y, &z);
+      z = z+l/2;
+      /* rotate speed */
+      X  = coords_set(vx,vy,vz);
+      RX = rot_apply(R, X);
+      coords_get(RX, &vx, &vy, &vz);
+    }
+
+    for (i=0; i<7; GVars.N_reflection[i++] = 0);
+
+    /* propagate to box input (with gravitation) in comp local coords */
+    /* A = 0.5 n.g; B = n.v; C = n.(r-W); */
+    /* 0=Z0 side: n=(0, 0, -l) ; W = (0, 0, 0) (at z=0, guide input)*/
+    B = -l*vz; C = -l*z;
+
+    ret = solve_2nd_order(&dt, NULL, GVars.A[0], B, C);
+    if (ret==0) ABSORB;
+
+    if (dt>0.0) PROP_GRAV_DT(dt, GVars.gx, GVars.gy, GVars.gz); else if (angle) ABSORB;
+    GVars.N_reflection[6]++;
+
+    this_width  = w1;
+    this_height = h1;
+
+  /* check if we are in the box input, else absorb */
+    if (fabs(x) > this_width/2 || fabs(y) > this_height/2)
+      ABSORB;
+    else
+    {
+      double w_edge, w_adj; /* Channel displacement on X */
+      double h_edge, h_adj; /* Channel displacement on Y */
+      double w_chnum,h_chnum; /* channel indexes */
+
+      SCATTER;
+
+      /* X: Shift origin to center of channel hit (absorb if hit dividing walls) */
+      x += w1/2.0;
+      w_chnum = floor(x/(GVars.w1c+d));  /* 0= right side, nslit+1=left side  */
+      w_edge  = w_chnum*(GVars.w1c+d);
+      if(x - w_edge > GVars.w1c)
+      {
+        x -= w1/2.0; /* Re-adjust origin */
+        ABSORB;
+      }
+      w_adj = w_edge + (GVars.w1c)/2.0;
+      x -= w_adj; w_adj -=  w1/2.0;
+
+      /* Y: Shift origin to center of channel hit (absorb if hit dividing walls) */
+      y += h1/2.0;
+      h_chnum = floor(y/(GVars.h1c+d));  /* 0= lower side, nslit+1=upper side  */
+      h_edge  = h_chnum*(GVars.h1c+d);
+      if(y - h_edge > GVars.h1c)
+      {
+        y -= h1/2.0; /* Re-adjust origin */
+        ABSORB;
+      }
+      h_adj = h_edge + (GVars.h1c)/2.0;
+      y -= h_adj; h_adj -=  h1/2.0;
+
+      /* neutron is now in the input window of the guide */
+      /* do loops on reflections in the box */
+      for(;;)
+      {
+        /* get intersections for all box sides */
+        double q, nx,ny,nz;
+        double this_length;
+        int side=0;
+
+        bounces++;
+        /* now look for intersection with guide sides and exit */
+        side = Gravity_guide_Trace(&dt, &GVars, x, y, z,
+            vx, vy, vz, w_chnum, nslit, h_chnum, nhslit,
+            &nx, &ny, &nz);
+
+        /* only positive dt are valid */
+        /* exit reflection loops if no intersection (neutron is after box) */
+        if (side == 0 || dt <= 0)
+          { if (GVars.warnings < 100)
+              fprintf(stderr,"%s: warning: neutron has entered guide, but can not exit !\n", GVars.compcurname);
+            GVars.warnings++;
+            x += w_adj; y += h_adj; ABSORB; } /* should never occur */
+
+        /* propagate to dt */
+        PROP_GRAV_DT(dt, GVars.gx, GVars.gy, GVars.gz);
+
+        /* do reflection on speed for l/r/u/d sides */
+        if (side == 5) /* neutron reaches end of guide: end loop and exit comp */
+          { GVars.N_reflection[side]++; x += w_adj; y += h_adj; SCATTER; x -= w_adj; y -= h_adj; break; }
+        /* else reflection on a guide wall */
+        if(GVars.M[side] == 0 || Qc == 0 || R0 == 0)  /* walls are absorbing */
+          { x += w_adj; y += h_adj; ABSORB; }
+        /* handle chamfers */
+        this_width = w1+(w2-w1)*z/l;
+        this_height= h1+(h2-h1)*z/l;
+        this_length= fmod(z, l/nelements);
+        /* absorb on input/output of element parts */
+        if (GVars.chamfer_z && (this_length<GVars.chamfer_z || this_length>l/nelements-GVars.chamfer_z))
+        { x += w_adj; y += h_adj; ABSORB; }
+        /* absorb on l/r/t/b sides */
+        if (GVars.chamfer_lr && (side==1 || side==2) && (fabs(y+h_adj)>this_height/2-GVars.chamfer_lr))
+        { x += w_adj; y += h_adj; ABSORB; }
+        if (GVars.chamfer_tb && (side==3 || side==4) && (fabs(x+w_adj)>this_width/2- GVars.chamfer_tb))
+        { x += w_adj; y += h_adj; ABSORB; }
+        /* change/mirror velocity: h_f = v - n.2*n.v/|n|^2 */
+        GVars.N_reflection[side]++; /* GVars.norm_n2 > 0 was checked at INIT */
+        /* compute n.v using current values */
+        B = scalar_prod(vx,vy,vz,nx,ny,nz);
+        dt = 2*B/GVars.norm_n2[side]; /* 2*n.v/|n|^2 */
+        vx -= nx*dt;
+        vy -= ny*dt;
+        vz -= nz*dt;
+
+        /* compute q and modify neutron weight */
+        /* scattering q=|n_i-n_f| = V2Q*|vf - v| = V2Q*2*n.v/|n| */
+        q = 2*V2Q*fabs(B)/GVars.norm_n[side];
+
+        if (reflect && strlen(reflect) && strcmp(reflect,"NULL") && strcmp(reflect,"0"))
+          TableReflecFunc(q, &pTable, &B);
+        else {
+          double par[] = {R0, Qc, GVars.Alpha[side], GVars.M[side], W};
+          StdReflecFunc(q, par, &B);
+        }
+        if (B <= 0) { x += w_adj; y += h_adj; ABSORB; }
+        else p *= B;
+        x += w_adj; y += h_adj; SCATTER; x -= w_adj; y -= h_adj;
+        GVars.N_reflection[0]++;
+        /* go to the next reflection */
+        if (bounces > 1000) ABSORB;
+      } /* end for */
+      x += w_adj; y += h_adj; /* Re-adjust origin after SCATTER */
+    }
+
+    if (GVars.fc_freq != 0 || GVars.fc_phase != 0) { /* rotate back neutron w/r to guide element */
+      /* approximation of rotating straight Fermi Chopper */
+      Coords   X = coords_set(x,y,z-l/2);  /* current coordinates of neutron in centered static frame */
+      Rotation R;
+      rot_set_rotation(R, 0, angle, 0); /* will rotate back neutron: positive side */
+      /* apply rotation to centered coordinates */
+      Coords   RX = rot_apply(R, X);
+      coords_get(RX, &x, &y, &z);
+      z = z+l/2;
+      /* rotate speed */
+      X  = coords_set(vx,vy,vz);
+      RX = rot_apply(R, X);
+      coords_get(RX, &vx, &vy, &vz);
+    }
+
+  } /* if l */
+}
+#line 14278 "./NERA_guide_ell_st_3part_parabol.c"
+}   /* End of CG_1=Guide_gravity() SETTING parameter declarations. */
+#undef pTable
+#undef GVars
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+  /* Label for restoring  neutron */
+  mcabsorbCompCG_1:
+  if (RESTORE) /* restore if needed */
+  { RESTORE_NEUTRON(8,
+      mcnlx,
+      mcnly,
+      mcnlz,
+      mcnlvx,
+      mcnlvy,
+      mcnlvz,
+      mcnlt,
+      mcnlsx,
+      mcnlsy,
+      mcnlsz,
+      mcnlp); }
+#undef mcabsorbComp
+#undef p
+#undef sz
+#undef sy
+#undef sx
+#undef t
+#undef vz
+#undef vy
+#undef vx
+#undef z
+#undef y
+#undef x
+  mcDEBUG_STATE(
+mcnlx,
+mcnly,
+mcnlz,
+mcnlvx,
+mcnlvy,
+mcnlvz,
+mcnlt,
+mcnlsx,
+mcnlsy,
+mcnlsz,
+mcnlp)
+
+  /* TRACE Component elliptic_guide [9] */
   mccoordschange(mcposrelliptic_guide, mcrotrelliptic_guide,
     &mcnlx,
     &mcnly,
@@ -14744,7 +14362,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompelliptic_guide
-  STORE_NEUTRON(10,
+  STORE_NEUTRON(9,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14758,12 +14376,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[10]++;
-  mcPCounter[10] += p;
-  mcP2Counter[10] += p*p;
+  mcNCounter[9]++;
+  mcPCounter[9] += p;
+  mcP2Counter[9] += p*p;
 #define mccompcurname  elliptic_guide
 #define mccompcurtype  Guide_tapering
-#define mccompcurindex 10
+#define mccompcurindex 9
 #define w1c mccelliptic_guide_w1c
 #define w2c mccelliptic_guide_w2c
 #define ww mccelliptic_guide_ww
@@ -14823,7 +14441,7 @@ MCNUM my = mccelliptic_guide_my;
 MCNUM segno = mccelliptic_guide_segno;
 MCNUM curvature = mccelliptic_guide_curvature;
 MCNUM curvature_v = mccelliptic_guide_curvature_v;
-#line 452 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -14978,7 +14596,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   } /* loop on segments */
 
 }
-#line 14981 "./NERA_guide.c"
+#line 14599 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of elliptic_guide=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -15025,7 +14643,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   /* Label for restoring  neutron */
   mcabsorbCompelliptic_guide:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(10,
+  { RESTORE_NEUTRON(9,
       mcnlx,
       mcnly,
       mcnlz,
@@ -15062,7 +14680,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component guide_end [11] */
+  /* TRACE Component guide_end [10] */
   mccoordschange(mcposrguide_end, mcrotrguide_end,
     &mcnlx,
     &mcnly,
@@ -15102,7 +14720,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompguide_end
-  STORE_NEUTRON(11,
+  STORE_NEUTRON(10,
     mcnlx,
     mcnly,
     mcnlz,
@@ -15116,19 +14734,19 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[11]++;
-  mcPCounter[11] += p;
-  mcP2Counter[11] += p*p;
+  mcNCounter[10]++;
+  mcPCounter[10] += p;
+  mcP2Counter[10] += p*p;
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
-#define mccompcurindex 11
+#define mccompcurindex 10
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
   mcabsorbCompguide_end:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(11,
+  { RESTORE_NEUTRON(10,
       mcnlx,
       mcnly,
       mcnlz,
@@ -15165,7 +14783,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component monitor_nd_xy [12] */
+  /* TRACE Component monitor_nd_xy [11] */
   mccoordschange(mcposrmonitor_nd_xy, mcrotrmonitor_nd_xy,
     &mcnlx,
     &mcnly,
@@ -15205,7 +14823,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompmonitor_nd_xy
-  STORE_NEUTRON(12,
+  STORE_NEUTRON(11,
     mcnlx,
     mcnly,
     mcnlz,
@@ -15219,12 +14837,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[12]++;
-  mcPCounter[12] += p;
-  mcP2Counter[12] += p*p;
+  mcNCounter[11]++;
+  mcPCounter[11] += p;
+  mcP2Counter[11] += p*p;
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -15423,7 +15041,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 15426 "./NERA_guide.c"
+#line 15044 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -15438,7 +15056,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
   /* Label for restoring  neutron */
   mcabsorbCompmonitor_nd_xy:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(12,
+  { RESTORE_NEUTRON(11,
       mcnlx,
       mcnly,
       mcnlz,
@@ -15539,7 +15157,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 15542 "./NERA_guide.c"
+#line 15160 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -15549,115 +15167,11 @@ MCNUM minutes = mccorigin_minutes;
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* User SAVE code for component 'source_time_mon_one_pulse'. */
-  SIG_MESSAGE("source_time_mon_one_pulse (Save)");
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
-MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
-MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
-MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
-MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
-MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
-MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
-MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
-MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
-MCNUM bins = mccsource_time_mon_one_pulse_bins;
-MCNUM min = mccsource_time_mon_one_pulse_min;
-MCNUM max = mccsource_time_mon_one_pulse_max;
-MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
-MCNUM radius = mccsource_time_mon_one_pulse_radius;
-char* options = mccsource_time_mon_one_pulse_options;
-char* filename = mccsource_time_mon_one_pulse_filename;
-char* geometry = mccsource_time_mon_one_pulse_geometry;
-char* username1 = mccsource_time_mon_one_pulse_username1;
-char* username2 = mccsource_time_mon_one_pulse_username2;
-char* username3 = mccsource_time_mon_one_pulse_username3;
-int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  /* save results, but do not free pointers */
-  detector = Monitor_nD_Save(&DEFS, &Vars);
-}
-#line 15591 "./NERA_guide.c"
-}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-  /* User SAVE code for component 'source_time_mon_many_pulses'. */
-  SIG_MESSAGE("source_time_mon_many_pulses (Save)");
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
-MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
-MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
-MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
-MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
-MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
-MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
-MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
-MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
-MCNUM bins = mccsource_time_mon_many_pulses_bins;
-MCNUM min = mccsource_time_mon_many_pulses_min;
-MCNUM max = mccsource_time_mon_many_pulses_max;
-MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
-MCNUM radius = mccsource_time_mon_many_pulses_radius;
-char* options = mccsource_time_mon_many_pulses_options;
-char* filename = mccsource_time_mon_many_pulses_filename;
-char* geometry = mccsource_time_mon_many_pulses_geometry;
-char* username1 = mccsource_time_mon_many_pulses_username1;
-char* username2 = mccsource_time_mon_many_pulses_username2;
-char* username3 = mccsource_time_mon_many_pulses_username3;
-int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  /* save results, but do not free pointers */
-  detector = Monitor_nD_Save(&DEFS, &Vars);
-}
-#line 15643 "./NERA_guide.c"
-}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
   /* User SAVE code for component 'monitor_nd_xy'. */
   SIG_MESSAGE("monitor_nd_xy (Save)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -15692,7 +15206,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 15695 "./NERA_guide.c"
+#line 15209 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -15739,7 +15253,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 15742 "./NERA_guide.c"
+#line 15256 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -15811,7 +15325,7 @@ int target_index = mccSource_target_index;
   Table_Free(&pTable_x);
   Table_Free(&pTable_y);
 }
-#line 15813 "./NERA_guide.c"
+#line 15327 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -15837,140 +15351,86 @@ int target_index = mccSource_target_index;
     if (!mcNCounter[2]) fprintf(stderr, "Warning: No neutron could reach Component[2] Source\n");
     if (mcAbsorbProp[2]) fprintf(stderr, "Warning: %g events were removed in Component[2] Source=Source_gen()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[2]);
-  /* User FINALLY code for component 'source_time_mon_one_pulse'. */
-  SIG_MESSAGE("source_time_mon_one_pulse (Finally)");
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
-MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
-MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
-MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
-MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
-MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
-MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
-MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
-MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
-MCNUM bins = mccsource_time_mon_one_pulse_bins;
-MCNUM min = mccsource_time_mon_one_pulse_min;
-MCNUM max = mccsource_time_mon_one_pulse_max;
-MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
-MCNUM radius = mccsource_time_mon_one_pulse_radius;
-char* options = mccsource_time_mon_one_pulse_options;
-char* filename = mccsource_time_mon_one_pulse_filename;
-char* geometry = mccsource_time_mon_one_pulse_geometry;
-char* username1 = mccsource_time_mon_one_pulse_username1;
-char* username2 = mccsource_time_mon_one_pulse_username2;
-char* username3 = mccsource_time_mon_one_pulse_username3;
-int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  /* free pointers */
-  if (!nowritefile) {
-    Monitor_nD_Finally(&DEFS, &Vars);
-  }
-}
-#line 15879 "./NERA_guide.c"
-}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-    if (!mcNCounter[3]) fprintf(stderr, "Warning: No neutron could reach Component[3] source_time_mon_one_pulse\n");
-    if (mcAbsorbProp[3]) fprintf(stderr, "Warning: %g events were removed in Component[3] source_time_mon_one_pulse=Monitor_nD()\n"
+    if (!mcNCounter[3]) fprintf(stderr, "Warning: No neutron could reach Component[3] slit1\n");
+    if (mcAbsorbProp[3]) fprintf(stderr, "Warning: %g events were removed in Component[3] slit1=Slit()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[3]);
-  /* User FINALLY code for component 'source_time_mon_many_pulses'. */
-  SIG_MESSAGE("source_time_mon_many_pulses (Finally)");
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
-MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
-MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
-MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
-MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
-MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
-MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
-MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
-MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
-MCNUM bins = mccsource_time_mon_many_pulses_bins;
-MCNUM min = mccsource_time_mon_many_pulses_min;
-MCNUM max = mccsource_time_mon_many_pulses_max;
-MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
-MCNUM radius = mccsource_time_mon_many_pulses_radius;
-char* options = mccsource_time_mon_many_pulses_options;
-char* filename = mccsource_time_mon_many_pulses_filename;
-char* geometry = mccsource_time_mon_many_pulses_geometry;
-char* username1 = mccsource_time_mon_many_pulses_username1;
-char* username2 = mccsource_time_mon_many_pulses_username2;
-char* username3 = mccsource_time_mon_many_pulses_username3;
-int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+    if (!mcNCounter[4]) fprintf(stderr, "Warning: No neutron could reach Component[4] slit2\n");
+    if (mcAbsorbProp[4]) fprintf(stderr, "Warning: %g events were removed in Component[4] slit2=Slit()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[4]);
+    if (!mcNCounter[5]) fprintf(stderr, "Warning: No neutron could reach Component[5] slit3\n");
+    if (mcAbsorbProp[5]) fprintf(stderr, "Warning: %g events were removed in Component[5] slit3=Slit()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[5]);
+    if (!mcNCounter[6]) fprintf(stderr, "Warning: No neutron could reach Component[6] slit4\n");
+    if (mcAbsorbProp[6]) fprintf(stderr, "Warning: %g events were removed in Component[6] slit4=Slit()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[6]);
+    if (!mcNCounter[7]) fprintf(stderr, "Warning: No neutron could reach Component[7] Guide_start_arm\n");
+    if (mcAbsorbProp[7]) fprintf(stderr, "Warning: %g events were removed in Component[7] Guide_start_arm=Arm()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[7]);
+  /* User FINALLY code for component 'CG_1'. */
+  SIG_MESSAGE("CG_1 (Finally)");
+#define mccompcurname  CG_1
+#define mccompcurtype  Guide_gravity
+#define mccompcurindex 8
+#define GVars mccCG_1_GVars
+#define pTable mccCG_1_pTable
+{   /* Declarations of CG_1=Guide_gravity() SETTING parameters. */
+MCNUM w1 = mccCG_1_w1;
+MCNUM h1 = mccCG_1_h1;
+MCNUM w2 = mccCG_1_w2;
+MCNUM h2 = mccCG_1_h2;
+MCNUM l = mccCG_1_l;
+MCNUM R0 = mccCG_1_R0;
+MCNUM Qc = mccCG_1_Qc;
+MCNUM alpha = mccCG_1_alpha;
+MCNUM m = mccCG_1_m;
+MCNUM W = mccCG_1_W;
+MCNUM nslit = mccCG_1_nslit;
+MCNUM d = mccCG_1_d;
+MCNUM mleft = mccCG_1_mleft;
+MCNUM mright = mccCG_1_mright;
+MCNUM mtop = mccCG_1_mtop;
+MCNUM mbottom = mccCG_1_mbottom;
+MCNUM nhslit = mccCG_1_nhslit;
+MCNUM G = mccCG_1_G;
+MCNUM aleft = mccCG_1_aleft;
+MCNUM aright = mccCG_1_aright;
+MCNUM atop = mccCG_1_atop;
+MCNUM abottom = mccCG_1_abottom;
+MCNUM wavy = mccCG_1_wavy;
+MCNUM wavy_z = mccCG_1_wavy_z;
+MCNUM wavy_tb = mccCG_1_wavy_tb;
+MCNUM wavy_lr = mccCG_1_wavy_lr;
+MCNUM chamfers = mccCG_1_chamfers;
+MCNUM chamfers_z = mccCG_1_chamfers_z;
+MCNUM chamfers_lr = mccCG_1_chamfers_lr;
+MCNUM chamfers_tb = mccCG_1_chamfers_tb;
+MCNUM nelements = mccCG_1_nelements;
+MCNUM nu = mccCG_1_nu;
+MCNUM phase = mccCG_1_phase;
+char* reflect = mccCG_1_reflect;
+#line 562 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
-  /* free pointers */
-  if (!nowritefile) {
-    Monitor_nD_Finally(&DEFS, &Vars);
-  }
+if (GVars.warnings > 100) {
+  fprintf(stderr,"%s: warning: neutron has entered guide, but can not exit !\n", GVars.compcurname);
+  fprintf(stderr,"%s: warning: This message has been repeated %g times\n", GVars.compcurname, GVars.warnings);
 }
-#line 15935 "./NERA_guide.c"
-}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
+}
+#line 15411 "./NERA_guide_ell_st_3part_parabol.c"
+}   /* End of CG_1=Guide_gravity() SETTING parameter declarations. */
+#undef pTable
+#undef GVars
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[4]) fprintf(stderr, "Warning: No neutron could reach Component[4] source_time_mon_many_pulses\n");
-    if (mcAbsorbProp[4]) fprintf(stderr, "Warning: %g events were removed in Component[4] source_time_mon_many_pulses=Monitor_nD()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[4]);
-    if (!mcNCounter[5]) fprintf(stderr, "Warning: No neutron could reach Component[5] slit1\n");
-    if (mcAbsorbProp[5]) fprintf(stderr, "Warning: %g events were removed in Component[5] slit1=Slit()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[5]);
-    if (!mcNCounter[6]) fprintf(stderr, "Warning: No neutron could reach Component[6] slit2\n");
-    if (mcAbsorbProp[6]) fprintf(stderr, "Warning: %g events were removed in Component[6] slit2=Slit()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[6]);
-    if (!mcNCounter[7]) fprintf(stderr, "Warning: No neutron could reach Component[7] slit3\n");
-    if (mcAbsorbProp[7]) fprintf(stderr, "Warning: %g events were removed in Component[7] slit3=Slit()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[7]);
-    if (!mcNCounter[8]) fprintf(stderr, "Warning: No neutron could reach Component[8] slit4\n");
-    if (mcAbsorbProp[8]) fprintf(stderr, "Warning: %g events were removed in Component[8] slit4=Slit()\n"
+    if (!mcNCounter[8]) fprintf(stderr, "Warning: No neutron could reach Component[8] CG_1\n");
+    if (mcAbsorbProp[8]) fprintf(stderr, "Warning: %g events were removed in Component[8] CG_1=Guide_gravity()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[8]);
-    if (!mcNCounter[9]) fprintf(stderr, "Warning: No neutron could reach Component[9] Guide_start_arm\n");
-    if (mcAbsorbProp[9]) fprintf(stderr, "Warning: %g events were removed in Component[9] Guide_start_arm=Arm()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[9]);
   /* User FINALLY code for component 'elliptic_guide'. */
   SIG_MESSAGE("elliptic_guide (Finally)");
 #define mccompcurname  elliptic_guide
 #define mccompcurtype  Guide_tapering
-#define mccompcurindex 10
+#define mccompcurindex 9
 #define w1c mccelliptic_guide_w1c
 #define w2c mccelliptic_guide_w2c
 #define ww mccelliptic_guide_ww
@@ -16030,7 +15490,7 @@ MCNUM my = mccelliptic_guide_my;
 MCNUM segno = mccelliptic_guide_segno;
 MCNUM curvature = mccelliptic_guide_curvature;
 MCNUM curvature_v = mccelliptic_guide_curvature_v;
-#line 608 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -16045,7 +15505,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 16039 "./NERA_guide.c"
+#line 15500 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of elliptic_guide=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16090,17 +15550,17 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[10]) fprintf(stderr, "Warning: No neutron could reach Component[10] elliptic_guide\n");
-    if (mcAbsorbProp[10]) fprintf(stderr, "Warning: %g events were removed in Component[10] elliptic_guide=Guide_tapering()\n"
+    if (!mcNCounter[9]) fprintf(stderr, "Warning: No neutron could reach Component[9] elliptic_guide\n");
+    if (mcAbsorbProp[9]) fprintf(stderr, "Warning: %g events were removed in Component[9] elliptic_guide=Guide_tapering()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[9]);
+    if (!mcNCounter[10]) fprintf(stderr, "Warning: No neutron could reach Component[10] guide_end\n");
+    if (mcAbsorbProp[10]) fprintf(stderr, "Warning: %g events were removed in Component[10] guide_end=Arm()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[10]);
-    if (!mcNCounter[11]) fprintf(stderr, "Warning: No neutron could reach Component[11] guide_end\n");
-    if (mcAbsorbProp[11]) fprintf(stderr, "Warning: %g events were removed in Component[11] guide_end=Arm()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[11]);
   /* User FINALLY code for component 'monitor_nd_xy'. */
   SIG_MESSAGE("monitor_nd_xy (Finally)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -16137,7 +15597,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 16129 "./NERA_guide.c"
+#line 15590 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -16150,18 +15610,17 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[12]) fprintf(stderr, "Warning: No neutron could reach Component[12] monitor_nd_xy\n");
-    if (mcAbsorbProp[12]) fprintf(stderr, "Warning: %g events were removed in Component[12] monitor_nd_xy=Monitor_nD()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[12]);
+    if (!mcNCounter[11]) fprintf(stderr, "Warning: No neutron could reach Component[11] monitor_nd_xy\n");
+    if (mcAbsorbProp[11]) fprintf(stderr, "Warning: %g events were removed in Component[11] monitor_nd_xy=Monitor_nD()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[11]);
   /* User FINALLY code from instrument definition. */
   SIG_MESSAGE("Nera (Finally)");
 #define mccompcurname  Nera
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
-#define linh mciplinh
+#define ell_length mcipell_length
 #define louth mciplouth
-#define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
 #define source_lambda_min mcipsource_lambda_min
@@ -16173,7 +15632,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 {
 //printf("floats: %4.2f",LT0);
 }
-#line 16164 "./NERA_guide.c"
+#line 15624 "./NERA_guide_ell_st_3part_parabol.c"
 #undef guide_height
 #undef guide_width
 #undef source_pulse_number
@@ -16181,9 +15640,8 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef source_lambda_min
 #undef sample_size
 #undef loutw
-#undef linw
 #undef louth
-#undef linh
+#undef ell_length
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -16223,7 +15681,7 @@ MCNUM minutes = mccorigin_minutes;
 {
   
 }
-#line 16214 "./NERA_guide.c"
+#line 15673 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -16336,7 +15794,7 @@ int target_index = mccSource_target_index;
     dashed_line(0,0,0, -focus_xw/2, focus_yh/2,dist, 4);
   }
 }
-#line 16327 "./NERA_guide.c"
+#line 15786 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -16359,126 +15817,12 @@ int target_index = mccSource_target_index;
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* MCDISPLAY code for component 'source_time_mon_one_pulse'. */
-  SIG_MESSAGE("source_time_mon_one_pulse (McDisplay)");
-  printf("MCDISPLAY: component %s\n", "source_time_mon_one_pulse");
-#define mccompcurname  source_time_mon_one_pulse
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 3
-#define user1 mccsource_time_mon_one_pulse_user1
-#define user2 mccsource_time_mon_one_pulse_user2
-#define user3 mccsource_time_mon_one_pulse_user3
-#define DEFS mccsource_time_mon_one_pulse_DEFS
-#define Vars mccsource_time_mon_one_pulse_Vars
-#define detector mccsource_time_mon_one_pulse_detector
-#define offdata mccsource_time_mon_one_pulse_offdata
-{   /* Declarations of source_time_mon_one_pulse=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_one_pulse_xwidth;
-MCNUM yheight = mccsource_time_mon_one_pulse_yheight;
-MCNUM zdepth = mccsource_time_mon_one_pulse_zdepth;
-MCNUM xmin = mccsource_time_mon_one_pulse_xmin;
-MCNUM xmax = mccsource_time_mon_one_pulse_xmax;
-MCNUM ymin = mccsource_time_mon_one_pulse_ymin;
-MCNUM ymax = mccsource_time_mon_one_pulse_ymax;
-MCNUM zmin = mccsource_time_mon_one_pulse_zmin;
-MCNUM zmax = mccsource_time_mon_one_pulse_zmax;
-MCNUM bins = mccsource_time_mon_one_pulse_bins;
-MCNUM min = mccsource_time_mon_one_pulse_min;
-MCNUM max = mccsource_time_mon_one_pulse_max;
-MCNUM restore_neutron = mccsource_time_mon_one_pulse_restore_neutron;
-MCNUM radius = mccsource_time_mon_one_pulse_radius;
-char* options = mccsource_time_mon_one_pulse_options;
-char* filename = mccsource_time_mon_one_pulse_filename;
-char* geometry = mccsource_time_mon_one_pulse_geometry;
-char* username1 = mccsource_time_mon_one_pulse_username1;
-char* username2 = mccsource_time_mon_one_pulse_username2;
-char* username3 = mccsource_time_mon_one_pulse_username3;
-int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-  {
-    off_display(offdata);
-  } else {
-    Monitor_nD_McDisplay(&DEFS, &Vars);
-  }
-}
-#line 16394 "./NERA_guide.c"
-}   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
-  /* MCDISPLAY code for component 'source_time_mon_many_pulses'. */
-  SIG_MESSAGE("source_time_mon_many_pulses (McDisplay)");
-  printf("MCDISPLAY: component %s\n", "source_time_mon_many_pulses");
-#define mccompcurname  source_time_mon_many_pulses
-#define mccompcurtype  Monitor_nD
-#define mccompcurindex 4
-#define user1 mccsource_time_mon_many_pulses_user1
-#define user2 mccsource_time_mon_many_pulses_user2
-#define user3 mccsource_time_mon_many_pulses_user3
-#define DEFS mccsource_time_mon_many_pulses_DEFS
-#define Vars mccsource_time_mon_many_pulses_Vars
-#define detector mccsource_time_mon_many_pulses_detector
-#define offdata mccsource_time_mon_many_pulses_offdata
-{   /* Declarations of source_time_mon_many_pulses=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccsource_time_mon_many_pulses_xwidth;
-MCNUM yheight = mccsource_time_mon_many_pulses_yheight;
-MCNUM zdepth = mccsource_time_mon_many_pulses_zdepth;
-MCNUM xmin = mccsource_time_mon_many_pulses_xmin;
-MCNUM xmax = mccsource_time_mon_many_pulses_xmax;
-MCNUM ymin = mccsource_time_mon_many_pulses_ymin;
-MCNUM ymax = mccsource_time_mon_many_pulses_ymax;
-MCNUM zmin = mccsource_time_mon_many_pulses_zmin;
-MCNUM zmax = mccsource_time_mon_many_pulses_zmax;
-MCNUM bins = mccsource_time_mon_many_pulses_bins;
-MCNUM min = mccsource_time_mon_many_pulses_min;
-MCNUM max = mccsource_time_mon_many_pulses_max;
-MCNUM restore_neutron = mccsource_time_mon_many_pulses_restore_neutron;
-MCNUM radius = mccsource_time_mon_many_pulses_radius;
-char* options = mccsource_time_mon_many_pulses_options;
-char* filename = mccsource_time_mon_many_pulses_filename;
-char* geometry = mccsource_time_mon_many_pulses_geometry;
-char* username1 = mccsource_time_mon_many_pulses_username1;
-char* username2 = mccsource_time_mon_many_pulses_username2;
-char* username3 = mccsource_time_mon_many_pulses_username3;
-int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
-{
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
-  {
-    off_display(offdata);
-  } else {
-    Monitor_nD_McDisplay(&DEFS, &Vars);
-  }
-}
-#line 16451 "./NERA_guide.c"
-}   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
-#undef offdata
-#undef detector
-#undef Vars
-#undef DEFS
-#undef user3
-#undef user2
-#undef user1
-#undef mccompcurname
-#undef mccompcurtype
-#undef mccompcurindex
-
   /* MCDISPLAY code for component 'slit1'. */
   SIG_MESSAGE("slit1 (McDisplay)");
   printf("MCDISPLAY: component %s\n", "slit1");
 #define mccompcurname  slit1
 #define mccompcurtype  Slit
-#define mccompcurindex 5
+#define mccompcurindex 3
 {   /* Declarations of slit1=Slit() SETTING parameters. */
 MCNUM xmin = mccslit1_xmin;
 MCNUM xmax = mccslit1_xmax;
@@ -16510,7 +15854,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 16501 "./NERA_guide.c"
+#line 15846 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16521,7 +15865,7 @@ MCNUM yheight = mccslit1_yheight;
   printf("MCDISPLAY: component %s\n", "slit2");
 #define mccompcurname  slit2
 #define mccompcurtype  Slit
-#define mccompcurindex 6
+#define mccompcurindex 4
 {   /* Declarations of slit2=Slit() SETTING parameters. */
 MCNUM xmin = mccslit2_xmin;
 MCNUM xmax = mccslit2_xmax;
@@ -16553,7 +15897,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 16544 "./NERA_guide.c"
+#line 15889 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16564,7 +15908,7 @@ MCNUM yheight = mccslit2_yheight;
   printf("MCDISPLAY: component %s\n", "slit3");
 #define mccompcurname  slit3
 #define mccompcurtype  Slit
-#define mccompcurindex 7
+#define mccompcurindex 5
 {   /* Declarations of slit3=Slit() SETTING parameters. */
 MCNUM xmin = mccslit3_xmin;
 MCNUM xmax = mccslit3_xmax;
@@ -16596,7 +15940,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 16587 "./NERA_guide.c"
+#line 15932 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16607,7 +15951,7 @@ MCNUM yheight = mccslit3_yheight;
   printf("MCDISPLAY: component %s\n", "slit4");
 #define mccompcurname  slit4
 #define mccompcurtype  Slit
-#define mccompcurindex 8
+#define mccompcurindex 6
 {   /* Declarations of slit4=Slit() SETTING parameters. */
 MCNUM xmin = mccslit4_xmin;
 MCNUM xmax = mccslit4_xmax;
@@ -16639,7 +15983,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 16630 "./NERA_guide.c"
+#line 15975 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16650,7 +15994,7 @@ MCNUM yheight = mccslit4_yheight;
   printf("MCDISPLAY: component %s\n", "Guide_start_arm");
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
-#define mccompcurindex 9
+#define mccompcurindex 7
 #line 40 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
@@ -16659,7 +16003,121 @@ MCNUM yheight = mccslit4_yheight;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 16650 "./NERA_guide.c"
+#line 15995 "./NERA_guide_ell_st_3part_parabol.c"
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* MCDISPLAY code for component 'CG_1'. */
+  SIG_MESSAGE("CG_1 (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "CG_1");
+#define mccompcurname  CG_1
+#define mccompcurtype  Guide_gravity
+#define mccompcurindex 8
+#define GVars mccCG_1_GVars
+#define pTable mccCG_1_pTable
+{   /* Declarations of CG_1=Guide_gravity() SETTING parameters. */
+MCNUM w1 = mccCG_1_w1;
+MCNUM h1 = mccCG_1_h1;
+MCNUM w2 = mccCG_1_w2;
+MCNUM h2 = mccCG_1_h2;
+MCNUM l = mccCG_1_l;
+MCNUM R0 = mccCG_1_R0;
+MCNUM Qc = mccCG_1_Qc;
+MCNUM alpha = mccCG_1_alpha;
+MCNUM m = mccCG_1_m;
+MCNUM W = mccCG_1_W;
+MCNUM nslit = mccCG_1_nslit;
+MCNUM d = mccCG_1_d;
+MCNUM mleft = mccCG_1_mleft;
+MCNUM mright = mccCG_1_mright;
+MCNUM mtop = mccCG_1_mtop;
+MCNUM mbottom = mccCG_1_mbottom;
+MCNUM nhslit = mccCG_1_nhslit;
+MCNUM G = mccCG_1_G;
+MCNUM aleft = mccCG_1_aleft;
+MCNUM aright = mccCG_1_aright;
+MCNUM atop = mccCG_1_atop;
+MCNUM abottom = mccCG_1_abottom;
+MCNUM wavy = mccCG_1_wavy;
+MCNUM wavy_z = mccCG_1_wavy_z;
+MCNUM wavy_tb = mccCG_1_wavy_tb;
+MCNUM wavy_lr = mccCG_1_wavy_lr;
+MCNUM chamfers = mccCG_1_chamfers;
+MCNUM chamfers_z = mccCG_1_chamfers_z;
+MCNUM chamfers_lr = mccCG_1_chamfers_lr;
+MCNUM chamfers_tb = mccCG_1_chamfers_tb;
+MCNUM nelements = mccCG_1_nelements;
+MCNUM nu = mccCG_1_nu;
+MCNUM phase = mccCG_1_phase;
+char* reflect = mccCG_1_reflect;
+#line 571 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
+{
+
+  if (l > 0 && nelements > 0) {
+    int i,j,n;
+    double x1,x2,x3,x4;
+    double y1,y2,y3,y4;
+    double nel = (nelements > 11 ? 11 : nelements);
+
+    
+    for (n=0; n<nel; n++)
+    {
+      double z0, z1;
+      z0 =     n*(l/nel);
+      z1 = (n+1)*(l/nel);
+
+      for(j = 0; j < nhslit; j++)
+      {
+        y1 = j*(GVars.h1c+d)         - h1/2.0;
+        y2 = j*(GVars.h2c+d)         - h2/2.0;
+        y3 = (j+1)*(GVars.h1c+d) - d - h1/2.0;
+        y4 = (j+1)*(GVars.h2c+d) - d - h2/2.0;
+        for(i = 0; i < nslit; i++)
+        {
+          x1 = i*(GVars.w1c+d)         - w1/2.0;
+          x2 = i*(GVars.w2c+d)         - w2/2.0;
+          x3 = (i+1)*(GVars.w1c+d) - d - w1/2.0;
+          x4 = (i+1)*(GVars.w2c+d) - d - w2/2.0;
+          multiline(5,
+                    x1, y1, z0,
+                    x2, y2, z1,
+                    x2, y4, z1,
+                    x1, y3, z0,
+                    x1, y1, z0);
+          multiline(5,
+                    x3, y1, z0,
+                    x4, y2, z1,
+                    x4, y4, z1,
+                    x3, y3, z0,
+                    x3, y1, z0);
+        }
+        line(-w1/2.0, y1, z0, w1/2.0, y1, z0);
+        line(-w2/2.0, y2, z1, w2/2.0, y2, z1);
+      }
+    }
+
+    if (nu || phase) {
+      double radius = sqrt(w1*w1+l*l);
+      /* cylinder top/center/bottom  */
+      circle("xz", 0,-h1/2,l/2,radius);
+      circle("xz", 0,0    ,l/2,radius);
+      circle("xz", 0, h1/2,l/2,radius);
+    }
+  }
+  else {
+    /* A bit ugly; hard-coded dimensions. */
+    
+    line(0,0,0,0.2,0,0);
+    line(0,0,0,0,0.2,0);
+    line(0,0,0,0,0,0.2);
+  }
+
+}
+#line 16106 "./NERA_guide_ell_st_3part_parabol.c"
+}   /* End of CG_1=Guide_gravity() SETTING parameter declarations. */
+#undef pTable
+#undef GVars
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -16669,7 +16127,7 @@ MCNUM yheight = mccslit4_yheight;
   printf("MCDISPLAY: component %s\n", "elliptic_guide");
 #define mccompcurname  elliptic_guide
 #define mccompcurtype  Guide_tapering
-#define mccompcurindex 10
+#define mccompcurindex 9
 #define w1c mccelliptic_guide_w1c
 #define w2c mccelliptic_guide_w2c
 #define ww mccelliptic_guide_ww
@@ -16729,7 +16187,7 @@ MCNUM my = mccelliptic_guide_my;
 MCNUM segno = mccelliptic_guide_segno;
 MCNUM curvature = mccelliptic_guide_curvature;
 MCNUM curvature_v = mccelliptic_guide_curvature_v;
-#line 624 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -16762,7 +16220,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   }
 
 }
-#line 16753 "./NERA_guide.c"
+#line 16212 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of elliptic_guide=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16812,7 +16270,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   printf("MCDISPLAY: component %s\n", "guide_end");
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
-#define mccompcurindex 11
+#define mccompcurindex 10
 #line 40 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
@@ -16821,7 +16279,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 16812 "./NERA_guide.c"
+#line 16271 "./NERA_guide_ell_st_3part_parabol.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -16831,7 +16289,7 @@ MCNUM curvature_v = mccelliptic_guide_curvature_v;
   printf("MCDISPLAY: component %s\n", "monitor_nd_xy");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 11
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -16870,7 +16328,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 16861 "./NERA_guide.c"
+#line 16320 "./NERA_guide_ell_st_3part_parabol.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -16894,4 +16352,4 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef circle
 #undef cylinder
 #undef sphere
-/* end of generated C code ./NERA_guide.c */
+/* end of generated C code ./NERA_guide_ell_st_3part_parabol.c */

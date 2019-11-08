@@ -1,0 +1,20 @@
+clear all
+model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=4');      
+parameters.sample_size=0.03;
+parameters.source_lambda_min=0.5;
+parameters.source_lambda_max=1;
+
+parameters.ell_length = 20;
+%model.loutw = 'free'; model.loutw = [0 0.38 5];
+%model.linw = 'free'; model.linw = [0 12.3 20];
+parameters.loutw = 1.0535;
+parameters.louth = 0.5471;
+
+parameters.guide_height = 0.2;
+parameters.guide_width = 0.16;
+%model.guide_width = 'free'; model.guide_width = [0.03 0.06 0.3];
+%model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
+
+
+results = iData(model,parameters);
+sum_s = results.UserData.monitors.Data.values(1);
