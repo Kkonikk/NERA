@@ -4,7 +4,7 @@ fix(model, 'all');
 i=1;
 for length = 1:5:81
     j=1;
-    for height = 0.08:0.04:0.24
+    for width = 0.08:0.04:0.16
         model.sample_size=0.03;
         model.source_lambda_min=0.5;
         model.source_lambda_max=1;
@@ -17,7 +17,7 @@ for length = 1:5:81
         %parameters.linh = length+0.35;
         %parameters.louth = 0.35;
 
-        model.guide_height = height;
+        model.guide_height = width;
         model.guide_width = 0.15;
         %model.guide_width = 'free'; model.guide_width = [0.03 0.06 0.3];
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
@@ -35,12 +35,12 @@ end
 j=1;
 
 sz = size(int);
-height = 0.08:0.04:0.24;
+width = 0.08:0.04:0.24;
 length = 1:5:81;
 name = 'opt_konik';
 figure;
 for i = 1:sz(2)
-    plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(height(i))]);
+    plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(width(i))]);
     hold on
     title(name)
     grid on
@@ -50,6 +50,6 @@ for i = 1:sz(2)
     legend('Location','south')
 end
 
-print(gcf,[name 'ell_scan_height'],'-dpng','-r300')
+print(gcf,[name 'ell_scan_width'],'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
-saveas(gcf,[name 'ell_scan_height.fig']);
+saveas(gcf,[name 'ell_scan_width.fig']);
