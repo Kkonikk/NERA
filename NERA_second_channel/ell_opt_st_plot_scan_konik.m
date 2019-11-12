@@ -1,31 +1,33 @@
 clear all
-model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
+model = mccode('NERA_guide_ell_st_3part.instr','mpi=1');
 
 i=1;
 for length = 1:5:81
     j=1;
     for height = 0.08:0.04:0.24
-        parameters.sample_size=0.03;
-        parameters.source_lambda_min=0.5;
-        parameters.source_lambda_max=1;
+        model.sample_size=0.03;
+        model.source_lambda_min=0.5;
+        model.source_lambda_max=1;
 
-        parameters.ell_length = length;
+        model.ell_length = length;
         model.louth = 'free'; model.loutw = [0 0.38 5];
         model.linh = 'free'; model.linw = [0 12.3 50];
-        parameters.loutw = 0;
-        parameters.linw = 0;
+        model.loutw = 0;
+        model.linw = 0;
         %parameters.linh = length+0.35;
         %parameters.louth = 0.35;
 
-        parameters.guide_height = height;
-        parameters.guide_width = 0.15;
+        model.guide_height = height;
+        model.guide_width = 0.15;
         %model.guide_width = 'free'; model.guide_width = [0.03 0.06 0.3];
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
+ 
+        [model, fval, status, output]=fmax(model,[], ...
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=50', nan);
 
-        
-        results = iData(model,parameters);
-        sum_s = results.UserData.monitors.Data.values(1);
-        int(i,j) = sum_s;
+        bb = model(model,nan);
+        int(i,j) = sum(bb,'all');
+        j=j+1;
         j=j+1;
     end
     i= i+1;
