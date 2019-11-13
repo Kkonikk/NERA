@@ -1,5 +1,5 @@
 clear all
-model = mccode('NERA_guide_ell_st_3part.instr','mpi=2');
+model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
 for length = 1:5:81
