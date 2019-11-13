@@ -1,10 +1,10 @@
 clear all
-model = mccode('NERA_guide_ell_st_3part.instr','mpi=2');
+model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
 for length = 1:5:81
     j=1;
-    for height = 0.08:0.04:0.24
+    for height = 0.08:0.04:0.2
         model.sample_size=0.03;
         model.source_lambda_min=0.5;
         model.source_lambda_max=1;
@@ -37,7 +37,7 @@ j=1;
 sz = size(int);
 height = 0.08:0.04:0.24;
 length = 1:5:81;
-name = 'opt_konik';
+name = 'opt_ell_konik';
 figure;
 for i = 1:sz(2)
     plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(height(i))]);
@@ -50,6 +50,6 @@ for i = 1:sz(2)
     legend('Location','south')
 end
 
-print(gcf,[name 'ell_scan_height'],'-dpng','-r300')
+print(gcf,[name '_scan_height'],'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
-saveas(gcf,[name 'ell_scan_height.fig']);
+saveas(gcf,[name '_scan_height.fig']);
