@@ -26,7 +26,7 @@ for length = 1:5:81
         'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=200', nan);
 
         bb = model(parameters,nan);
-        int(i,j) = sum(bb,'all');
+        int(i,j) = sum(sum(bb,'double'));
         j=j+1;
     end
     i= i+1;
