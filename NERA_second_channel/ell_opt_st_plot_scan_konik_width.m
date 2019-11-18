@@ -2,16 +2,20 @@ clear all
 model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
-for length = 20:1:25
+name = '18_11_elliptic_width_scan';
+width_min = 0.1; width_step = 0.01; width_max = 0.2;
+length_min = 2.5; length_step = 5; length_max = 90;
+
+for length = length_min:length_step:length_max
     j=1;
-    for width = 0.10:0.01:0.20
+    for width = width_min:width_step:width_max
         model.sample_size=0.03;
         model.source_lambda_min=0.5;
         model.source_lambda_max=1;
 
         model.ell_length = length;
-        model.loutw = 'free'; model.loutw = [0 0.38 5];
-        model.linw = 'free'; model.linw = [0 12.3 50];
+        model.loutw = 'free'; model.loutw = [0 0.38 6];
+        model.linw = 'free'; model.linw = [0 12.3 90];
         model.louth = 0;
         model.linh = 0;
         %parameters.linh = length+0.35;
@@ -23,9 +27,10 @@ for length = 20:1:25
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
  
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=200', nan);
 
         bb = model(parameters,nan);
+        ell_param{i,j} = parameters;
         int(i,j) = sum(sum(bb,'double'));
         j=j+1;
     end
@@ -34,14 +39,13 @@ end
 j=1;
 
 sz = size(int);
-width = 0.10:0.01:0.20;
-length = 20:1:25;
-name = 'opt_ell_konik';
+width = width_min:width_step:width_max;
+length = length_min:length_step:length_max;
 figure;
 for i = 1:sz(2)
     plot(length,int(:,i),'LineWidth',2,'DisplayName',['width =' num2str(width(i))]);
     hold on
-    title(name)
+    title('scan of different elliptic guides')
     grid on
     xlabel('Length of elliptic guide, m')
     ylabel('I, arb.u.')
@@ -49,6 +53,8 @@ for i = 1:sz(2)
     legend('Location','south')
 end
 
-print(gcf,[name '_scan_width'],'-dpng','-r300')
+print(gcf,name,'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
-saveas(gcf,[name '_scan_width.fig']);
+saveas(gcf,[name '.fig']);
+save(name)
+

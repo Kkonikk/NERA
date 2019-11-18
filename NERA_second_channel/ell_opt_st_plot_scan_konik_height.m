@@ -2,16 +2,20 @@ clear all
 model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
-for length = 7:1:25
+name = '18_11_elliptic_height_scan';
+height_min = 0.12; height_step = 0.01; height_max = 0.22;
+length_min = 2.5; length_step = 5; length_max = 90;
+
+for length = length_min:length_step:length_max
     j=1;
-    for height = 0.1:0.01:0.2
+    for height = height_min:height_step:height_max
         model.sample_size=0.03;
         model.source_lambda_min=0.5;
         model.source_lambda_max=1;
 
         model.ell_length = length;
-        model.louth = 'free'; model.louth = [0 0.38 5];
-        model.linh = 'free'; model.linh = [0 12.3 50];
+        model.louth = 'free'; model.louth = [0 0.38 6];
+        model.linh = 'free'; model.linh = [0 12.3 90];
         model.loutw = 0;
         model.linw = 0;
         %parameters.linh = length+0.35;
@@ -23,9 +27,10 @@ for length = 7:1:25
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
  
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=200', nan);
 
         bb = model(parameters,nan);
+        ell_param{i,j} = parameters;
         int(i,j) = sum(sum(bb,'double'));
         j=j+1;
     end
@@ -34,14 +39,13 @@ end
 j=1;
 
 sz = size(int);
-height = 0.1:0.01:0.2;
-length = 7:1:25;
-name = 'opt_ell_konik';
+height = height_min:height_step:height_max;
+length = length_min:length_step:length_max;
 figure;
 for i = 1:sz(2)
     plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(height(i))]);
     hold on
-    title(name)
+    title('scan of different elliptic guides')
     grid on
     xlabel('Length of elliptic guide, m')
     ylabel('I, arb.u.')
@@ -49,6 +53,8 @@ for i = 1:sz(2)
     legend('Location','south')
 end
 
-print(gcf,[name '_scan_height'],'-dpng','-r300')
+print(gcf,name,'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
-saveas(gcf,[name '_scan_height.fig']);
+saveas(gcf,[name '.fig']);
+save(name)
+

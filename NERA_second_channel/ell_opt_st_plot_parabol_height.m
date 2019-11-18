@@ -2,6 +2,7 @@ clear all
 model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=6');
 fix(model, 'all');
 i=1;
+name = '18_11_parab_height_scan';
 height_min = 0.12; height_step = 0.01; height_max = 0.22;
 length_min = 2.5; length_step = 2.5; length_max = 30;
 
@@ -23,8 +24,9 @@ for length = length_min:length_step:length_max
         'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=70', nan);
 
         bb = model(parameters,nan);
+        parab_param{i,j} = parameters;
 		%не забудь изменить свою функцию в sum
-        int(i,j) = sum(bb,'all');
+        int(i,j) = sum(bb,'double');
         j=j+1;
     end
     i= i+1;
@@ -34,7 +36,6 @@ j=1;
 sz = size(int);
 height = height_min:height_step:height_max;
 length = length_min:length_step:length_max;
-name = 'parabol_';
 figure;
 for i = 1:sz(2)
     plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(height(i))]);
@@ -47,6 +48,7 @@ for i = 1:sz(2)
     legend('Location','south')
 end
 
-print(gcf,[name 'scan_height_more_precise'],'-dpng','-r300')
+print(gcf,name,'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
-saveas(gcf,[name 'scan_height_more_precise.fig']);
+saveas(gcf,[name '.fig']);
+save(name)
