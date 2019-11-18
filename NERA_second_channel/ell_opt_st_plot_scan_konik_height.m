@@ -2,9 +2,9 @@ clear all
 model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
-for length = 1:5:81
+for length = 7:1:25
     j=1;
-    for height = 0.08:0.04:0.2
+    for height = 0.1:0.01:0.2
         model.sample_size=0.03;
         model.source_lambda_min=0.5;
         model.source_lambda_max=1;
@@ -23,7 +23,7 @@ for length = 1:5:81
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
  
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=200', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
 
         bb = model(parameters,nan);
         int(i,j) = sum(sum(bb,'double'));
@@ -34,8 +34,8 @@ end
 j=1;
 
 sz = size(int);
-height = 0.08:0.04:0.2;
-length = 1:5:81;
+height = 0.1:0.01:0.2;
+length = 7:1:25;
 name = 'opt_ell_konik';
 figure;
 for i = 1:sz(2)
