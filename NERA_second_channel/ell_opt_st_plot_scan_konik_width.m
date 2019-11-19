@@ -2,9 +2,9 @@ clear all
 model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
-name = '18_11_elliptic_width_scan';
+name = '20_11_elliptic_width_scan';
 width_min = 0.1; width_step = 0.01; width_max = 0.2;
-length_min = 2.5; length_step = 5; length_max = 90;
+length_min = 5; length_step = 1; length_max = 20;
 
 for length = length_min:length_step:length_max
     j=1;
@@ -14,20 +14,20 @@ for length = length_min:length_step:length_max
         model.source_lambda_max=1;
 
         model.ell_length = length;
-        model.loutw = 'free'; model.loutw = [0 0.38 6];
-        model.linw = 'free'; model.linw = [0 12.3 90];
+        model.loutw = 'free'; model.loutw = [0.2 0.5 2];
+        model.linw = 'free'; model.linw = [5 90 150];
         model.louth = 0;
         model.linh = 0;
         %parameters.linh = length+0.35;
         %parameters.louth = 0.35;
 
-        model.guide_height = 0.2;
+        model.guide_height = 0.03;
         model.guide_width = width;
         %model.guide_width = 'free'; model.guide_width = [0.03 0.06 0.3];
         %model.guide_height = 'free'; model.guide_height = [0.03 0.15 0.3];
  
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=200', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;ncount=1e5;MaxFunEvals=100', nan);
 
         bb = model(parameters,nan);
         ell_param{i,j} = parameters;
