@@ -4,7 +4,7 @@ fix(model, 'all');
 i=1;
 name = '20_11_elliptic_width_scan';
 width_min = 0.1; width_step = 0.01; width_max = 0.25;
-length_min = 5; length_step = 1; length_max = 20;
+length_min = 5; length_step = 1; length_max = 25;
 
 for length = length_min:length_step:length_max
     j=1;

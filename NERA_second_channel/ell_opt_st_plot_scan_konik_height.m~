@@ -67,8 +67,6 @@ plot(height,max(int)/max(max(int)), 'LineWidth',4);
     xlabel('Height, m')
     ylabel('Maximal achievable flux, a.u.')
 set(gca, 'FontSize',16);
-print(gcf,[name '_max'],'-dpng','-r300')
-saveas(gcf,[name '_max' '.fig']);
 
 fig = figure;
 set(fig,'Color','White');
