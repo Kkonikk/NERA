@@ -3,7 +3,7 @@ model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
 name = '20_11_elliptic_height_scan';
-height_min = 0.1; height_step = 0.01; height_max = 0.20;
+height_min = 0.1; height_step = 0.01; height_max = 0.25;
 length_min = 5; length_step = 1; length_max = 20;
 
 for length = length_min:length_step:length_max
@@ -15,7 +15,7 @@ for length = length_min:length_step:length_max
 
         model.ell_length = length;
         model.louth = 'free'; model.louth = [0.2 0.5 2];
-        model.linh = 'free'; model.linh = [5 90 150];
+        model.linh = 'free'; model.linh = [5 110 200];
         model.loutw = 0;
         model.linw = 0;
         %parameters.linh = length+0.35;
@@ -32,6 +32,8 @@ for length = length_min:length_step:length_max
         bb = model(parameters,nan);
         ell_param{i,j} = parameters;
         int(i,j) = sum(sum(bb,'double'));
+        left_foc(i,j)=ell_param{i,j}(2);
+        right_foc(i,j)=ell_param{i,j}(3);
         j=j+1;
     end
     i= i+1;
@@ -45,7 +47,7 @@ figure;
 for i = 1:sz(2)
     plot(length,int(:,i),'LineWidth',2,'DisplayName',['height =' num2str(height(i))]);
     hold on
-    title('scan of different elliptic guides')
+    title('Elliptic nose scan')
     grid on
     xlabel('Length of elliptic guide, m')
     ylabel('I, arb.u.')
@@ -54,7 +56,33 @@ for i = 1:sz(2)
 end
 
 print(gcf,name,'-dpng','-r300')
-%matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
 saveas(gcf,[name '.fig']);
-save(name)
+save(name);
+
+figure;
+plot(height,max(int)/max(max(int)));
+    hold on
+    title('Height scan')
+    xlabel('Height, m')
+    ylabel('Maximal achievable flux, a.u.')
+
+figure;
+h = histogram(left_foc);
+    hold on
+    title('Left focus distribution')
+    xlabel('Left focus position, m')
+    ylabel('Number')
+
+figure;
+t = histogram(right_foc);
+    hold on
+    title('Right focus distribution')
+    xlabel('Right focus position, m')
+    ylabel('Number')
+
+
+max(max(left_foc))
+max(max(right_foc))
+min(min(left_foc))
+min(min(right_foc))
 
