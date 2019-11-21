@@ -14,7 +14,7 @@ for length = length_min:length_step:length_max
         model.source_lambda_max=1;
 
         model.ell_length = length;
-        model.loutw = 'free'; model.loutw = [0.2 0.5 2];
+        model.loutw = 'free'; model.loutw = [0.1 0.5 2];
         model.linw = 'free'; model.linw = [5 110 200];
         model.louth = 0;
         model.linh = 0;

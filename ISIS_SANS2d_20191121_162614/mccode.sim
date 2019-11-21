@@ -1,0 +1,199 @@
+McStas simulation description file for ISIS_SANS2d.
+Date:    Thu Nov 21 16:26:15 2019
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: ISIS_SANS2d
+  File: /Users/peterkonik/JOB/git_repos/NERA/ISIS_SANS2d_20191121_162614/mccode
+  Source: ISIS_SANS2d.instr
+  Parameters:  L1(double) A1w(double) A1h(double) S6(double) A2(double) Lmin(double) Lmax(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /Users/peterkonik/JOB/git_repos/NERA/ISIS_SANS2d_20191121_162614
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: ISIS_SANS2d.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1574373275
+  Directory: /Users/peterkonik/JOB/git_repos/NERA/ISIS_SANS2d_20191121_162614
+  Param: L1=3.926
+  Param: A1w=0.03
+  Param: A1h=0.02
+  Param: S6=0.006
+  Param: A2=0.006
+  Param: Lmin=1
+  Param: Lmax=14
+end simulation
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_1d(140)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: lmon1
+  position: 0 0 3.69801
+  title: Wavelength monitor
+  Ncount: 1000000
+  filename: lmon1.dat
+  statistics: X0=3.99006; dX=1.99759;
+  signal: Min=0; Max=1.08398e+07; Mean=2.43267e+06;
+  values: 3.40574e+08 340574 1e+06
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0 17
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_2d(100, 100)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: psd1
+  position: 0 0 3.69901
+  title: PSD monitor
+  Ncount: 1000000
+  filename: psd1.dat
+  statistics: X0=-0.0016972; dX=1.05982; Y0=0.0004257; dY=0.610607;
+  signal: Min=0; Max=482593; Mean=34057.4;
+  values: 3.40574e+08 340574 1e+06
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_1d(140)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: lmonb
+  position: 0.0428984 0 6.95065
+  title: Wavelength monitor
+  Ncount: 1000000
+  filename: lmonB.dat
+  statistics: X0=4.76707; dX=2.08975;
+  signal: Min=0; Max=4.31461e+06; Mean=1.04862e+06;
+  values: 1.46806e+08 216838 702314
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0 17
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_2d(100, 100)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: psd2
+  position: 0.0429224 0 6.95165
+  title: PSD monitor
+  Ncount: 1000000
+  filename: psd2.dat
+  statistics: X0=0.0203331; dX=1.02299; Y0=0.000885436; dY=0.573494;
+  signal: Min=0; Max=81760.5; Mean=14680.6;
+  values: 1.46806e+08 216838 702314
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -2.5 2.5 -2.5 2.5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_2d(100, 100)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: psd3
+  position: 0.241648 0 15.2328
+  title: PSD monitor
+  Ncount: 1000000
+  filename: psd3.dat
+  statistics: X0=-0.0136472; dX=0.86887; Y0=0.000370625; dY=0.579651;
+  signal: Min=0; Max=74103.6; Mean=10097.7;
+  values: 1.00977e+08 180129 543674
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -3 3 -3 3
+  variables: I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_1d(140)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: lmonitor2
+  position: 0.305271 0 17.884
+  title: Wavelength monitor
+  Ncount: 1000000
+  filename: lmonitor2.dat
+  statistics: X0=4.62931; dX=1.99495;
+  signal: Min=0; Max=1.58794e+06; Mean=358371;
+  values: 5.01719e+07 127236 210210
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0 17
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_1d(140)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: lmon2
+  position: 0.342696 0 19.4436
+  title: Wavelength monitor
+  Ncount: 1000000
+  filename: lmonitor3.dat
+  statistics: X0=4.32623; dX=1.96572;
+  signal: Min=0; Max=192496; Mean=39413.7;
+  values: 5.51792e+06 42259.2 19244
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0 17
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Thu Nov 21 16:26:17 2019 (1574342777)
+  type: array_2d(100, 100)
+  Source: ISIS_SANS2d (ISIS_SANS2d.instr)
+  component: psd4
+  position: 0.34272 0 19.4446
+  title: PSD monitor
+  Ncount: 1000000
+  filename: psd4.dat
+  statistics: X0=0.00386628; dX=0.322309; Y0=-0.00169891; dY=0.308978;
+  signal: Min=0; Max=3705.27; Mean=551.792;
+  values: 5.51792e+06 42259.2 19244
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.75 0.75 -0.75 0.75
+  variables: I I_err N
+end data
