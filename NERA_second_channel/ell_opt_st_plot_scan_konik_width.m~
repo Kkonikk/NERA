@@ -64,7 +64,7 @@ set(fig,'Color','White');
 plot(height,max(int)/max(max(int)), 'LineWidth',4);
     grid on
     title('Elliptic nose width scan')
-    xlabel('Width, m')
+    xlabel('Height, m')
     ylabel('Maximal achievable flux, a.u.')
 set(gca, 'FontSize',16);
 print(gcf,[name '_max'],'-dpng','-r300')
