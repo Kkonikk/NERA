@@ -73,25 +73,55 @@ COMPONENT source_time_mon_many_pulses = Monitor_nD(
     options="time limits = [0 1]")
 AT (0, 0, 0.00011) RELATIVE origin
 */
+/************ first version ****************/
 COMPONENT slit1 = Slit(
-    xwidth=0.18, 
+    xwidth=0.22, 
     yheight=0.42)
-AT (0, 0, 1.21) RELATIVE origin
+AT (0, 0, 1.167) RELATIVE origin
 
 COMPONENT slit2 = Slit(
     xwidth=0.28, 
     yheight=0.42)
-AT (0, 0, 1.73) RELATIVE origin
+AT (0, 0, 1.8) RELATIVE origin
 
 COMPONENT slit3 = Slit(
-    xwidth=0.37, 
+    xwidth=0.34, 
     yheight=0.42)
-AT (0, 0, 2.1) RELATIVE origin
+AT (0, 0, 2.2) RELATIVE origin
 
 COMPONENT slit4 = Slit(
-    xwidth=0.47, 
+    xwidth=0.46, 
     yheight=0.42)
-AT (0, 0, 2.52) RELATIVE origin
+AT (0, 0, 2.56) RELATIVE origin
+
+/***************** second version *******************/
+/*
+COMPONENT slit1 = Slit(
+    xwidth=0.22, 
+    yheight=0.42)
+AT (0, 0, 1.167) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=0.196, 
+    yheight=0.42)
+AT (0, 0, 1.335) RELATIVE origin
+
+COMPONENT slit3 = Slit(
+    xwidth=0.22, 
+    yheight=0.42)
+AT (0, 0, 1.8) RELATIVE origin
+
+COMPONENT slit4 = Slit(
+    xwidth=0.34, 
+    yheight=0.42)
+AT (0, 0, 2.2) RELATIVE origin
+
+COMPONENT slit5 = Slit(
+    xwidth=0.36, 
+    yheight=0.42)
+AT (0, 0, 2.56) RELATIVE origin
+
+/**************** end ***************************/
 
 COMPONENT Guide_start_arm = Arm()
 AT (0, 0, source_optics_dist) RELATIVE origin
