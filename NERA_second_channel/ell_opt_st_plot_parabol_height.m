@@ -27,6 +27,7 @@ for length = length_min:length_step:length_max
         parab_param{i,j} = parameters;
 		%не забудь изменить свою функцию в sum
         int(i,j) = sum(bb,'double');
+	    right_foc(i,j)=parab_param{i,j}(2);
         j=j+1;
     end
     i= i+1;
@@ -47,8 +48,32 @@ for i = 1:sz(2)
     legend
     legend('Location','south')
 end
-
+set(gca, 'FontSize',16);
 print(gcf,name,'-dpng','-r300')
-%matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
 saveas(gcf,[name '.fig']);
-save(name)
+
+fig = figure;
+set(fig,'Color','White');
+plot(height,max(int)/max(max(int)), 'LineWidth',4);
+    grid on
+    title('Parabolic nose height scan')
+    xlabel('Height, m')
+    ylabel('Maximal achievable flux, a.u.')
+set(gca, 'FontSize',16);
+print(gcf,[name '_max'],'-dpng','-r300')
+saveas(gcf,[name '_max' '.fig']);
+
+
+fig = figure;
+set(fig,'Color','White');
+t = histogram(right_foc);
+    title('Right focus distribution')
+    xlabel('Right focus position, m')
+    ylabel('Number')
+set(gca, 'FontSize',16);
+
+
+right_foc_max = max(max(right_foc));
+right_foc_min = min(min(right_foc));
+
+save(name);

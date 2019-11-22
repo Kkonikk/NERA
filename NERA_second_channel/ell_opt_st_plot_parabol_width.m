@@ -2,7 +2,7 @@ clear all
 model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=6');
 fix(model, 'all');
 i=1;
-name = '18_11_parab_width_scan';
+name = '22_11_parab_width_scan';
 width_min = 0.1; width_step = 0.01; width_max = 0.2;
 length_min = 2.5; length_step = 2.5; length_max = 30;
 
@@ -27,6 +27,7 @@ for length = length_min:length_step:length_max
         parab_param{i,j} = parameters;
 		%не забудь изменить свою функцию в sum
         int(i,j) = sum(bb,'double');
+        right_foc(i,j)=parab_param{i,j}(3);
         j=j+1;
     end
     i= i+1;
@@ -46,10 +47,36 @@ for i = 1:sz(2)
     xlabel('Length of parabolic guide, m')
     ylabel('I, arb.u.')
     legend
-    legend('Location','south')
+    legend('Location','southoutside')
 end
 
+
+set(gca, 'FontSize',16);
 print(gcf,name,'-dpng','-r300')
-%matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
 saveas(gcf,[name '.fig']);
-save(name)
+
+fig = figure;
+set(fig,'Color','White');
+plot(height,max(int)/max(max(int)), 'LineWidth',4);
+    grid on
+    title('Parabolic nose width scan')
+    xlabel('Width, m')
+    ylabel('Maximal achievable flux, a.u.')
+set(gca, 'FontSize',16);
+print(gcf,[name '_max'],'-dpng','-r300')
+saveas(gcf,[name '_max' '.fig']);
+
+fig = figure;
+set(fig,'Color','White');
+t = histogram(right_foc);
+    title('Right focus distribution')
+    xlabel('Right focus position, m')
+    ylabel('Number')
+set(gca, 'FontSize',16);
+
+
+right_foc_max = max(max(right_foc));
+right_foc_min = min(min(right_foc));
+
+save(name);
+
