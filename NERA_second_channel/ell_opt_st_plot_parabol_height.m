@@ -2,7 +2,7 @@ clear all
 model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=6');
 fix(model, 'all');
 i=1;
-name = '18_11_parab_height_scan';
+name = '22_11_parab_height_scan';
 height_min = 0.12; height_step = 0.01; height_max = 0.22;
 length_min = 2.5; length_step = 2.5; length_max = 30;
 
