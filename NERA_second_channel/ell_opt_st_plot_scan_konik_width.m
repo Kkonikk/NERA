@@ -51,7 +51,7 @@ for i = 1:sz(2)
     title('Elliptic nose length scan')
     grid on
     xlabel('Length of elliptic guide, m')
-    ylabel('I, arb.u.')
+    ylabel('Sample flux, arb.u.')
     legend('Location','southeastoutside')
 end
 
@@ -65,7 +65,7 @@ plot(width,max(int)/max(max(int)), 'LineWidth',4);
     grid on
     title('Elliptic nose width scan')
     xlabel('Width, m')
-    ylabel('Maximal achievable flux, a.u.')
+    ylabel('Maximal achievable sample flux, a.u.')
 set(gca, 'FontSize',16);
 print(gcf,[name '_max'],'-dpng','-r300')
 saveas(gcf,[name '_max' '.fig']);
