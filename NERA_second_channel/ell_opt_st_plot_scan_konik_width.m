@@ -3,7 +3,7 @@ model = mccode('NERA_guide_ell_st_3part.instr','mpi=6');
 fix(model, 'all');
 i=1;
 name = '21_11_elliptic_width_scan';
-width_min = 0.1; width_step = 0.01; width_max = 0.25;
+width_min = 0.1; width_step = 0.01; width_max = 0.2;
 length_min = 5; length_step = 1; length_max = 25;
 
 for length = length_min:length_step:length_max
@@ -46,13 +46,13 @@ length = length_min:length_step:length_max;
 fig = figure;
 set(fig,'Color','White');
 for i = 1:sz(2)
-    plot(length,int(:,i),'LineWidth',2,'DisplayName',['width =' num2str(width(i))]);
+    plot(length,int(:,i),'LineWidth',2,'DisplayName',['w =' num2str(width(i))]);
     hold on
     title('Elliptic nose length scan')
     grid on
     xlabel('Length of elliptic guide, m')
     ylabel('I, arb.u.')
-    legend('Location','southoutside')
+    legend('Location','southeastoutside')
 end
 
 set(gca, 'FontSize',16);
@@ -61,7 +61,7 @@ saveas(gcf,[name '.fig']);
 
 fig = figure;
 set(fig,'Color','White');
-plot(height,max(int)/max(max(int)), 'LineWidth',4);
+plot(width,max(int)/max(max(int)), 'LineWidth',4);
     grid on
     title('Elliptic nose width scan')
     xlabel('Width, m')
