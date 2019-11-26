@@ -21,7 +21,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera(ell_length = 10,louth = 0.5, loutw = 0.5, sample_size = 0.01)
+DEFINE INSTRUMENT Nera(ell_length = 10,linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.01)
 DECLARE
 %{
 
@@ -65,11 +65,13 @@ mtop = 6, mbottom = 6, G = -9.81)
   AT (0, 0, 0.01) RELATIVE Guide_start_arm
 
 COMPONENT elliptic_guide = Guide_tapering(
-    option="parabolical", 
+    option="elliptical", 
     w1=guide_width, 
     h1=guide_height, 
     l=ell_length, 
+    linh = linh, 
     louth = louth,
+    linw = linw,
     loutw = loutw,
     mx=m_side,
     my=m_top)
@@ -106,6 +108,7 @@ COMPONENT monitor_nd_x = Monitor_nD(
     options="x")
 AT (0, 0, distance_before_sample) RELATIVE guide_end
 
+
 COMPONENT monitor_nd_dx = Monitor_nD(
     xwidth=sample_size, yheight=0.2, bins=100, restore_neutron=1, 
     options="dx")
@@ -130,7 +133,6 @@ COMPONENT monitor_nd_lambda_45 = Monitor_nD(
     xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
     options="lambda limits = [0.5 4.5]")
 AT (0, 0, distance_before_sample + 0.005) RELATIVE guide_end
-
 
 /* ******************************* end  *************************************/
 
