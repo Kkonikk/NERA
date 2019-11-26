@@ -203,12 +203,6 @@ COMPONENT monitor_nd_xy = Monitor_nD(
     options="x y")
 AT (0, 0, distance_before_sample) RELATIVE guide_end
 
-COMPONENT monitor_nd_y = Monitor_nD(
-    xwidth=0.2, yheight=0.07, bins=100, restore_neutron=1, 
-    options="y")
-AT (0, 0, distance_before_sample+0.0005) RELATIVE guide_end
-
-
 COMPONENT monitor_nd_lambda = Monitor_nD(
     xwidth=0.2, yheight=0.2, bins=100, restore_neutron=1, 
     options="lambda limits = [0 20]")
