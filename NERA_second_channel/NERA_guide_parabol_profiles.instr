@@ -108,7 +108,7 @@ AT (0, 0, distance_before_sample) RELATIVE guide_end
 
 COMPONENT monitor_nd_dx = Monitor_nD(
     xwidth=sample_size, yheight=0.2, bins=100, restore_neutron=1, 
-    options="dx")
+    options="dx limits = [-2 2]")
 AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
 
 COMPONENT monitor_nd_y = Monitor_nD(
@@ -118,7 +118,7 @@ AT (0, 0, distance_before_sample + 0.002) RELATIVE guide_end
 
 COMPONENT monitor_nd_dy = Monitor_nD(
     xwidth=0.15, yheight=sample_size, bins=100, restore_neutron=1, 
-    options="dy")
+    options="dy limits = [-2 2]")
 AT (0, 0, distance_before_sample + 0.003) RELATIVE guide_end
 
 COMPONENT monitor_nd_lambda_1 = Monitor_nD(

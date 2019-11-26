@@ -225,7 +225,7 @@ set(fig,'Color','White');
 plot(Signal_all{1,1}{2,2},Signal_all{1,1}{2,3},'LineWidth',2,'DisplayName','PV14')
 hold on
 grid on
-xlabel('vertical divergence, deg')
+xlabel('divh, m')
 ylabel('I, arb.u.')
 legend
 legend('Location','south')
@@ -234,7 +234,7 @@ set(gca, 'FontSize',16);
 plot(Signal_all{1,2}{2,2},Signal_all{1,2}{2,3},'LineWidth',2,'DisplayName','PV19')
 hold on
 grid on
-xlabel('vertical divergence, deg')
+xlabel('divh, m')
 ylabel('I, arb.u.')
 legend
 legend('Location','south')
@@ -243,7 +243,7 @@ set(gca, 'FontSize',16);
 plot(Signal_all{1,3}{2,2},Signal_all{1,3}{2,3},'LineWidth',2,'DisplayName','EV14')
 hold on
 grid on
-xlabel('vertical divergence, deg')
+xlabel('divh, m')
 ylabel('I, arb.u.')
 legend
 legend('Location','south')
@@ -252,7 +252,7 @@ set(gca, 'FontSize',16);
 plot(Signal_all{1,4}{2,2},Signal_all{1,4}{2,3},'LineWidth',2,'DisplayName','EV19')
 hold on
 grid on
-xlabel('vertical divergence, deg')
+xlabel('divh, m')
 ylabel('I, arb.u.')
 legend
 legend('Location','south')
