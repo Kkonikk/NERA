@@ -15,7 +15,7 @@
 * guide_widtht:               [m] Initial guide width
 * guide_height:               [m] Initial guide height
 *focusing_length:           [m] Length of the focusing nose
-*shape:                          [string] Shape of the focusing nose - either elliptical or parabolic
+*shape:                          [0 or 1] Shape of the focusing nose - either elliptical (1) or parabolical (0)
 *linh:                              [m] Distance from the focusing nose to the left focus in vertical plane
 *louth:                            [m] Distance from the focusing nose to the right focus in vertical plane
 *linw:                              [m] Distance from the focusing nose to the left focus in horizontal plane
@@ -25,7 +25,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, string shape = "elliptical", linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
+DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
 
 DECLARE
 %{
@@ -118,8 +118,8 @@ mtop = m, mbottom = m, R0=R0, Qc=Qc, alpha=alpha, W=W)
 COMPONENT Main_guide_arm = Arm()
 AT (0, 0, guide_length_st) RELATIVE Main_guide
 
-COMPONENT Focusing_nose = Guide_tapering(
-    option=shape, 
+COMPONENT Focusing_nose_ell = Guide_tapering(
+    option="elliptical", 
     w1=guide_width, 
     h1=guide_height, 
     l=focusing_length, 
@@ -128,11 +128,24 @@ COMPONENT Focusing_nose = Guide_tapering(
     linw = linw,
     loutw = loutw,
     mx=m,
-    my=m, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+    my=m, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 1)
+AT (0, 0, 0.001) RELATIVE Main_guide_arm
+
+COMPONENT Focusing_nose_par = Guide_tapering(
+    option="parabolical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = 0, 
+    louth = louth,
+    linw = 0,
+    loutw = loutw,
+    mx=m,
+    my=m, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 0)
 AT (0, 0, 0.001) RELATIVE Main_guide_arm
 
 COMPONENT guide_end = Arm()
-AT (0, 0, focusing_length) RELATIVE Focusing_nose
+AT (0, 0, focusing_length) RELATIVE Main_guide_arm
 
 //Sample
 

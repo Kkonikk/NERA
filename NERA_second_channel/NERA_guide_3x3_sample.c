@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_guide_3x3_sample.instr (Nera)
- * Date:       Wed Nov 27 14:31:39 2019
+ * Date:       Thu Nov 28 00:03:34 2019
  * File:       ./NERA_guide_3x3_sample.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample.c 
  * CFLAGS=
@@ -10060,7 +10060,7 @@ MCNUM mcipsource_lambda_max;
 MCNUM mcipguide_width;
 MCNUM mcipguide_height;
 MCNUM mcipfocusing_length;
-char* mcipshape;
+MCNUM mcipguide_shape;
 MCNUM mciplinh;
 MCNUM mciplouth;
 MCNUM mciplinw;
@@ -10075,7 +10075,7 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
   "guide_width", &mcipguide_width, instr_type_double, "0.15", 
   "guide_height", &mcipguide_height, instr_type_double, "0.26", 
   "focusing_length", &mcipfocusing_length, instr_type_double, "10", 
-  "shape", &mcipshape, instr_type_string, "elliptical", 
+  "guide_shape", &mcipguide_shape, instr_type_double, "1", 
   "linh", &mciplinh, instr_type_double, "10.5", 
   "louth", &mciplouth, instr_type_double, "0.5", 
   "linw", &mciplinw, instr_type_double, "10.5", 
@@ -10094,13 +10094,13 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define guide_width mcipguide_width
 #define guide_height mcipguide_height
 #define focusing_length mcipfocusing_length
-#define shape mcipshape
+#define guide_shape mcipguide_shape
 #define linh mciplinh
 #define louth mciplouth
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 31 "NERA_guide_3x3_sample.instr"
+#line 32 "NERA_guide_3x3_sample.instr"
 //Source description
 double source_I = 1e16;
 double source_height=0.405, source_width=0.335;
@@ -10114,7 +10114,7 @@ double shutter_width3 = 0.36, shutter_dist3 = 2.16;
 double shutter_width4 = 0.46, shutter_dist4 = 2.56;
 
 //Guide description
-double source_optics_dist = 4.2;
+double source_optics_dist = 2.6;
 double total_length = 105;
 double distance_before_sample = 0.35;
 double guide_length_st;
@@ -10128,7 +10128,7 @@ double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
 #undef linw
 #undef louth
 #undef linh
-#undef shape
+#undef guide_shape
 #undef focusing_length
 #undef guide_height
 #undef guide_width
@@ -10141,17 +10141,17 @@ double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
 
 /* neutron state table at each component input (local coords) */
 /* [x, y, z, vx, vy, vz, t, sx, sy, sz, p] */
-MCNUM mccomp_storein[11*14];
+MCNUM mccomp_storein[11*15];
 /* Components position table (absolute and relative coords) */
-Coords mccomp_posa[14];
-Coords mccomp_posr[14];
+Coords mccomp_posa[15];
+Coords mccomp_posr[15];
 /* Counter for each comp to check for inactive ones */
-MCNUM  mcNCounter[14];
-MCNUM  mcPCounter[14];
-MCNUM  mcP2Counter[14];
-#define mcNUMCOMP 13 /* number of components */
+MCNUM  mcNCounter[15];
+MCNUM  mcPCounter[15];
+MCNUM  mcP2Counter[15];
+#define mcNUMCOMP 14 /* number of components */
 /* Counter for PROP ABSORB */
-MCNUM  mcAbsorbProp[14];
+MCNUM  mcAbsorbProp[15];
 /* Flag true when previous component acted on the neutron (SCATTER) */
 MCNUM mcScattered=0;
 /* Flag true when neutron should be restored (RESTORE) */
@@ -10251,32 +10251,53 @@ MCNUM mccMain_guide_nu;
 MCNUM mccMain_guide_phase;
 char mccMain_guide_reflect[16384];
 
-/* Setting parameters for component 'Focusing_nose' [10]. */
-char mccFocusing_nose_option[16384];
-MCNUM mccFocusing_nose_w1;
-MCNUM mccFocusing_nose_h1;
-MCNUM mccFocusing_nose_l;
-MCNUM mccFocusing_nose_linw;
-MCNUM mccFocusing_nose_loutw;
-MCNUM mccFocusing_nose_linh;
-MCNUM mccFocusing_nose_louth;
-MCNUM mccFocusing_nose_R0;
-MCNUM mccFocusing_nose_Qcx;
-MCNUM mccFocusing_nose_Qcy;
-MCNUM mccFocusing_nose_alphax;
-MCNUM mccFocusing_nose_alphay;
-MCNUM mccFocusing_nose_W;
-MCNUM mccFocusing_nose_mx;
-MCNUM mccFocusing_nose_my;
-MCNUM mccFocusing_nose_segno;
-MCNUM mccFocusing_nose_curvature;
-MCNUM mccFocusing_nose_curvature_v;
+/* Setting parameters for component 'Focusing_nose_ell' [10]. */
+char mccFocusing_nose_ell_option[16384];
+MCNUM mccFocusing_nose_ell_w1;
+MCNUM mccFocusing_nose_ell_h1;
+MCNUM mccFocusing_nose_ell_l;
+MCNUM mccFocusing_nose_ell_linw;
+MCNUM mccFocusing_nose_ell_loutw;
+MCNUM mccFocusing_nose_ell_linh;
+MCNUM mccFocusing_nose_ell_louth;
+MCNUM mccFocusing_nose_ell_R0;
+MCNUM mccFocusing_nose_ell_Qcx;
+MCNUM mccFocusing_nose_ell_Qcy;
+MCNUM mccFocusing_nose_ell_alphax;
+MCNUM mccFocusing_nose_ell_alphay;
+MCNUM mccFocusing_nose_ell_W;
+MCNUM mccFocusing_nose_ell_mx;
+MCNUM mccFocusing_nose_ell_my;
+MCNUM mccFocusing_nose_ell_segno;
+MCNUM mccFocusing_nose_ell_curvature;
+MCNUM mccFocusing_nose_ell_curvature_v;
 
-/* Definition parameters for component 'monitor_nd_xy' [12]. */
+/* Setting parameters for component 'Focusing_nose_par' [11]. */
+char mccFocusing_nose_par_option[16384];
+MCNUM mccFocusing_nose_par_w1;
+MCNUM mccFocusing_nose_par_h1;
+MCNUM mccFocusing_nose_par_l;
+MCNUM mccFocusing_nose_par_linw;
+MCNUM mccFocusing_nose_par_loutw;
+MCNUM mccFocusing_nose_par_linh;
+MCNUM mccFocusing_nose_par_louth;
+MCNUM mccFocusing_nose_par_R0;
+MCNUM mccFocusing_nose_par_Qcx;
+MCNUM mccFocusing_nose_par_Qcy;
+MCNUM mccFocusing_nose_par_alphax;
+MCNUM mccFocusing_nose_par_alphay;
+MCNUM mccFocusing_nose_par_W;
+MCNUM mccFocusing_nose_par_mx;
+MCNUM mccFocusing_nose_par_my;
+MCNUM mccFocusing_nose_par_segno;
+MCNUM mccFocusing_nose_par_curvature;
+MCNUM mccFocusing_nose_par_curvature_v;
+
+/* Definition parameters for component 'monitor_nd_xy' [13]. */
 #define mccmonitor_nd_xy_user1 FLT_MAX
 #define mccmonitor_nd_xy_user2 FLT_MAX
 #define mccmonitor_nd_xy_user3 FLT_MAX
-/* Setting parameters for component 'monitor_nd_xy' [12]. */
+/* Setting parameters for component 'monitor_nd_xy' [13]. */
 MCNUM mccmonitor_nd_xy_xwidth;
 MCNUM mccmonitor_nd_xy_yheight;
 MCNUM mccmonitor_nd_xy_zdepth;
@@ -10324,7 +10345,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 10327 "./NERA_guide_3x3_sample.c"
+#line 10348 "./NERA_guide_3x3_sample.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10361,7 +10382,7 @@ time_t CurrentTime;
 double pmul, srcArea;
 int square;
 double tx,ty,tz;
-#line 10364 "./NERA_guide_3x3_sample.c"
+#line 10385 "./NERA_guide_3x3_sample.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -10521,7 +10542,7 @@ double tx,ty,tz;
 #line 334 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
   Gravity_guide_Vars_type GVars;
   t_Table pTable;
-#line 10524 "./NERA_guide_3x3_sample.c"
+#line 10545 "./NERA_guide_3x3_sample.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -10570,68 +10591,68 @@ double tx,ty,tz;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'Focusing_nose' [10]. */
-#define mccompcurname  Focusing_nose
+/* User declarations for component 'Focusing_nose_ell' [10]. */
+#define mccompcurname  Focusing_nose_ell
 #define mccompcurtype  Guide_tapering
 #define mccompcurindex 10
-#define w1c mccFocusing_nose_w1c
-#define w2c mccFocusing_nose_w2c
-#define ww mccFocusing_nose_ww
-#define hh mccFocusing_nose_hh
-#define whalf mccFocusing_nose_whalf
-#define hhalf mccFocusing_nose_hhalf
-#define lwhalf mccFocusing_nose_lwhalf
-#define lhhalf mccFocusing_nose_lhhalf
-#define h1_in mccFocusing_nose_h1_in
-#define h2_out mccFocusing_nose_h2_out
-#define w1_in mccFocusing_nose_w1_in
-#define w2_out mccFocusing_nose_w2_out
-#define l_seg mccFocusing_nose_l_seg
-#define seg mccFocusing_nose_seg
-#define h12 mccFocusing_nose_h12
-#define h2 mccFocusing_nose_h2
-#define w12 mccFocusing_nose_w12
-#define w2 mccFocusing_nose_w2
-#define a_ell_q mccFocusing_nose_a_ell_q
-#define b_ell_q mccFocusing_nose_b_ell_q
-#define lbw mccFocusing_nose_lbw
-#define lbh mccFocusing_nose_lbh
-#define mxi mccFocusing_nose_mxi
-#define u1 mccFocusing_nose_u1
-#define u2 mccFocusing_nose_u2
-#define div1 mccFocusing_nose_div1
-#define p2_para mccFocusing_nose_p2_para
-#define test mccFocusing_nose_test
-#define Div1 mccFocusing_nose_Div1
-#define i mccFocusing_nose_i
-#define ii mccFocusing_nose_ii
-#define seg mccFocusing_nose_seg
-#define fu mccFocusing_nose_fu
-#define pos mccFocusing_nose_pos
-#define file_name mccFocusing_nose_file_name
-#define ep mccFocusing_nose_ep
-#define num mccFocusing_nose_num
-#define rotation_h mccFocusing_nose_rotation_h
-#define rotation_v mccFocusing_nose_rotation_v
-#define option mccFocusing_nose_option
-#define w1 mccFocusing_nose_w1
-#define h1 mccFocusing_nose_h1
-#define l mccFocusing_nose_l
-#define linw mccFocusing_nose_linw
-#define loutw mccFocusing_nose_loutw
-#define linh mccFocusing_nose_linh
-#define louth mccFocusing_nose_louth
-#define R0 mccFocusing_nose_R0
-#define Qcx mccFocusing_nose_Qcx
-#define Qcy mccFocusing_nose_Qcy
-#define alphax mccFocusing_nose_alphax
-#define alphay mccFocusing_nose_alphay
-#define W mccFocusing_nose_W
-#define mx mccFocusing_nose_mx
-#define my mccFocusing_nose_my
-#define segno mccFocusing_nose_segno
-#define curvature mccFocusing_nose_curvature
-#define curvature_v mccFocusing_nose_curvature_v
+#define w1c mccFocusing_nose_ell_w1c
+#define w2c mccFocusing_nose_ell_w2c
+#define ww mccFocusing_nose_ell_ww
+#define hh mccFocusing_nose_ell_hh
+#define whalf mccFocusing_nose_ell_whalf
+#define hhalf mccFocusing_nose_ell_hhalf
+#define lwhalf mccFocusing_nose_ell_lwhalf
+#define lhhalf mccFocusing_nose_ell_lhhalf
+#define h1_in mccFocusing_nose_ell_h1_in
+#define h2_out mccFocusing_nose_ell_h2_out
+#define w1_in mccFocusing_nose_ell_w1_in
+#define w2_out mccFocusing_nose_ell_w2_out
+#define l_seg mccFocusing_nose_ell_l_seg
+#define seg mccFocusing_nose_ell_seg
+#define h12 mccFocusing_nose_ell_h12
+#define h2 mccFocusing_nose_ell_h2
+#define w12 mccFocusing_nose_ell_w12
+#define w2 mccFocusing_nose_ell_w2
+#define a_ell_q mccFocusing_nose_ell_a_ell_q
+#define b_ell_q mccFocusing_nose_ell_b_ell_q
+#define lbw mccFocusing_nose_ell_lbw
+#define lbh mccFocusing_nose_ell_lbh
+#define mxi mccFocusing_nose_ell_mxi
+#define u1 mccFocusing_nose_ell_u1
+#define u2 mccFocusing_nose_ell_u2
+#define div1 mccFocusing_nose_ell_div1
+#define p2_para mccFocusing_nose_ell_p2_para
+#define test mccFocusing_nose_ell_test
+#define Div1 mccFocusing_nose_ell_Div1
+#define i mccFocusing_nose_ell_i
+#define ii mccFocusing_nose_ell_ii
+#define seg mccFocusing_nose_ell_seg
+#define fu mccFocusing_nose_ell_fu
+#define pos mccFocusing_nose_ell_pos
+#define file_name mccFocusing_nose_ell_file_name
+#define ep mccFocusing_nose_ell_ep
+#define num mccFocusing_nose_ell_num
+#define rotation_h mccFocusing_nose_ell_rotation_h
+#define rotation_v mccFocusing_nose_ell_rotation_v
+#define option mccFocusing_nose_ell_option
+#define w1 mccFocusing_nose_ell_w1
+#define h1 mccFocusing_nose_ell_h1
+#define l mccFocusing_nose_ell_l
+#define linw mccFocusing_nose_ell_linw
+#define loutw mccFocusing_nose_ell_loutw
+#define linh mccFocusing_nose_ell_linh
+#define louth mccFocusing_nose_ell_louth
+#define R0 mccFocusing_nose_ell_R0
+#define Qcx mccFocusing_nose_ell_Qcx
+#define Qcy mccFocusing_nose_ell_Qcy
+#define alphax mccFocusing_nose_ell_alphax
+#define alphay mccFocusing_nose_ell_alphay
+#define W mccFocusing_nose_ell_W
+#define mx mccFocusing_nose_ell_mx
+#define my mccFocusing_nose_ell_my
+#define segno mccFocusing_nose_ell_segno
+#define curvature mccFocusing_nose_ell_curvature
+#define curvature_v mccFocusing_nose_ell_curvature_v
 #line 97 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
@@ -10649,7 +10670,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10652 "./NERA_guide_3x3_sample.c"
+#line 10673 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -10712,18 +10733,160 @@ double rotation_h, rotation_v;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'guide_end' [11]. */
-#define mccompcurname  guide_end
-#define mccompcurtype  Arm
+/* User declarations for component 'Focusing_nose_par' [11]. */
+#define mccompcurname  Focusing_nose_par
+#define mccompcurtype  Guide_tapering
 #define mccompcurindex 11
+#define w1c mccFocusing_nose_par_w1c
+#define w2c mccFocusing_nose_par_w2c
+#define ww mccFocusing_nose_par_ww
+#define hh mccFocusing_nose_par_hh
+#define whalf mccFocusing_nose_par_whalf
+#define hhalf mccFocusing_nose_par_hhalf
+#define lwhalf mccFocusing_nose_par_lwhalf
+#define lhhalf mccFocusing_nose_par_lhhalf
+#define h1_in mccFocusing_nose_par_h1_in
+#define h2_out mccFocusing_nose_par_h2_out
+#define w1_in mccFocusing_nose_par_w1_in
+#define w2_out mccFocusing_nose_par_w2_out
+#define l_seg mccFocusing_nose_par_l_seg
+#define seg mccFocusing_nose_par_seg
+#define h12 mccFocusing_nose_par_h12
+#define h2 mccFocusing_nose_par_h2
+#define w12 mccFocusing_nose_par_w12
+#define w2 mccFocusing_nose_par_w2
+#define a_ell_q mccFocusing_nose_par_a_ell_q
+#define b_ell_q mccFocusing_nose_par_b_ell_q
+#define lbw mccFocusing_nose_par_lbw
+#define lbh mccFocusing_nose_par_lbh
+#define mxi mccFocusing_nose_par_mxi
+#define u1 mccFocusing_nose_par_u1
+#define u2 mccFocusing_nose_par_u2
+#define div1 mccFocusing_nose_par_div1
+#define p2_para mccFocusing_nose_par_p2_para
+#define test mccFocusing_nose_par_test
+#define Div1 mccFocusing_nose_par_Div1
+#define i mccFocusing_nose_par_i
+#define ii mccFocusing_nose_par_ii
+#define seg mccFocusing_nose_par_seg
+#define fu mccFocusing_nose_par_fu
+#define pos mccFocusing_nose_par_pos
+#define file_name mccFocusing_nose_par_file_name
+#define ep mccFocusing_nose_par_ep
+#define num mccFocusing_nose_par_num
+#define rotation_h mccFocusing_nose_par_rotation_h
+#define rotation_v mccFocusing_nose_par_rotation_v
+#define option mccFocusing_nose_par_option
+#define w1 mccFocusing_nose_par_w1
+#define h1 mccFocusing_nose_par_h1
+#define l mccFocusing_nose_par_l
+#define linw mccFocusing_nose_par_linw
+#define loutw mccFocusing_nose_par_loutw
+#define linh mccFocusing_nose_par_linh
+#define louth mccFocusing_nose_par_louth
+#define R0 mccFocusing_nose_par_R0
+#define Qcx mccFocusing_nose_par_Qcx
+#define Qcy mccFocusing_nose_par_Qcy
+#define alphax mccFocusing_nose_par_alphax
+#define alphay mccFocusing_nose_par_alphay
+#define W mccFocusing_nose_par_W
+#define mx mccFocusing_nose_par_mx
+#define my mccFocusing_nose_par_my
+#define segno mccFocusing_nose_par_segno
+#define curvature mccFocusing_nose_par_curvature
+#define curvature_v mccFocusing_nose_par_curvature_v
+#line 97 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+double *w1c;
+double *w2c;
+double *ww, *hh;
+double *whalf, *hhalf;
+double *lwhalf, *lhhalf;
+double *h1_in, *h2_out, *w1_in, *w2_out;
+double l_seg, h12, h2, w12, w2, a_ell_q, b_ell_q, lbw, lbh;
+double mxi ,u1 ,u2 ,div1, p2_para;
+double test,Div1;
+int i,ii,seg;
+char *fu;
+char *pos;
+char file_name[1024];
+char *ep;
+FILE *num;
+double rotation_h, rotation_v;
+#line 10815 "./NERA_guide_3x3_sample.c"
+#undef curvature_v
+#undef curvature
+#undef segno
+#undef my
+#undef mx
+#undef W
+#undef alphay
+#undef alphax
+#undef Qcy
+#undef Qcx
+#undef R0
+#undef louth
+#undef linh
+#undef loutw
+#undef linw
+#undef l
+#undef h1
+#undef w1
+#undef option
+#undef rotation_v
+#undef rotation_h
+#undef num
+#undef ep
+#undef file_name
+#undef pos
+#undef fu
+#undef seg
+#undef ii
+#undef i
+#undef Div1
+#undef test
+#undef p2_para
+#undef div1
+#undef u2
+#undef u1
+#undef mxi
+#undef lbh
+#undef lbw
+#undef b_ell_q
+#undef a_ell_q
+#undef w2
+#undef w12
+#undef h2
+#undef h12
+#undef seg
+#undef l_seg
+#undef w2_out
+#undef w1_in
+#undef h2_out
+#undef h1_in
+#undef lhhalf
+#undef lwhalf
+#undef hhalf
+#undef whalf
+#undef hh
+#undef ww
+#undef w2c
+#undef w1c
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'monitor_nd_xy' [12]. */
+/* User declarations for component 'guide_end' [12]. */
+#define mccompcurname  guide_end
+#define mccompcurtype  Arm
+#define mccompcurindex 12
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+/* User declarations for component 'monitor_nd_xy' [13]. */
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -10757,7 +10920,7 @@ double rotation_h, rotation_v;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 10760 "./NERA_guide_3x3_sample.c"
+#line 10923 "./NERA_guide_3x3_sample.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -10808,8 +10971,10 @@ Coords mcposaMain_guide, mcposrMain_guide;
 Rotation mcrotaMain_guide, mcrotrMain_guide;
 Coords mcposaMain_guide_arm, mcposrMain_guide_arm;
 Rotation mcrotaMain_guide_arm, mcrotrMain_guide_arm;
-Coords mcposaFocusing_nose, mcposrFocusing_nose;
-Rotation mcrotaFocusing_nose, mcrotrFocusing_nose;
+Coords mcposaFocusing_nose_ell, mcposrFocusing_nose_ell;
+Rotation mcrotaFocusing_nose_ell, mcrotrFocusing_nose_ell;
+Coords mcposaFocusing_nose_par, mcposrFocusing_nose_par;
+Rotation mcrotaFocusing_nose_par, mcrotrFocusing_nose_par;
 Coords mcposaguide_end, mcposrguide_end;
 Rotation mcrotaguide_end, mcrotrguide_end;
 Coords mcposamonitor_nd_xy, mcposrmonitor_nd_xy;
@@ -10829,13 +10994,13 @@ void mcinit(void) {
 #define guide_width mcipguide_width
 #define guide_height mcipguide_height
 #define focusing_length mcipfocusing_length
-#define shape mcipshape
+#define guide_shape mcipguide_shape
 #define linh mciplinh
 #define louth mciplouth
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 55 "NERA_guide_3x3_sample.instr"
+#line 56 "NERA_guide_3x3_sample.instr"
 {
 
 lambda0=(source_lambda_min + source_lambda_max)/2;
@@ -10845,13 +11010,13 @@ total_length = total_length - source_optics_dist - distance_before_sample;
 guide_length_st = total_length-focusing_length;
 
 }
-#line 10848 "./NERA_guide_3x3_sample.c"
+#line 11013 "./NERA_guide_3x3_sample.c"
 #undef sample_size
 #undef loutw
 #undef linw
 #undef louth
 #undef linh
-#undef shape
+#undef guide_shape
 #undef focusing_length
 #undef guide_height
 #undef guide_width
@@ -10882,23 +11047,23 @@ guide_length_st = total_length-focusing_length;
   mccorigin_flag_save = 0;
 #line 39 "NERA_guide_3x3_sample.instr"
   mccorigin_minutes = 0;
-#line 10885 "./NERA_guide_3x3_sample.c"
+#line 11050 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10892 "./NERA_guide_3x3_sample.c"
+#line 11057 "./NERA_guide_3x3_sample.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
-#line 72 "NERA_guide_3x3_sample.instr"
+#line 73 "NERA_guide_3x3_sample.instr"
     0,
-#line 72 "NERA_guide_3x3_sample.instr"
+#line 73 "NERA_guide_3x3_sample.instr"
     0,
-#line 72 "NERA_guide_3x3_sample.instr"
+#line 73 "NERA_guide_3x3_sample.instr"
     0);
-#line 10901 "./NERA_guide_3x3_sample.c"
+#line 11066 "./NERA_guide_3x3_sample.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -10911,49 +11076,49 @@ guide_length_st = total_length-focusing_length;
   SIG_MESSAGE("Source_simple (Init:SetPar)");
 #line 52 "NERA_guide_3x3_sample.instr"
   mccSource_simple_radius = 0.1;
-#line 75 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_yheight = source_height;
 #line 76 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_xwidth = source_width;
+  mccSource_simple_yheight = source_height;
 #line 77 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_dist = source_optics_dist;
+  mccSource_simple_xwidth = source_width;
 #line 78 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_focus_xw = mcipguide_width;
+  mccSource_simple_dist = source_optics_dist;
 #line 79 "NERA_guide_3x3_sample.instr"
+  mccSource_simple_focus_xw = mcipguide_width;
+#line 80 "NERA_guide_3x3_sample.instr"
   mccSource_simple_focus_yh = mcipguide_height;
 #line 54 "NERA_guide_3x3_sample.instr"
   mccSource_simple_E0 = 0;
 #line 54 "NERA_guide_3x3_sample.instr"
   mccSource_simple_dE = 0;
-#line 80 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_lambda0 = lambda0;
 #line 81 "NERA_guide_3x3_sample.instr"
-  mccSource_simple_dlambda = dlambda;
+  mccSource_simple_lambda0 = lambda0;
 #line 82 "NERA_guide_3x3_sample.instr"
+  mccSource_simple_dlambda = dlambda;
+#line 83 "NERA_guide_3x3_sample.instr"
   mccSource_simple_flux = source_I;
 #line 55 "NERA_guide_3x3_sample.instr"
   mccSource_simple_gauss = 0;
 #line 55 "NERA_guide_3x3_sample.instr"
   mccSource_simple_target_index = + 1;
-#line 10938 "./NERA_guide_3x3_sample.c"
+#line 11103 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Source_simple (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10945 "./NERA_guide_3x3_sample.c"
+#line 11110 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource_simple);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource_simple, mctr1, mcrotrSource_simple);
   mctc1 = coords_set(
-#line 83 "NERA_guide_3x3_sample.instr"
+#line 84 "NERA_guide_3x3_sample.instr"
     0,
-#line 83 "NERA_guide_3x3_sample.instr"
+#line 84 "NERA_guide_3x3_sample.instr"
     0,
-#line 83 "NERA_guide_3x3_sample.instr"
+#line 84 "NERA_guide_3x3_sample.instr"
     0);
-#line 10956 "./NERA_guide_3x3_sample.c"
+#line 11121 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource_simple = coords_add(mcposaorigin, mctc2);
@@ -10977,29 +11142,29 @@ guide_length_st = total_length-focusing_length;
   mccslit1_ymax = 0;
 #line 46 "NERA_guide_3x3_sample.instr"
   mccslit1_radius = 0;
-#line 88 "NERA_guide_3x3_sample.instr"
-  mccslit1_xwidth = shutter_width1;
 #line 89 "NERA_guide_3x3_sample.instr"
+  mccslit1_xwidth = shutter_width1;
+#line 90 "NERA_guide_3x3_sample.instr"
   mccslit1_yheight = shutter_height;
-#line 10984 "./NERA_guide_3x3_sample.c"
+#line 11149 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10991 "./NERA_guide_3x3_sample.c"
+#line 11156 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
   rot_transpose(mcrotaSource_simple, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
   mctc1 = coords_set(
-#line 90 "NERA_guide_3x3_sample.instr"
+#line 91 "NERA_guide_3x3_sample.instr"
     0,
-#line 90 "NERA_guide_3x3_sample.instr"
+#line 91 "NERA_guide_3x3_sample.instr"
     0,
-#line 90 "NERA_guide_3x3_sample.instr"
+#line 91 "NERA_guide_3x3_sample.instr"
     shutter_dist1);
-#line 11002 "./NERA_guide_3x3_sample.c"
+#line 11167 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
@@ -11023,29 +11188,29 @@ guide_length_st = total_length-focusing_length;
   mccslit2_ymax = 0;
 #line 46 "NERA_guide_3x3_sample.instr"
   mccslit2_radius = 0;
-#line 93 "NERA_guide_3x3_sample.instr"
-  mccslit2_xwidth = shutter_width2;
 #line 94 "NERA_guide_3x3_sample.instr"
+  mccslit2_xwidth = shutter_width2;
+#line 95 "NERA_guide_3x3_sample.instr"
   mccslit2_yheight = shutter_height;
-#line 11030 "./NERA_guide_3x3_sample.c"
+#line 11195 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11037 "./NERA_guide_3x3_sample.c"
+#line 11202 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
   mctc1 = coords_set(
-#line 95 "NERA_guide_3x3_sample.instr"
+#line 96 "NERA_guide_3x3_sample.instr"
     0,
-#line 95 "NERA_guide_3x3_sample.instr"
+#line 96 "NERA_guide_3x3_sample.instr"
     0,
-#line 95 "NERA_guide_3x3_sample.instr"
+#line 96 "NERA_guide_3x3_sample.instr"
     shutter_dist2);
-#line 11048 "./NERA_guide_3x3_sample.c"
+#line 11213 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaorigin, mctc2);
@@ -11069,29 +11234,29 @@ guide_length_st = total_length-focusing_length;
   mccslit3_ymax = 0;
 #line 46 "NERA_guide_3x3_sample.instr"
   mccslit3_radius = 0;
-#line 98 "NERA_guide_3x3_sample.instr"
-  mccslit3_xwidth = shutter_width3;
 #line 99 "NERA_guide_3x3_sample.instr"
+  mccslit3_xwidth = shutter_width3;
+#line 100 "NERA_guide_3x3_sample.instr"
   mccslit3_yheight = shutter_height;
-#line 11076 "./NERA_guide_3x3_sample.c"
+#line 11241 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11083 "./NERA_guide_3x3_sample.c"
+#line 11248 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
   mctc1 = coords_set(
-#line 100 "NERA_guide_3x3_sample.instr"
+#line 101 "NERA_guide_3x3_sample.instr"
     0,
-#line 100 "NERA_guide_3x3_sample.instr"
+#line 101 "NERA_guide_3x3_sample.instr"
     0,
-#line 100 "NERA_guide_3x3_sample.instr"
+#line 101 "NERA_guide_3x3_sample.instr"
     shutter_dist3);
-#line 11094 "./NERA_guide_3x3_sample.c"
+#line 11259 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaorigin, mctc2);
@@ -11115,29 +11280,29 @@ guide_length_st = total_length-focusing_length;
   mccslit4_ymax = 0;
 #line 46 "NERA_guide_3x3_sample.instr"
   mccslit4_radius = 0;
-#line 103 "NERA_guide_3x3_sample.instr"
-  mccslit4_xwidth = shutter_width4;
 #line 104 "NERA_guide_3x3_sample.instr"
+  mccslit4_xwidth = shutter_width4;
+#line 105 "NERA_guide_3x3_sample.instr"
   mccslit4_yheight = shutter_height;
-#line 11122 "./NERA_guide_3x3_sample.c"
+#line 11287 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11129 "./NERA_guide_3x3_sample.c"
+#line 11294 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
   mctc1 = coords_set(
-#line 105 "NERA_guide_3x3_sample.instr"
+#line 106 "NERA_guide_3x3_sample.instr"
     0,
-#line 105 "NERA_guide_3x3_sample.instr"
+#line 106 "NERA_guide_3x3_sample.instr"
     0,
-#line 105 "NERA_guide_3x3_sample.instr"
+#line 106 "NERA_guide_3x3_sample.instr"
     shutter_dist4);
-#line 11140 "./NERA_guide_3x3_sample.c"
+#line 11305 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaorigin, mctc2);
@@ -11157,18 +11322,18 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11160 "./NERA_guide_3x3_sample.c"
+#line 11325 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
   mctc1 = coords_set(
-#line 110 "NERA_guide_3x3_sample.instr"
+#line 111 "NERA_guide_3x3_sample.instr"
     0,
-#line 110 "NERA_guide_3x3_sample.instr"
+#line 111 "NERA_guide_3x3_sample.instr"
     0,
-#line 110 "NERA_guide_3x3_sample.instr"
+#line 111 "NERA_guide_3x3_sample.instr"
     source_optics_dist);
-#line 11171 "./NERA_guide_3x3_sample.c"
+#line 11336 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -11182,37 +11347,37 @@ guide_length_st = total_length-focusing_length;
     /* Component Main_guide. */
   /* Setting parameters for component Main_guide. */
   SIG_MESSAGE("Main_guide (Init:SetPar)");
-#line 113 "NERA_guide_3x3_sample.instr"
+#line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_w1 = mcipguide_width;
-#line 113 "NERA_guide_3x3_sample.instr"
+#line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_h1 = mcipguide_height;
 #line 113 "NERA_guide_3x3_sample.instr"
   mccMain_guide_w2 = 0;
 #line 113 "NERA_guide_3x3_sample.instr"
   mccMain_guide_h2 = 0;
-#line 113 "NERA_guide_3x3_sample.instr"
+#line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_l = guide_length_st;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_R0 = R0;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_Qc = Qc;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_alpha = alpha;
 #line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_m = 1.0;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_W = W;
 #line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_nslit = 1;
 #line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_d = 0.0005;
-#line 113 "NERA_guide_3x3_sample.instr"
+#line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_mleft = m;
-#line 113 "NERA_guide_3x3_sample.instr"
+#line 114 "NERA_guide_3x3_sample.instr"
   mccMain_guide_mright = m;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_mtop = m;
-#line 114 "NERA_guide_3x3_sample.instr"
+#line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_mbottom = m;
 #line 115 "NERA_guide_3x3_sample.instr"
   mccMain_guide_nhslit = 1;
@@ -11250,25 +11415,25 @@ guide_length_st = total_length-focusing_length;
   mccMain_guide_phase = 0;
 #line 119 "NERA_guide_3x3_sample.instr"
   if("NULL") strncpy(mccMain_guide_reflect, "NULL" ? "NULL" : "", 16384); else mccMain_guide_reflect[0]='\0';
-#line 11253 "./NERA_guide_3x3_sample.c"
+#line 11418 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Main_guide (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11260 "./NERA_guide_3x3_sample.c"
+#line 11425 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaMain_guide);
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   rot_mul(mcrotaMain_guide, mctr1, mcrotrMain_guide);
   mctc1 = coords_set(
-#line 115 "NERA_guide_3x3_sample.instr"
+#line 116 "NERA_guide_3x3_sample.instr"
     0,
-#line 115 "NERA_guide_3x3_sample.instr"
+#line 116 "NERA_guide_3x3_sample.instr"
     0,
-#line 115 "NERA_guide_3x3_sample.instr"
+#line 116 "NERA_guide_3x3_sample.instr"
     0);
-#line 11271 "./NERA_guide_3x3_sample.c"
+#line 11436 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide = coords_add(mcposaGuide_start_arm, mctc2);
@@ -11288,18 +11453,18 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11291 "./NERA_guide_3x3_sample.c"
+#line 11456 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaMain_guide, mcrotaMain_guide_arm);
   rot_transpose(mcrotaMain_guide, mctr1);
   rot_mul(mcrotaMain_guide_arm, mctr1, mcrotrMain_guide_arm);
   mctc1 = coords_set(
-#line 118 "NERA_guide_3x3_sample.instr"
+#line 119 "NERA_guide_3x3_sample.instr"
     0,
-#line 118 "NERA_guide_3x3_sample.instr"
+#line 119 "NERA_guide_3x3_sample.instr"
     0,
-#line 118 "NERA_guide_3x3_sample.instr"
+#line 119 "NERA_guide_3x3_sample.instr"
     guide_length_st);
-#line 11302 "./NERA_guide_3x3_sample.c"
+#line 11467 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide_arm = coords_add(mcposaMain_guide, mctc2);
@@ -11310,76 +11475,146 @@ guide_length_st = total_length-focusing_length;
   mccomp_posr[9] = mcposrMain_guide_arm;
   mcNCounter[9]  = mcPCounter[9] = mcP2Counter[9] = 0;
   mcAbsorbProp[9]= 0;
-    /* Component Focusing_nose. */
-  /* Setting parameters for component Focusing_nose. */
-  SIG_MESSAGE("Focusing_nose (Init:SetPar)");
-#line 121 "NERA_guide_3x3_sample.instr"
-  if(mcipshape) strncpy(mccFocusing_nose_option, mcipshape ? mcipshape : "", 16384); else mccFocusing_nose_option[0]='\0';
+    /* Component Focusing_nose_ell. */
+  /* Setting parameters for component Focusing_nose_ell. */
+  SIG_MESSAGE("Focusing_nose_ell (Init:SetPar)");
 #line 122 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_w1 = mcipguide_width;
+  if("elliptical") strncpy(mccFocusing_nose_ell_option, "elliptical" ? "elliptical" : "", 16384); else mccFocusing_nose_ell_option[0]='\0';
 #line 123 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_h1 = mcipguide_height;
+  mccFocusing_nose_ell_w1 = mcipguide_width;
 #line 124 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_l = mcipfocusing_length;
-#line 127 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_linw = mciplinw;
-#line 128 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_loutw = mciploutw;
+  mccFocusing_nose_ell_h1 = mcipguide_height;
 #line 125 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_linh = mciplinh;
-#line 126 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_louth = mciplouth;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_R0 = R0;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_Qcx = Qc;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_Qcy = Qc;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_alphax = alpha;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_alphay = alpha;
-#line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_W = W;
+  mccFocusing_nose_ell_l = mcipfocusing_length;
+#line 128 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_linw = mciplinw;
 #line 129 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_mx = m;
+  mccFocusing_nose_ell_loutw = mciploutw;
+#line 126 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_linh = mciplinh;
+#line 127 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_louth = mciplouth;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_R0 = R0;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_Qcx = Qc;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_Qcy = Qc;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_alphax = alpha;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_alphay = alpha;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_W = W;
 #line 130 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_my = m;
+  mccFocusing_nose_ell_mx = m;
+#line 131 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_ell_my = m;
 #line 83 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_segno = 800;
+  mccFocusing_nose_ell_segno = 800;
 #line 83 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_curvature = 0;
+  mccFocusing_nose_ell_curvature = 0;
 #line 83 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_curvature_v = 0;
-#line 11354 "./NERA_guide_3x3_sample.c"
+  mccFocusing_nose_ell_curvature_v = 0;
+#line 11519 "./NERA_guide_3x3_sample.c"
 
-  SIG_MESSAGE("Focusing_nose (Init:Place/Rotate)");
+  SIG_MESSAGE("Focusing_nose_ell (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11361 "./NERA_guide_3x3_sample.c"
-  rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose);
+#line 11526 "./NERA_guide_3x3_sample.c"
+  rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_ell);
   rot_transpose(mcrotaMain_guide_arm, mctr1);
-  rot_mul(mcrotaFocusing_nose, mctr1, mcrotrFocusing_nose);
+  rot_mul(mcrotaFocusing_nose_ell, mctr1, mcrotrFocusing_nose_ell);
   mctc1 = coords_set(
-#line 131 "NERA_guide_3x3_sample.instr"
+#line 132 "NERA_guide_3x3_sample.instr"
     0,
-#line 131 "NERA_guide_3x3_sample.instr"
+#line 132 "NERA_guide_3x3_sample.instr"
     0,
-#line 131 "NERA_guide_3x3_sample.instr"
+#line 132 "NERA_guide_3x3_sample.instr"
     0.001);
-#line 11372 "./NERA_guide_3x3_sample.c"
+#line 11537 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposaFocusing_nose = coords_add(mcposaMain_guide_arm, mctc2);
-  mctc1 = coords_sub(mcposaMain_guide_arm, mcposaFocusing_nose);
-  mcposrFocusing_nose = rot_apply(mcrotaFocusing_nose, mctc1);
-  mcDEBUG_COMPONENT("Focusing_nose", mcposaFocusing_nose, mcrotaFocusing_nose)
-  mccomp_posa[10] = mcposaFocusing_nose;
-  mccomp_posr[10] = mcposrFocusing_nose;
+  mcposaFocusing_nose_ell = coords_add(mcposaMain_guide_arm, mctc2);
+  mctc1 = coords_sub(mcposaMain_guide_arm, mcposaFocusing_nose_ell);
+  mcposrFocusing_nose_ell = rot_apply(mcrotaFocusing_nose_ell, mctc1);
+  mcDEBUG_COMPONENT("Focusing_nose_ell", mcposaFocusing_nose_ell, mcrotaFocusing_nose_ell)
+  mccomp_posa[10] = mcposaFocusing_nose_ell;
+  mccomp_posr[10] = mcposrFocusing_nose_ell;
   mcNCounter[10]  = mcPCounter[10] = mcP2Counter[10] = 0;
   mcAbsorbProp[10]= 0;
+    /* Component Focusing_nose_par. */
+  /* Setting parameters for component Focusing_nose_par. */
+  SIG_MESSAGE("Focusing_nose_par (Init:SetPar)");
+#line 135 "NERA_guide_3x3_sample.instr"
+  if("parabolical") strncpy(mccFocusing_nose_par_option, "parabolical" ? "parabolical" : "", 16384); else mccFocusing_nose_par_option[0]='\0';
+#line 136 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_w1 = mcipguide_width;
+#line 137 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_h1 = mcipguide_height;
+#line 138 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_l = mcipfocusing_length;
+#line 141 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_linw = 0;
+#line 142 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_loutw = mciploutw;
+#line 139 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_linh = 0;
+#line 140 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_louth = mciplouth;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_R0 = R0;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_Qcx = Qc;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_Qcy = Qc;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_alphax = alpha;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_alphay = alpha;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_W = W;
+#line 143 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_mx = m;
+#line 144 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_my = m;
+#line 83 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_segno = 800;
+#line 83 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_curvature = 0;
+#line 83 "NERA_guide_3x3_sample.instr"
+  mccFocusing_nose_par_curvature_v = 0;
+#line 11589 "./NERA_guide_3x3_sample.c"
+
+  SIG_MESSAGE("Focusing_nose_par (Init:Place/Rotate)");
+  rot_set_rotation(mctr1,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD);
+#line 11596 "./NERA_guide_3x3_sample.c"
+  rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_par);
+  rot_transpose(mcrotaFocusing_nose_ell, mctr1);
+  rot_mul(mcrotaFocusing_nose_par, mctr1, mcrotrFocusing_nose_par);
+  mctc1 = coords_set(
+#line 145 "NERA_guide_3x3_sample.instr"
+    0,
+#line 145 "NERA_guide_3x3_sample.instr"
+    0,
+#line 145 "NERA_guide_3x3_sample.instr"
+    0.001);
+#line 11607 "./NERA_guide_3x3_sample.c"
+  rot_transpose(mcrotaMain_guide_arm, mctr1);
+  mctc2 = rot_apply(mctr1, mctc1);
+  mcposaFocusing_nose_par = coords_add(mcposaMain_guide_arm, mctc2);
+  mctc1 = coords_sub(mcposaFocusing_nose_ell, mcposaFocusing_nose_par);
+  mcposrFocusing_nose_par = rot_apply(mcrotaFocusing_nose_par, mctc1);
+  mcDEBUG_COMPONENT("Focusing_nose_par", mcposaFocusing_nose_par, mcrotaFocusing_nose_par)
+  mccomp_posa[11] = mcposaFocusing_nose_par;
+  mccomp_posr[11] = mcposrFocusing_nose_par;
+  mcNCounter[11]  = mcPCounter[11] = mcP2Counter[11] = 0;
+  mcAbsorbProp[11]= 0;
     /* Component guide_end. */
   /* Setting parameters for component guide_end. */
   SIG_MESSAGE("guide_end (Init:SetPar)");
@@ -11389,34 +11624,34 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11392 "./NERA_guide_3x3_sample.c"
-  rot_mul(mctr1, mcrotaFocusing_nose, mcrotaguide_end);
-  rot_transpose(mcrotaFocusing_nose, mctr1);
+#line 11627 "./NERA_guide_3x3_sample.c"
+  rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaguide_end);
+  rot_transpose(mcrotaFocusing_nose_par, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
   mctc1 = coords_set(
-#line 134 "NERA_guide_3x3_sample.instr"
+#line 148 "NERA_guide_3x3_sample.instr"
     0,
-#line 134 "NERA_guide_3x3_sample.instr"
+#line 148 "NERA_guide_3x3_sample.instr"
     0,
-#line 134 "NERA_guide_3x3_sample.instr"
+#line 148 "NERA_guide_3x3_sample.instr"
     mcipfocusing_length);
-#line 11403 "./NERA_guide_3x3_sample.c"
-  rot_transpose(mcrotaFocusing_nose, mctr1);
+#line 11638 "./NERA_guide_3x3_sample.c"
+  rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposaguide_end = coords_add(mcposaFocusing_nose, mctc2);
-  mctc1 = coords_sub(mcposaFocusing_nose, mcposaguide_end);
+  mcposaguide_end = coords_add(mcposaMain_guide_arm, mctc2);
+  mctc1 = coords_sub(mcposaFocusing_nose_par, mcposaguide_end);
   mcposrguide_end = rot_apply(mcrotaguide_end, mctc1);
   mcDEBUG_COMPONENT("guide_end", mcposaguide_end, mcrotaguide_end)
-  mccomp_posa[11] = mcposaguide_end;
-  mccomp_posr[11] = mcposrguide_end;
-  mcNCounter[11]  = mcPCounter[11] = mcP2Counter[11] = 0;
-  mcAbsorbProp[11]= 0;
+  mccomp_posa[12] = mcposaguide_end;
+  mccomp_posr[12] = mcposrguide_end;
+  mcNCounter[12]  = mcPCounter[12] = mcP2Counter[12] = 0;
+  mcAbsorbProp[12]= 0;
     /* Component monitor_nd_xy. */
   /* Setting parameters for component monitor_nd_xy. */
   SIG_MESSAGE("monitor_nd_xy (Init:SetPar)");
-#line 139 "NERA_guide_3x3_sample.instr"
+#line 153 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_xwidth = mcipsample_size;
-#line 139 "NERA_guide_3x3_sample.instr"
+#line 153 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_yheight = mcipsample_size;
 #line 201 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_zdepth = 0;
@@ -11432,17 +11667,17 @@ guide_length_st = total_length-focusing_length;
   mccmonitor_nd_xy_zmin = 0;
 #line 202 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_zmax = 0;
-#line 139 "NERA_guide_3x3_sample.instr"
+#line 153 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_bins = 100;
 #line 203 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_min = -1e40;
 #line 203 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_max = 1e40;
-#line 139 "NERA_guide_3x3_sample.instr"
+#line 153 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_restore_neutron = 1;
 #line 203 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_radius = 0;
-#line 140 "NERA_guide_3x3_sample.instr"
+#line 154 "NERA_guide_3x3_sample.instr"
   if("dx limits = [-2 2] dy limits = [-2 2]") strncpy(mccmonitor_nd_xy_options, "dx limits = [-2 2] dy limits = [-2 2]" ? "dx limits = [-2 2] dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_xy_options[0]='\0';
 #line 204 "NERA_guide_3x3_sample.instr"
   if("NULL") strncpy(mccmonitor_nd_xy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_filename[0]='\0';
@@ -11456,35 +11691,35 @@ guide_length_st = total_length-focusing_length;
   if("NULL") strncpy(mccmonitor_nd_xy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username3[0]='\0';
 #line 206 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_nowritefile = 0;
-#line 11459 "./NERA_guide_3x3_sample.c"
+#line 11694 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("monitor_nd_xy (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11466 "./NERA_guide_3x3_sample.c"
+#line 11701 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_xy);
   rot_transpose(mcrotaguide_end, mctr1);
   rot_mul(mcrotamonitor_nd_xy, mctr1, mcrotrmonitor_nd_xy);
   mctc1 = coords_set(
-#line 141 "NERA_guide_3x3_sample.instr"
+#line 155 "NERA_guide_3x3_sample.instr"
     0,
-#line 141 "NERA_guide_3x3_sample.instr"
+#line 155 "NERA_guide_3x3_sample.instr"
     0,
-#line 141 "NERA_guide_3x3_sample.instr"
+#line 155 "NERA_guide_3x3_sample.instr"
     distance_before_sample);
-#line 11477 "./NERA_guide_3x3_sample.c"
+#line 11712 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_xy = coords_add(mcposaguide_end, mctc2);
   mctc1 = coords_sub(mcposaguide_end, mcposamonitor_nd_xy);
   mcposrmonitor_nd_xy = rot_apply(mcrotamonitor_nd_xy, mctc1);
   mcDEBUG_COMPONENT("monitor_nd_xy", mcposamonitor_nd_xy, mcrotamonitor_nd_xy)
-  mccomp_posa[12] = mcposamonitor_nd_xy;
-  mccomp_posr[12] = mcposrmonitor_nd_xy;
-  mcNCounter[12]  = mcPCounter[12] = mcP2Counter[12] = 0;
-  mcAbsorbProp[12]= 0;
+  mccomp_posa[13] = mcposamonitor_nd_xy;
+  mccomp_posr[13] = mcposrmonitor_nd_xy;
+  mcNCounter[13]  = mcPCounter[13] = mcP2Counter[13] = 0;
+  mcAbsorbProp[13]= 0;
   /* Component initializations. */
   /* Initializations for component origin. */
   SIG_MESSAGE("origin (Init)");
@@ -11511,7 +11746,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 11514 "./NERA_guide_3x3_sample.c"
+#line 11749 "./NERA_guide_3x3_sample.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -11605,7 +11840,7 @@ if (radius && !yheight && !xwidth ) {
       exit(0);
   }
 }
-#line 11608 "./NERA_guide_3x3_sample.c"
+#line 11843 "./NERA_guide_3x3_sample.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -11658,7 +11893,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11661 "./NERA_guide_3x3_sample.c"
+#line 11896 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11702,7 +11937,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11705 "./NERA_guide_3x3_sample.c"
+#line 11940 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11746,7 +11981,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11749 "./NERA_guide_3x3_sample.c"
+#line 11984 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11790,7 +12025,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11793 "./NERA_guide_3x3_sample.c"
+#line 12028 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11898,7 +12133,7 @@ if (xwidth > 0)  {
   } else printf("Guide_gravity: %s: unactivated (l=0 or nelements=0)\n", NAME_CURRENT_COMP);
 
 }
-#line 11901 "./NERA_guide_3x3_sample.c"
+#line 12136 "./NERA_guide_3x3_sample.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -11942,69 +12177,69 @@ if (xwidth > 0)  {
   /* Initializations for component Main_guide_arm. */
   SIG_MESSAGE("Main_guide_arm (Init)");
 
-  /* Initializations for component Focusing_nose. */
-  SIG_MESSAGE("Focusing_nose (Init)");
-#define mccompcurname  Focusing_nose
+  /* Initializations for component Focusing_nose_ell. */
+  SIG_MESSAGE("Focusing_nose_ell (Init)");
+#define mccompcurname  Focusing_nose_ell
 #define mccompcurtype  Guide_tapering
 #define mccompcurindex 10
-#define w1c mccFocusing_nose_w1c
-#define w2c mccFocusing_nose_w2c
-#define ww mccFocusing_nose_ww
-#define hh mccFocusing_nose_hh
-#define whalf mccFocusing_nose_whalf
-#define hhalf mccFocusing_nose_hhalf
-#define lwhalf mccFocusing_nose_lwhalf
-#define lhhalf mccFocusing_nose_lhhalf
-#define h1_in mccFocusing_nose_h1_in
-#define h2_out mccFocusing_nose_h2_out
-#define w1_in mccFocusing_nose_w1_in
-#define w2_out mccFocusing_nose_w2_out
-#define l_seg mccFocusing_nose_l_seg
-#define seg mccFocusing_nose_seg
-#define h12 mccFocusing_nose_h12
-#define h2 mccFocusing_nose_h2
-#define w12 mccFocusing_nose_w12
-#define w2 mccFocusing_nose_w2
-#define a_ell_q mccFocusing_nose_a_ell_q
-#define b_ell_q mccFocusing_nose_b_ell_q
-#define lbw mccFocusing_nose_lbw
-#define lbh mccFocusing_nose_lbh
-#define mxi mccFocusing_nose_mxi
-#define u1 mccFocusing_nose_u1
-#define u2 mccFocusing_nose_u2
-#define div1 mccFocusing_nose_div1
-#define p2_para mccFocusing_nose_p2_para
-#define test mccFocusing_nose_test
-#define Div1 mccFocusing_nose_Div1
-#define i mccFocusing_nose_i
-#define ii mccFocusing_nose_ii
-#define seg mccFocusing_nose_seg
-#define fu mccFocusing_nose_fu
-#define pos mccFocusing_nose_pos
-#define file_name mccFocusing_nose_file_name
-#define ep mccFocusing_nose_ep
-#define num mccFocusing_nose_num
-#define rotation_h mccFocusing_nose_rotation_h
-#define rotation_v mccFocusing_nose_rotation_v
-#define option mccFocusing_nose_option
-#define w1 mccFocusing_nose_w1
-#define h1 mccFocusing_nose_h1
-#define l mccFocusing_nose_l
-#define linw mccFocusing_nose_linw
-#define loutw mccFocusing_nose_loutw
-#define linh mccFocusing_nose_linh
-#define louth mccFocusing_nose_louth
-#define R0 mccFocusing_nose_R0
-#define Qcx mccFocusing_nose_Qcx
-#define Qcy mccFocusing_nose_Qcy
-#define alphax mccFocusing_nose_alphax
-#define alphay mccFocusing_nose_alphay
-#define W mccFocusing_nose_W
-#define mx mccFocusing_nose_mx
-#define my mccFocusing_nose_my
-#define segno mccFocusing_nose_segno
-#define curvature mccFocusing_nose_curvature
-#define curvature_v mccFocusing_nose_curvature_v
+#define w1c mccFocusing_nose_ell_w1c
+#define w2c mccFocusing_nose_ell_w2c
+#define ww mccFocusing_nose_ell_ww
+#define hh mccFocusing_nose_ell_hh
+#define whalf mccFocusing_nose_ell_whalf
+#define hhalf mccFocusing_nose_ell_hhalf
+#define lwhalf mccFocusing_nose_ell_lwhalf
+#define lhhalf mccFocusing_nose_ell_lhhalf
+#define h1_in mccFocusing_nose_ell_h1_in
+#define h2_out mccFocusing_nose_ell_h2_out
+#define w1_in mccFocusing_nose_ell_w1_in
+#define w2_out mccFocusing_nose_ell_w2_out
+#define l_seg mccFocusing_nose_ell_l_seg
+#define seg mccFocusing_nose_ell_seg
+#define h12 mccFocusing_nose_ell_h12
+#define h2 mccFocusing_nose_ell_h2
+#define w12 mccFocusing_nose_ell_w12
+#define w2 mccFocusing_nose_ell_w2
+#define a_ell_q mccFocusing_nose_ell_a_ell_q
+#define b_ell_q mccFocusing_nose_ell_b_ell_q
+#define lbw mccFocusing_nose_ell_lbw
+#define lbh mccFocusing_nose_ell_lbh
+#define mxi mccFocusing_nose_ell_mxi
+#define u1 mccFocusing_nose_ell_u1
+#define u2 mccFocusing_nose_ell_u2
+#define div1 mccFocusing_nose_ell_div1
+#define p2_para mccFocusing_nose_ell_p2_para
+#define test mccFocusing_nose_ell_test
+#define Div1 mccFocusing_nose_ell_Div1
+#define i mccFocusing_nose_ell_i
+#define ii mccFocusing_nose_ell_ii
+#define seg mccFocusing_nose_ell_seg
+#define fu mccFocusing_nose_ell_fu
+#define pos mccFocusing_nose_ell_pos
+#define file_name mccFocusing_nose_ell_file_name
+#define ep mccFocusing_nose_ell_ep
+#define num mccFocusing_nose_ell_num
+#define rotation_h mccFocusing_nose_ell_rotation_h
+#define rotation_v mccFocusing_nose_ell_rotation_v
+#define option mccFocusing_nose_ell_option
+#define w1 mccFocusing_nose_ell_w1
+#define h1 mccFocusing_nose_ell_h1
+#define l mccFocusing_nose_ell_l
+#define linw mccFocusing_nose_ell_linw
+#define loutw mccFocusing_nose_ell_loutw
+#define linh mccFocusing_nose_ell_linh
+#define louth mccFocusing_nose_ell_louth
+#define R0 mccFocusing_nose_ell_R0
+#define Qcx mccFocusing_nose_ell_Qcx
+#define Qcy mccFocusing_nose_ell_Qcy
+#define alphax mccFocusing_nose_ell_alphax
+#define alphay mccFocusing_nose_ell_alphay
+#define W mccFocusing_nose_ell_W
+#define mx mccFocusing_nose_ell_mx
+#define my mccFocusing_nose_ell_my
+#define segno mccFocusing_nose_ell_segno
+#define curvature mccFocusing_nose_ell_curvature
+#define curvature_v mccFocusing_nose_ell_curvature_v
 #line 116 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
 {
 rotation_h=0;
@@ -12341,7 +12576,469 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 12344 "./NERA_guide_3x3_sample.c"
+#line 12579 "./NERA_guide_3x3_sample.c"
+#undef curvature_v
+#undef curvature
+#undef segno
+#undef my
+#undef mx
+#undef W
+#undef alphay
+#undef alphax
+#undef Qcy
+#undef Qcx
+#undef R0
+#undef louth
+#undef linh
+#undef loutw
+#undef linw
+#undef l
+#undef h1
+#undef w1
+#undef option
+#undef rotation_v
+#undef rotation_h
+#undef num
+#undef ep
+#undef file_name
+#undef pos
+#undef fu
+#undef seg
+#undef ii
+#undef i
+#undef Div1
+#undef test
+#undef p2_para
+#undef div1
+#undef u2
+#undef u1
+#undef mxi
+#undef lbh
+#undef lbw
+#undef b_ell_q
+#undef a_ell_q
+#undef w2
+#undef w12
+#undef h2
+#undef h12
+#undef seg
+#undef l_seg
+#undef w2_out
+#undef w1_in
+#undef h2_out
+#undef h1_in
+#undef lhhalf
+#undef lwhalf
+#undef hhalf
+#undef whalf
+#undef hh
+#undef ww
+#undef w2c
+#undef w1c
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* Initializations for component Focusing_nose_par. */
+  SIG_MESSAGE("Focusing_nose_par (Init)");
+#define mccompcurname  Focusing_nose_par
+#define mccompcurtype  Guide_tapering
+#define mccompcurindex 11
+#define w1c mccFocusing_nose_par_w1c
+#define w2c mccFocusing_nose_par_w2c
+#define ww mccFocusing_nose_par_ww
+#define hh mccFocusing_nose_par_hh
+#define whalf mccFocusing_nose_par_whalf
+#define hhalf mccFocusing_nose_par_hhalf
+#define lwhalf mccFocusing_nose_par_lwhalf
+#define lhhalf mccFocusing_nose_par_lhhalf
+#define h1_in mccFocusing_nose_par_h1_in
+#define h2_out mccFocusing_nose_par_h2_out
+#define w1_in mccFocusing_nose_par_w1_in
+#define w2_out mccFocusing_nose_par_w2_out
+#define l_seg mccFocusing_nose_par_l_seg
+#define seg mccFocusing_nose_par_seg
+#define h12 mccFocusing_nose_par_h12
+#define h2 mccFocusing_nose_par_h2
+#define w12 mccFocusing_nose_par_w12
+#define w2 mccFocusing_nose_par_w2
+#define a_ell_q mccFocusing_nose_par_a_ell_q
+#define b_ell_q mccFocusing_nose_par_b_ell_q
+#define lbw mccFocusing_nose_par_lbw
+#define lbh mccFocusing_nose_par_lbh
+#define mxi mccFocusing_nose_par_mxi
+#define u1 mccFocusing_nose_par_u1
+#define u2 mccFocusing_nose_par_u2
+#define div1 mccFocusing_nose_par_div1
+#define p2_para mccFocusing_nose_par_p2_para
+#define test mccFocusing_nose_par_test
+#define Div1 mccFocusing_nose_par_Div1
+#define i mccFocusing_nose_par_i
+#define ii mccFocusing_nose_par_ii
+#define seg mccFocusing_nose_par_seg
+#define fu mccFocusing_nose_par_fu
+#define pos mccFocusing_nose_par_pos
+#define file_name mccFocusing_nose_par_file_name
+#define ep mccFocusing_nose_par_ep
+#define num mccFocusing_nose_par_num
+#define rotation_h mccFocusing_nose_par_rotation_h
+#define rotation_v mccFocusing_nose_par_rotation_v
+#define option mccFocusing_nose_par_option
+#define w1 mccFocusing_nose_par_w1
+#define h1 mccFocusing_nose_par_h1
+#define l mccFocusing_nose_par_l
+#define linw mccFocusing_nose_par_linw
+#define loutw mccFocusing_nose_par_loutw
+#define linh mccFocusing_nose_par_linh
+#define louth mccFocusing_nose_par_louth
+#define R0 mccFocusing_nose_par_R0
+#define Qcx mccFocusing_nose_par_Qcx
+#define Qcy mccFocusing_nose_par_Qcy
+#define alphax mccFocusing_nose_par_alphax
+#define alphay mccFocusing_nose_par_alphay
+#define W mccFocusing_nose_par_W
+#define mx mccFocusing_nose_par_mx
+#define my mccFocusing_nose_par_my
+#define segno mccFocusing_nose_par_segno
+#define curvature mccFocusing_nose_par_curvature
+#define curvature_v mccFocusing_nose_par_curvature_v
+#line 116 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+{
+rotation_h=0;
+rotation_v=0;
+
+// dynamic memory allocation is good
+w1c = (double*)malloc(sizeof(double)*segno);
+  w2c = (double*)malloc(sizeof(double)*segno);
+  ww = (double*)malloc(sizeof(double)*segno);
+  hh = (double*)malloc(sizeof(double)*segno);
+  whalf = (double*)malloc(sizeof(double)*segno);
+  hhalf = (double*)malloc(sizeof(double)*segno);
+  lwhalf = (double*)malloc(sizeof(double)*segno);
+  lhhalf = (double*)malloc(sizeof(double)*segno);
+  h1_in = (double*)malloc(sizeof(double)*(segno+1));
+  h2_out = (double*)malloc(sizeof(double)*(segno+1));
+  w1_in = (double*)malloc(sizeof(double)*(segno+1));
+  w2_out = (double*)malloc(sizeof(double)*(segno+1));
+
+  struct para {
+    char st[128];
+  } segment[800];
+  if (W <=0)
+  {
+    fprintf(stderr,"Component: %s (Guide_tapering) W must \n", NAME_CURRENT_COMP);
+    fprintf(stderr,"           be positive\n");
+    exit(-1);
+  }
+  if (l <= 0)
+  {
+    fprintf(stderr,"Component: %s (Guide_tapering) real guide length \n",
+    NAME_CURRENT_COMP);
+    fprintf(stderr,"           is <= ZERO ! \n");
+    exit(-1);
+  }
+  if (mcgravitation) fprintf(stderr,"WARNING: Guide_tapering: %s: "
+    "This component produces wrong results with gravitation !\n"
+    "Use Guide_gravity.\n",
+    NAME_CURRENT_COMP);
+  seg=segno;
+  l_seg=l/(seg);
+  h12 = h1/2.0;
+  if (option != NULL)
+  {
+     fu = (char*)malloc(sizeof(char)*(strlen(option)+1));
+     strcpy(fu,option);
+  } else {
+     exit(-1);
+  }
+  /* handle guide geometry ================================================== */
+  if (!strcmp(fu,"elliptical"))
+  {
+     /* calculate parameter b of elliptical equestion - vertical mirrors */
+     /* (l+linh+louth) -> distance between focal points */
+     /*  printf("A1 \n"); */
+     lbh = l + linh + louth;
+     if (linh == 0 && louth == 0 )
+     {
+        /* plane mirrors (vertical) */
+        b_ell_q = 0;
+        h2 = h1;
+     } else {
+        /* elliptical mirrors */
+        u1 = sqrt((linh*linh)+(h12*h12));
+        u2 = sqrt((h12*h12) + ((l+louth)*(l+louth)));
+        a_ell_q = ((u1 + u2)/2.0)*((u1 + u2)/2.0);
+        b_ell_q = a_ell_q - ((lbh/2.0)*(lbh/2.0));
+        /* calculate heigth of guide exit (h2) */
+        div1 = ((lbh/2.0-louth)*(lbh/2.0-louth))/a_ell_q;
+        h2 = sqrt(b_ell_q*(1.0-div1));
+        h2 = h2*2.0;
+     }
+  } else if (!strcmp(fu,"parabolical")) {
+     if ((linh > 0) && (louth > 0))
+     {
+       fprintf(stderr,"Component: %s (Guide_tapering) Two focal\n",NAME_CURRENT_COMP);
+       fprintf(stderr,"            points lout and linh are not allowed! \n");
+        free(fu);exit(-1);
+     }
+     if (louth == 0 && linh == 0)
+     {
+        /* plane mirrors (vertical) */
+        h2 = h1;
+     } else {
+        /* parabolical mirrors */
+        if (linh == 0)
+        {
+           Div1=((2.0*louth+2.0*l)*(2.0*louth+2.0*l))/4.0;
+           p2_para=((sqrt(Div1+(h12*h12)))-(louth+l))*2.0;
+           /* calculate heigth of guide exit (h2) */
+           h2 = sqrt(p2_para*(louth+p2_para/4.0));
+           h2 = h2*2.0;
+         } else {
+            /* anti-trompete */
+           Div1=((2.0*linh)*(2.0*linh))/4.0;
+           p2_para=((sqrt(Div1+(h12*h12)))-linh)*2.0;
+           /* calculate heigth of guide exit (h2) */
+           h2 = sqrt(p2_para*(l+linh+p2_para/4.0));
+           h2 = h2*2.0;
+         }
+     }
+  } else if (!strncmp(fu,"file",4)) {
+     pos = strtok(fu,"=");
+     while (pos=strtok(0,"="))
+     {
+        strcpy(file_name,pos);
+     }
+     if ((num=fopen(file_name,"r")) == NULL)
+     {
+        fprintf(stderr,"Component: %s (Guide_tapering)\n",NAME_CURRENT_COMP);
+        fprintf(stderr,"           File %s not found! \n", file_name);
+         free(fu);exit(-1);
+     } else {
+        ii = 0;
+        while (!feof(num))
+        {
+          fgets(segment[ii].st,128,num);
+          if (ii >  799) {
+             fprintf(stderr,"%s: Number of segments is limited to 800 !! \n",NAME_CURRENT_COMP);
+              free(fu);exit(-1);
+          }
+          ii++;
+        }
+        fclose(num);
+        ii--;
+     }
+     seg = ii-3;
+     l_seg=l/seg;
+     for (i=3;i<ii;i++)
+     {
+        if (strlen(segment[i].st) < 4)
+        {
+          fprintf(stderr,"Component: %s (Guide_tapering)\n",NAME_CURRENT_COMP);
+          fprintf(stderr,"           Data Format Error! \n");
+          free(fu);exit(-1);
+        }
+        h1_in[i-3] = strtod(strtok(segment[i].st," "), &ep);
+        h2_out[i-3] = strtod(strtok(0," "), &ep);
+        w1_in[i-3] = strtod(strtok(0," "), &ep);
+        w2_out[i-3] = strtod(strtok(0," "), &ep);
+     }
+     h1 = h1_in[0];
+     h2 = h2_out[seg-1];
+     w1 = w1_in[0];
+     w2 = w2_out[seg-1];
+     for (i=0;i<seg;i++)
+     {
+      fprintf(stderr,"%d: %lf %lf %lf %lf \n",i,h1_in[i],h2_out[i],w1_in[i],w2_out[i]);
+     }
+  } else if (!strcmp(fu,"straight")) {
+    for (i=0;i<seg;i++) {
+      h1_in[i] = h2_out[i] = h2 = h1;
+      w1_in[i] = w2_out[i] = w2 = w1;
+    }
+  } else {
+     fprintf(stderr,"Component: %s (Guide_tapering)\n",NAME_CURRENT_COMP);
+     fprintf(stderr,"           Unknown KEYWORD: %s \n", fu);
+     free(fu);exit(-1);
+  }
+  fprintf(stderr,"Component: %s (Guide_tapering)\n",NAME_CURRENT_COMP);
+  fprintf(stderr,"           Height at the guide exit (h2): %lf \n", h2);
+  if (h2 <= 0)
+  {
+   fprintf(stderr,"Component: %s (Guide_tapering)\n", NAME_CURRENT_COMP);
+   fprintf(stderr,"           Height at the guide exit (h2) was calculated\n");
+   fprintf(stderr,"           <=0; Please change the parameter h1 and/or\n");
+   fprintf(stderr,"           linh and/or louth! \n");
+    free(fu);exit(-1);
+  }
+  if (!strcmp(fu,"elliptical"))
+  {
+     h1_in[0] = h1;
+     for (i=1;i<seg;i++)
+     {
+       if (b_ell_q == 0)
+       {
+         h1_in[i]=h1;
+       } else {
+         mxi = (((lbh/2.0)-linh) - (l_seg * i));
+         h1_in[i] = (sqrt((1.0-((mxi*mxi)/a_ell_q))*b_ell_q))*2.0;
+       }
+     h2_out[i-1] = h1_in[i];
+     }
+     h2_out[seg-1]=h2;
+  } else if (!strcmp(fu,"parabolical")) {
+     h1_in[0] = h1;
+     ii=seg-1;
+     if (louth == 0 && linh == 0)
+     {
+        for (i=1;i<(seg+1);i++)
+        {
+           h1_in[i]=h1;
+           ii=ii-1;
+           h2_out[i-1] = h1_in[i];
+        }
+     } else {
+        if ((linh == 0) && (louth > 0))
+        {
+           for (i=1;i<(seg+1);i++)
+           {
+             h1_in[i] = (sqrt((p2_para/4.0+louth+(l_seg*ii))*p2_para))*2.0;
+             ii=ii-1;
+             h2_out[i-1] = h1_in[i];
+           }
+        } else {
+           for (i=1;i<(seg+1);i++)
+           {
+             h1_in[i] = (sqrt((p2_para/4.0+linh+(l_seg*i))*p2_para))*2.0;
+             h2_out[i-1] = h1_in[i];
+           }
+        }
+     }
+  }
+  /* compute each value for horizontal mirrors */
+  w12 = w1/2.0;
+  if (!strcmp(fu,"elliptical"))
+  {
+    /* calculate lbw the distance between focal points of horizontal mirrors */
+    lbw = l + linw + loutw;
+    /* calculate parameter b of elliptical equestion - horizontal mirrors */
+    if (linw == 0 && loutw == 0 )
+    {
+       /* plane mirrors (horizontal) */
+       b_ell_q = 0;
+       w2 = w1;
+    } else {
+       /* elliptical mirrors */
+       u1 = sqrt((linw*linw)+(w12*w12));
+       u2 = sqrt((w12*w12) + ((l+loutw)*(l+loutw)));
+       a_ell_q = ((u1 + u2)/2.0)*((u1 + u2)/2.0);
+       b_ell_q = a_ell_q - ((lbw/2.0)*(lbw/2.0));
+       /* calculate weigth of guide exit (w2) */
+       div1 = ((lbw/2.0-loutw)*(lbw/2.0-loutw))/a_ell_q;
+       w2 = sqrt(b_ell_q*(1.0-div1));
+       w2 = w2*2.0;
+     }
+  } else if (!strcmp(fu,"parabolical")) {
+     if ((linw > 0) && (loutw > 0))
+     {
+       fprintf(stderr,"Component: %s (Guide_tapering) Two focal\n",NAME_CURRENT_COMP);
+       fprintf(stderr,"           points linw and loutw are not allowed! \n");
+         free(fu);exit(-1);
+     }
+     if (loutw == 0 && linw == 0)
+     {
+        /* plane mirrors (horizontal) */
+        w2 = w1;
+     } else {
+       if (linw == 0)
+       {
+          /* parabolical mirrors */
+          Div1=((2.0*loutw+2.0*l)*(2.0*loutw+2.0*l))/4.0;
+          p2_para=((sqrt(Div1+(w12*w12)))-(loutw+l))*2.0;
+          /* calculate weigth of guide exit (w2) */
+          w2 = sqrt(p2_para*(loutw+p2_para/4.0));
+          w2 = w2*2.0;
+       } else {
+          /* anti-trompete */
+          Div1=((2.0*linw)*(2.0*linw))/4.0;
+          p2_para=((sqrt(Div1+(w12*w12)))-linw)*2.0;
+          /* calculate heigth of guide exit (w2) */
+          w2 = sqrt(p2_para*(l+linw+p2_para/4.0));
+          w2 = w2*2.0;
+       }
+     }
+  }
+  fprintf(stderr,"Component: %s (Guide_tapering)\n",NAME_CURRENT_COMP);
+  fprintf(stderr,"           Width at the guide exit (w2): %lf \n", w2);
+  if (w2 <= 0)
+  {
+   fprintf(stderr,"Component: %s (Guide_tapering)\n", NAME_CURRENT_COMP);
+   fprintf(stderr,"           Width at the guide exit (w2) was calculated\n");
+   fprintf(stderr,"           <=0; Please change the parameter w1 and/or\n");
+   fprintf(stderr,"           l! \n");
+    free(fu);exit(-1);
+  }
+  if (!strcmp(fu,"elliptical"))
+  {
+     w1_in[0]=w1;
+     for (i=1;i<seg;i++)
+     {
+       if (b_ell_q == 0)
+       {
+         w1_in[i]=w1;
+       } else {
+         mxi = (((lbw/2.0)-linw) - (l_seg * i));
+         w1_in[i] = (sqrt((1.0-((mxi*mxi)/a_ell_q))*b_ell_q))*2.0;
+       }
+       w2_out[i-1] = w1_in[i];
+     }
+     w2_out[seg-1]=w2;
+  } else if (!strcmp(fu,"parabolical")) {
+     w1_in[0]=w1;
+     ii=seg-1;
+     if (loutw == 0 && linw == 0)
+     {
+        for (i=1;i<(seg+1);i++)
+        {
+           w1_in[i]=w1;
+           ii=ii-1;
+           w2_out[i-1] = w1_in[i];
+        }
+     } else {
+        if ((linw == 0) && (loutw > 0))
+        {
+           for (i=1;i<(seg+1);i++)
+           {
+             w1_in[i] = (sqrt((p2_para/4+loutw+(l_seg*ii))*p2_para))*2;
+             ii=ii-1;
+             w2_out[i-1] = w1_in[i];
+           }
+        } else {
+           for (i=1;i<(seg+1);i++)
+           {
+             w1_in[i] = (sqrt((p2_para/4+linw+(l_seg*i))*p2_para))*2;
+             w2_out[i-1] = w1_in[i];
+           }
+        }
+     }
+  }
+  free(fu);
+  for (i=0;i<seg;i++)
+  {
+    w1c[i] = w1_in[i];
+    w2c[i] = w2_out[i];
+    ww[i] = .5*(w2c[i] - w1c[i]);
+    hh[i] = .5*(h2_out[i] - h1_in[i]);
+    whalf[i] = .5*w1c[i];
+    hhalf[i] = .5*h1_in[i];
+    lwhalf[i] = l_seg*whalf[i];
+    lhhalf[i] = l_seg*hhalf[i];
+  }
+  /* guide curvature: rotation angle [rad] between each guide segment */
+  if (curvature && l && segno)   rotation_h = l/curvature/segno;
+  if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
+}
+#line 13041 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -12411,7 +13108,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   SIG_MESSAGE("monitor_nd_xy (Init)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -12519,7 +13216,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 12522 "./NERA_guide_3x3_sample.c"
+#line 13219 "./NERA_guide_3x3_sample.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -12705,7 +13402,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 12708 "./NERA_guide_3x3_sample.c"
+#line 13405 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12876,7 +13573,7 @@ int target_index = mccSource_simple_target_index;
  vy=v*dy/rf;
  vx=v*dx/rf;
 }
-#line 12879 "./NERA_guide_3x3_sample.c"
+#line 13576 "./NERA_guide_3x3_sample.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -13001,7 +13698,7 @@ MCNUM yheight = mccslit1_yheight;
     else
         SCATTER;
 }
-#line 13004 "./NERA_guide_3x3_sample.c"
+#line 13701 "./NERA_guide_3x3_sample.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13123,7 +13820,7 @@ MCNUM yheight = mccslit2_yheight;
     else
         SCATTER;
 }
-#line 13126 "./NERA_guide_3x3_sample.c"
+#line 13823 "./NERA_guide_3x3_sample.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13245,7 +13942,7 @@ MCNUM yheight = mccslit3_yheight;
     else
         SCATTER;
 }
-#line 13248 "./NERA_guide_3x3_sample.c"
+#line 13945 "./NERA_guide_3x3_sample.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13367,7 +14064,7 @@ MCNUM yheight = mccslit4_yheight;
     else
         SCATTER;
 }
-#line 13370 "./NERA_guide_3x3_sample.c"
+#line 14067 "./NERA_guide_3x3_sample.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13781,7 +14478,7 @@ char* reflect = mccMain_guide_reflect;
 
   } /* if l */
 }
-#line 13784 "./NERA_guide_3x3_sample.c"
+#line 14481 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -13931,8 +14628,8 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component Focusing_nose [10] */
-  mccoordschange(mcposrFocusing_nose, mcrotrFocusing_nose,
+  /* TRACE Component Focusing_nose_ell [10] */
+  mccoordschange(mcposrFocusing_nose_ell, mcrotrFocusing_nose_ell,
     &mcnlx,
     &mcnly,
     &mcnlz,
@@ -13942,10 +14639,10 @@ mcnlp)
     &mcnlsx,
     &mcnlsy,
     &mcnlsz);
-  /* define label inside component Focusing_nose (without coords transformations) */
-  mcJumpTrace_Focusing_nose:
-  SIG_MESSAGE("Focusing_nose (Trace)");
-  mcDEBUG_COMP("Focusing_nose")
+  /* define label inside component Focusing_nose_ell (without coords transformations) */
+  mcJumpTrace_Focusing_nose_ell:
+  SIG_MESSAGE("Focusing_nose_ell (Trace)");
+  mcDEBUG_COMP("Focusing_nose_ell")
   mcDEBUG_STATE(
     mcnlx,
     mcnly,
@@ -13970,7 +14667,7 @@ mcnlp)
 #define sz mcnlsz
 #define p mcnlp
 
-#define mcabsorbComp mcabsorbCompFocusing_nose
+#define mcabsorbComp mcabsorbCompFocusing_nose_ell
   STORE_NEUTRON(10,
     mcnlx,
     mcnly,
@@ -13988,68 +14685,71 @@ mcnlp)
   mcNCounter[10]++;
   mcPCounter[10] += p;
   mcP2Counter[10] += p*p;
-#define mccompcurname  Focusing_nose
+#define mccompcurname  Focusing_nose_ell
 #define mccompcurtype  Guide_tapering
 #define mccompcurindex 10
-#define w1c mccFocusing_nose_w1c
-#define w2c mccFocusing_nose_w2c
-#define ww mccFocusing_nose_ww
-#define hh mccFocusing_nose_hh
-#define whalf mccFocusing_nose_whalf
-#define hhalf mccFocusing_nose_hhalf
-#define lwhalf mccFocusing_nose_lwhalf
-#define lhhalf mccFocusing_nose_lhhalf
-#define h1_in mccFocusing_nose_h1_in
-#define h2_out mccFocusing_nose_h2_out
-#define w1_in mccFocusing_nose_w1_in
-#define w2_out mccFocusing_nose_w2_out
-#define l_seg mccFocusing_nose_l_seg
-#define seg mccFocusing_nose_seg
-#define h12 mccFocusing_nose_h12
-#define h2 mccFocusing_nose_h2
-#define w12 mccFocusing_nose_w12
-#define w2 mccFocusing_nose_w2
-#define a_ell_q mccFocusing_nose_a_ell_q
-#define b_ell_q mccFocusing_nose_b_ell_q
-#define lbw mccFocusing_nose_lbw
-#define lbh mccFocusing_nose_lbh
-#define mxi mccFocusing_nose_mxi
-#define u1 mccFocusing_nose_u1
-#define u2 mccFocusing_nose_u2
-#define div1 mccFocusing_nose_div1
-#define p2_para mccFocusing_nose_p2_para
-#define test mccFocusing_nose_test
-#define Div1 mccFocusing_nose_Div1
-#define i mccFocusing_nose_i
-#define ii mccFocusing_nose_ii
-#define seg mccFocusing_nose_seg
-#define fu mccFocusing_nose_fu
-#define pos mccFocusing_nose_pos
-#define file_name mccFocusing_nose_file_name
-#define ep mccFocusing_nose_ep
-#define num mccFocusing_nose_num
-#define rotation_h mccFocusing_nose_rotation_h
-#define rotation_v mccFocusing_nose_rotation_v
-{   /* Declarations of Focusing_nose=Guide_tapering() SETTING parameters. */
-char* option = mccFocusing_nose_option;
-MCNUM w1 = mccFocusing_nose_w1;
-MCNUM h1 = mccFocusing_nose_h1;
-MCNUM l = mccFocusing_nose_l;
-MCNUM linw = mccFocusing_nose_linw;
-MCNUM loutw = mccFocusing_nose_loutw;
-MCNUM linh = mccFocusing_nose_linh;
-MCNUM louth = mccFocusing_nose_louth;
-MCNUM R0 = mccFocusing_nose_R0;
-MCNUM Qcx = mccFocusing_nose_Qcx;
-MCNUM Qcy = mccFocusing_nose_Qcy;
-MCNUM alphax = mccFocusing_nose_alphax;
-MCNUM alphay = mccFocusing_nose_alphay;
-MCNUM W = mccFocusing_nose_W;
-MCNUM mx = mccFocusing_nose_mx;
-MCNUM my = mccFocusing_nose_my;
-MCNUM segno = mccFocusing_nose_segno;
-MCNUM curvature = mccFocusing_nose_curvature;
-MCNUM curvature_v = mccFocusing_nose_curvature_v;
+#define w1c mccFocusing_nose_ell_w1c
+#define w2c mccFocusing_nose_ell_w2c
+#define ww mccFocusing_nose_ell_ww
+#define hh mccFocusing_nose_ell_hh
+#define whalf mccFocusing_nose_ell_whalf
+#define hhalf mccFocusing_nose_ell_hhalf
+#define lwhalf mccFocusing_nose_ell_lwhalf
+#define lhhalf mccFocusing_nose_ell_lhhalf
+#define h1_in mccFocusing_nose_ell_h1_in
+#define h2_out mccFocusing_nose_ell_h2_out
+#define w1_in mccFocusing_nose_ell_w1_in
+#define w2_out mccFocusing_nose_ell_w2_out
+#define l_seg mccFocusing_nose_ell_l_seg
+#define seg mccFocusing_nose_ell_seg
+#define h12 mccFocusing_nose_ell_h12
+#define h2 mccFocusing_nose_ell_h2
+#define w12 mccFocusing_nose_ell_w12
+#define w2 mccFocusing_nose_ell_w2
+#define a_ell_q mccFocusing_nose_ell_a_ell_q
+#define b_ell_q mccFocusing_nose_ell_b_ell_q
+#define lbw mccFocusing_nose_ell_lbw
+#define lbh mccFocusing_nose_ell_lbh
+#define mxi mccFocusing_nose_ell_mxi
+#define u1 mccFocusing_nose_ell_u1
+#define u2 mccFocusing_nose_ell_u2
+#define div1 mccFocusing_nose_ell_div1
+#define p2_para mccFocusing_nose_ell_p2_para
+#define test mccFocusing_nose_ell_test
+#define Div1 mccFocusing_nose_ell_Div1
+#define i mccFocusing_nose_ell_i
+#define ii mccFocusing_nose_ell_ii
+#define seg mccFocusing_nose_ell_seg
+#define fu mccFocusing_nose_ell_fu
+#define pos mccFocusing_nose_ell_pos
+#define file_name mccFocusing_nose_ell_file_name
+#define ep mccFocusing_nose_ell_ep
+#define num mccFocusing_nose_ell_num
+#define rotation_h mccFocusing_nose_ell_rotation_h
+#define rotation_v mccFocusing_nose_ell_rotation_v
+{   /* Declarations of Focusing_nose_ell=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_ell_option;
+MCNUM w1 = mccFocusing_nose_ell_w1;
+MCNUM h1 = mccFocusing_nose_ell_h1;
+MCNUM l = mccFocusing_nose_ell_l;
+MCNUM linw = mccFocusing_nose_ell_linw;
+MCNUM loutw = mccFocusing_nose_ell_loutw;
+MCNUM linh = mccFocusing_nose_ell_linh;
+MCNUM louth = mccFocusing_nose_ell_louth;
+MCNUM R0 = mccFocusing_nose_ell_R0;
+MCNUM Qcx = mccFocusing_nose_ell_Qcx;
+MCNUM Qcy = mccFocusing_nose_ell_Qcy;
+MCNUM alphax = mccFocusing_nose_ell_alphax;
+MCNUM alphay = mccFocusing_nose_ell_alphay;
+MCNUM W = mccFocusing_nose_ell_W;
+MCNUM mx = mccFocusing_nose_ell_mx;
+MCNUM my = mccFocusing_nose_ell_my;
+MCNUM segno = mccFocusing_nose_ell_segno;
+MCNUM curvature = mccFocusing_nose_ell_curvature;
+MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
+/* 'Focusing_nose_ell=Guide_tapering()' component instance has conditional execution */
+if (( mcipguide_shape == 1 ))
+
 #line 453 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
@@ -14205,8 +14905,8 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   } /* loop on segments */
 
 }
-#line 14208 "./NERA_guide_3x3_sample.c"
-}   /* End of Focusing_nose=Guide_tapering() SETTING parameter declarations. */
+#line 14907 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
 #undef num
@@ -14250,7 +14950,7 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
-  mcabsorbCompFocusing_nose:
+  mcabsorbCompFocusing_nose_ell:
   if (RESTORE) /* restore if needed */
   { RESTORE_NEUTRON(10,
       mcnlx,
@@ -14289,7 +14989,368 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component guide_end [11] */
+  /* TRACE Component Focusing_nose_par [11] */
+  mccoordschange(mcposrFocusing_nose_par, mcrotrFocusing_nose_par,
+    &mcnlx,
+    &mcnly,
+    &mcnlz,
+    &mcnlvx,
+    &mcnlvy,
+    &mcnlvz,
+    &mcnlsx,
+    &mcnlsy,
+    &mcnlsz);
+  /* define label inside component Focusing_nose_par (without coords transformations) */
+  mcJumpTrace_Focusing_nose_par:
+  SIG_MESSAGE("Focusing_nose_par (Trace)");
+  mcDEBUG_COMP("Focusing_nose_par")
+  mcDEBUG_STATE(
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp)
+#define x mcnlx
+#define y mcnly
+#define z mcnlz
+#define vx mcnlvx
+#define vy mcnlvy
+#define vz mcnlvz
+#define t mcnlt
+#define sx mcnlsx
+#define sy mcnlsy
+#define sz mcnlsz
+#define p mcnlp
+
+#define mcabsorbComp mcabsorbCompFocusing_nose_par
+  STORE_NEUTRON(11,
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp);
+  mcScattered=0;
+  mcRestore=0;
+  mcNCounter[11]++;
+  mcPCounter[11] += p;
+  mcP2Counter[11] += p*p;
+#define mccompcurname  Focusing_nose_par
+#define mccompcurtype  Guide_tapering
+#define mccompcurindex 11
+#define w1c mccFocusing_nose_par_w1c
+#define w2c mccFocusing_nose_par_w2c
+#define ww mccFocusing_nose_par_ww
+#define hh mccFocusing_nose_par_hh
+#define whalf mccFocusing_nose_par_whalf
+#define hhalf mccFocusing_nose_par_hhalf
+#define lwhalf mccFocusing_nose_par_lwhalf
+#define lhhalf mccFocusing_nose_par_lhhalf
+#define h1_in mccFocusing_nose_par_h1_in
+#define h2_out mccFocusing_nose_par_h2_out
+#define w1_in mccFocusing_nose_par_w1_in
+#define w2_out mccFocusing_nose_par_w2_out
+#define l_seg mccFocusing_nose_par_l_seg
+#define seg mccFocusing_nose_par_seg
+#define h12 mccFocusing_nose_par_h12
+#define h2 mccFocusing_nose_par_h2
+#define w12 mccFocusing_nose_par_w12
+#define w2 mccFocusing_nose_par_w2
+#define a_ell_q mccFocusing_nose_par_a_ell_q
+#define b_ell_q mccFocusing_nose_par_b_ell_q
+#define lbw mccFocusing_nose_par_lbw
+#define lbh mccFocusing_nose_par_lbh
+#define mxi mccFocusing_nose_par_mxi
+#define u1 mccFocusing_nose_par_u1
+#define u2 mccFocusing_nose_par_u2
+#define div1 mccFocusing_nose_par_div1
+#define p2_para mccFocusing_nose_par_p2_para
+#define test mccFocusing_nose_par_test
+#define Div1 mccFocusing_nose_par_Div1
+#define i mccFocusing_nose_par_i
+#define ii mccFocusing_nose_par_ii
+#define seg mccFocusing_nose_par_seg
+#define fu mccFocusing_nose_par_fu
+#define pos mccFocusing_nose_par_pos
+#define file_name mccFocusing_nose_par_file_name
+#define ep mccFocusing_nose_par_ep
+#define num mccFocusing_nose_par_num
+#define rotation_h mccFocusing_nose_par_rotation_h
+#define rotation_v mccFocusing_nose_par_rotation_v
+{   /* Declarations of Focusing_nose_par=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_par_option;
+MCNUM w1 = mccFocusing_nose_par_w1;
+MCNUM h1 = mccFocusing_nose_par_h1;
+MCNUM l = mccFocusing_nose_par_l;
+MCNUM linw = mccFocusing_nose_par_linw;
+MCNUM loutw = mccFocusing_nose_par_loutw;
+MCNUM linh = mccFocusing_nose_par_linh;
+MCNUM louth = mccFocusing_nose_par_louth;
+MCNUM R0 = mccFocusing_nose_par_R0;
+MCNUM Qcx = mccFocusing_nose_par_Qcx;
+MCNUM Qcy = mccFocusing_nose_par_Qcy;
+MCNUM alphax = mccFocusing_nose_par_alphax;
+MCNUM alphay = mccFocusing_nose_par_alphay;
+MCNUM W = mccFocusing_nose_par_W;
+MCNUM mx = mccFocusing_nose_par_mx;
+MCNUM my = mccFocusing_nose_par_my;
+MCNUM segno = mccFocusing_nose_par_segno;
+MCNUM curvature = mccFocusing_nose_par_curvature;
+MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
+/* 'Focusing_nose_par=Guide_tapering()' component instance has conditional execution */
+if (( mcipguide_shape == 0 ))
+
+#line 453 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+{
+  double t1,t2,ts,zr;                           /* Intersection times. */
+  double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
+  double vdotn_v1,vdotn_v2,vdotn_h1,vdotn_h2;   /* Dot products. */
+  int i;                                        /* Which mirror hit? */
+  double q;                                     /* Q [1/AA] of reflection */
+  double vlen2,nlen2;                           /* Vector lengths squared */
+  double edge;
+  double hadj;                                  /* Channel displacement */
+  double sz=0;
+  int ii;
+  Coords mctc1,mctc2;
+  Rotation mctr1;
+
+  /* Propagate neutron to guide entrance. */
+  PROP_Z0;
+  for (ii=0;ii<seg;ii++)
+  {
+    zr=ii*l_seg;
+    /* Propagate neutron to segment entrance. */
+    ts=(zr-z)/vz;
+    PROP_DT(ts);
+    if(x <= w1_in[ii]/-2.0 || x >= w1_in[ii]/2.0 || y <= -hhalf[ii] || y >= hhalf[ii])
+      ABSORB;
+    /* Shift origin to center of channel hit (absorb if hit dividing walls) */
+    x += w1_in[ii]/2.0;
+    edge = floor(x/w1c[ii])*w1c[ii];
+    if(x - edge > w1c[ii])
+    {
+      x -= w1_in[ii]/2.0; /* Re-adjust origin */
+      ABSORB;
+    }
+    x -= (edge + (w1c[ii]/2.0));
+    hadj = edge + (w1c[ii]/2.0) - w1_in[ii]/2.0;
+    for(;;)
+    {
+      /* Compute the dot products of v and n for the four mirrors. */
+      ts=(zr-z)/vz;
+      av = l_seg*vx; bv = ww[ii]*vz;
+      ah = l_seg*vy; bh = hh[ii]*vz;
+      vdotn_v1 = bv + av;         /* Left vertical */
+      vdotn_v2 = bv - av;         /* Right vertical */
+      vdotn_h1 = bh + ah;         /* Lower horizontal */
+      vdotn_h2 = bh - ah;         /* Upper horizontal */
+      /* Compute the dot products of (O - r) and n as c1+c2 and c1-c2 */
+      cv1 = -whalf[ii]*l_seg - (z-zr)*ww[ii]; cv2 = x*l_seg;
+      ch1 = -hhalf[ii]*l_seg - (z-zr)*hh[ii]; ch2 = y*l_seg;
+      /* Compute intersection times. */
+      t1 = (zr + l_seg - z)/vz;
+      i = 0;
+      if(vdotn_v1 < 0 && (t2 = (cv1 - cv2)/vdotn_v1) < t1)
+      {
+        t1 = t2;
+        i = 1;
+      }
+      if(vdotn_v2 < 0 && (t2 = (cv1 + cv2)/vdotn_v2) < t1)
+      {
+        t1 = t2;
+        i = 2;
+      }
+      if(vdotn_h1 < 0 && (t2 = (ch1 - ch2)/vdotn_h1) < t1)
+      {
+        t1 = t2;
+        i = 3;
+      }
+      if(vdotn_h2 < 0 && (t2 = (ch1 + ch2)/vdotn_h2) < t1)
+      {
+        t1 = t2;
+        i = 4;
+      }
+      if(i == 0)
+      {
+        break;                    /* Neutron left guide. */
+      }
+      PROP_DT(t1);
+      switch(i)
+      {
+        case 1:                   /* Left vertical mirror */
+          nlen2 = l_seg*l_seg + ww[ii]*ww[ii];
+          q = V2Q*(-2)*vdotn_v1/sqrt(nlen2);
+          dd = 2*vdotn_v1/nlen2;
+          vx = vx - dd*l_seg;
+          vz = vz - dd*ww[ii];
+          break;
+        case 2:                   /* Right vertical mirror */
+          nlen2 = l_seg*l_seg + ww[ii]*ww[ii];
+          q = V2Q*(-2)*vdotn_v2/sqrt(nlen2);
+          dd = 2*vdotn_v2/nlen2;
+          vx = vx + dd*l_seg;
+          vz = vz - dd*ww[ii];
+          break;
+        case 3:                   /* Lower horizontal mirror */
+          nlen2 = l_seg*l_seg + hh[ii]*hh[ii];
+          q = V2Q*(-2)*vdotn_h1/sqrt(nlen2);
+          dd = 2*vdotn_h1/nlen2;
+          vy = vy - dd*l_seg;
+          vz = vz - dd*hh[ii];
+          break;
+        case 4:                   /* Upper horizontal mirror */
+          nlen2 = l_seg*l_seg + hh[ii]*hh[ii];
+          q = V2Q*(-2)*vdotn_h2/sqrt(nlen2);
+          dd = 2*vdotn_h2/nlen2;
+          vy = vy + dd*l_seg;
+          vz = vz - dd*hh[ii];
+          break;
+      }
+      /* Now compute reflectivity. */
+      if((i <= 2 && mx == 0) || (i > 2 && my == 0))
+      {
+        x += hadj; /* Re-adjust origin */
+        ABSORB;
+      } else {
+        double ref=1;
+        if (i <= 2)
+        {
+          double m     = (mx > 0 ? mx : fabs(mx*w1/w1_in[ii]));
+          double par[] = {R0, Qcx, alphax, m, W};
+          StdReflecFunc(q, par, &ref);
+          if (ref > 0)
+            p *= ref;
+          else {
+            x += hadj; /* Re-adjust origin */
+            ABSORB;                               /* Cutoff ~ 1E-10 */
+          }
+        } else {
+          double m     = (my > 0 ? my : fabs(my*h1/h1_in[ii]));
+          double par[] = {R0, Qcy, alphay, m, W};
+          StdReflecFunc(q, par, &ref);
+          if (ref > 0)
+            p *= ref;
+          else {
+            x += hadj; /* Re-adjust origin */
+            ABSORB;                               /* Cutoff ~ 1E-10 */
+          }
+        }
+      }
+      x += hadj; SCATTER; x -= hadj;
+    } /* loop on reflections inside segment */
+    x += hadj; /* Re-adjust origin */
+
+    /* rotate neutron according to actual guide curvature */
+    if (rotation_h) {
+      double nvx, nvy, nvz;
+      rotate(nvx,nvy,nvz, vx,vy,vz, -rotation_h, 0,1,0);
+      vx = nvx; vy=nvy; vz=nvz;
+    }
+    if (rotation_v) {
+      double nvx, nvy, nvz;
+      rotate(nvx,nvy,nvz, vx,vy,vz, -rotation_v, 1,0,0);
+      vx = nvx; vy=nvy; vz=nvz;
+    }
+  } /* loop on segments */
+
+}
+#line 15267 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
+#undef rotation_v
+#undef rotation_h
+#undef num
+#undef ep
+#undef file_name
+#undef pos
+#undef fu
+#undef seg
+#undef ii
+#undef i
+#undef Div1
+#undef test
+#undef p2_para
+#undef div1
+#undef u2
+#undef u1
+#undef mxi
+#undef lbh
+#undef lbw
+#undef b_ell_q
+#undef a_ell_q
+#undef w2
+#undef w12
+#undef h2
+#undef h12
+#undef seg
+#undef l_seg
+#undef w2_out
+#undef w1_in
+#undef h2_out
+#undef h1_in
+#undef lhhalf
+#undef lwhalf
+#undef hhalf
+#undef whalf
+#undef hh
+#undef ww
+#undef w2c
+#undef w1c
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+  /* Label for restoring  neutron */
+  mcabsorbCompFocusing_nose_par:
+  if (RESTORE) /* restore if needed */
+  { RESTORE_NEUTRON(11,
+      mcnlx,
+      mcnly,
+      mcnlz,
+      mcnlvx,
+      mcnlvy,
+      mcnlvz,
+      mcnlt,
+      mcnlsx,
+      mcnlsy,
+      mcnlsz,
+      mcnlp); }
+#undef mcabsorbComp
+#undef p
+#undef sz
+#undef sy
+#undef sx
+#undef t
+#undef vz
+#undef vy
+#undef vx
+#undef z
+#undef y
+#undef x
+  mcDEBUG_STATE(
+mcnlx,
+mcnly,
+mcnlz,
+mcnlvx,
+mcnlvy,
+mcnlvz,
+mcnlt,
+mcnlsx,
+mcnlsy,
+mcnlsz,
+mcnlp)
+
+  /* TRACE Component guide_end [12] */
   mccoordschange(mcposrguide_end, mcrotrguide_end,
     &mcnlx,
     &mcnly,
@@ -14329,7 +15390,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompguide_end
-  STORE_NEUTRON(11,
+  STORE_NEUTRON(12,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14343,19 +15404,19 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[11]++;
-  mcPCounter[11] += p;
-  mcP2Counter[11] += p*p;
+  mcNCounter[12]++;
+  mcPCounter[12] += p;
+  mcP2Counter[12] += p*p;
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
-#define mccompcurindex 11
+#define mccompcurindex 12
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
   mcabsorbCompguide_end:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(11,
+  { RESTORE_NEUTRON(12,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14392,7 +15453,7 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component monitor_nd_xy [12] */
+  /* TRACE Component monitor_nd_xy [13] */
   mccoordschange(mcposrmonitor_nd_xy, mcrotrmonitor_nd_xy,
     &mcnlx,
     &mcnly,
@@ -14432,7 +15493,7 @@ mcnlp)
 #define p mcnlp
 
 #define mcabsorbComp mcabsorbCompmonitor_nd_xy
-  STORE_NEUTRON(12,
+  STORE_NEUTRON(13,
     mcnlx,
     mcnly,
     mcnlz,
@@ -14446,12 +15507,12 @@ mcnlp)
     mcnlp);
   mcScattered=0;
   mcRestore=0;
-  mcNCounter[12]++;
-  mcPCounter[12] += p;
-  mcP2Counter[12] += p*p;
+  mcNCounter[13]++;
+  mcPCounter[13] += p;
+  mcP2Counter[13] += p*p;
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -14650,7 +15711,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 14653 "./NERA_guide_3x3_sample.c"
+#line 15712 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -14665,7 +15726,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
   /* Label for restoring  neutron */
   mcabsorbCompmonitor_nd_xy:
   if (RESTORE) /* restore if needed */
-  { RESTORE_NEUTRON(12,
+  { RESTORE_NEUTRON(13,
       mcnlx,
       mcnly,
       mcnlz,
@@ -14766,7 +15827,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 14769 "./NERA_guide_3x3_sample.c"
+#line 15828 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -14780,7 +15841,7 @@ MCNUM minutes = mccorigin_minutes;
   SIG_MESSAGE("monitor_nd_xy (Save)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -14815,7 +15876,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 14818 "./NERA_guide_3x3_sample.c"
+#line 15877 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -14862,7 +15923,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 14865 "./NERA_guide_3x3_sample.c"
+#line 15924 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -14942,7 +16003,7 @@ if (GVars.warnings > 100) {
   fprintf(stderr,"%s: warning: This message has been repeated %g times\n", GVars.compcurname, GVars.warnings);
 }
 }
-#line 14938 "./NERA_guide_3x3_sample.c"
+#line 15997 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -14956,70 +16017,70 @@ if (GVars.warnings > 100) {
     if (!mcNCounter[9]) fprintf(stderr, "Warning: No neutron could reach Component[9] Main_guide_arm\n");
     if (mcAbsorbProp[9]) fprintf(stderr, "Warning: %g events were removed in Component[9] Main_guide_arm=Arm()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[9]);
-  /* User FINALLY code for component 'Focusing_nose'. */
-  SIG_MESSAGE("Focusing_nose (Finally)");
-#define mccompcurname  Focusing_nose
+  /* User FINALLY code for component 'Focusing_nose_ell'. */
+  SIG_MESSAGE("Focusing_nose_ell (Finally)");
+#define mccompcurname  Focusing_nose_ell
 #define mccompcurtype  Guide_tapering
 #define mccompcurindex 10
-#define w1c mccFocusing_nose_w1c
-#define w2c mccFocusing_nose_w2c
-#define ww mccFocusing_nose_ww
-#define hh mccFocusing_nose_hh
-#define whalf mccFocusing_nose_whalf
-#define hhalf mccFocusing_nose_hhalf
-#define lwhalf mccFocusing_nose_lwhalf
-#define lhhalf mccFocusing_nose_lhhalf
-#define h1_in mccFocusing_nose_h1_in
-#define h2_out mccFocusing_nose_h2_out
-#define w1_in mccFocusing_nose_w1_in
-#define w2_out mccFocusing_nose_w2_out
-#define l_seg mccFocusing_nose_l_seg
-#define seg mccFocusing_nose_seg
-#define h12 mccFocusing_nose_h12
-#define h2 mccFocusing_nose_h2
-#define w12 mccFocusing_nose_w12
-#define w2 mccFocusing_nose_w2
-#define a_ell_q mccFocusing_nose_a_ell_q
-#define b_ell_q mccFocusing_nose_b_ell_q
-#define lbw mccFocusing_nose_lbw
-#define lbh mccFocusing_nose_lbh
-#define mxi mccFocusing_nose_mxi
-#define u1 mccFocusing_nose_u1
-#define u2 mccFocusing_nose_u2
-#define div1 mccFocusing_nose_div1
-#define p2_para mccFocusing_nose_p2_para
-#define test mccFocusing_nose_test
-#define Div1 mccFocusing_nose_Div1
-#define i mccFocusing_nose_i
-#define ii mccFocusing_nose_ii
-#define seg mccFocusing_nose_seg
-#define fu mccFocusing_nose_fu
-#define pos mccFocusing_nose_pos
-#define file_name mccFocusing_nose_file_name
-#define ep mccFocusing_nose_ep
-#define num mccFocusing_nose_num
-#define rotation_h mccFocusing_nose_rotation_h
-#define rotation_v mccFocusing_nose_rotation_v
-{   /* Declarations of Focusing_nose=Guide_tapering() SETTING parameters. */
-char* option = mccFocusing_nose_option;
-MCNUM w1 = mccFocusing_nose_w1;
-MCNUM h1 = mccFocusing_nose_h1;
-MCNUM l = mccFocusing_nose_l;
-MCNUM linw = mccFocusing_nose_linw;
-MCNUM loutw = mccFocusing_nose_loutw;
-MCNUM linh = mccFocusing_nose_linh;
-MCNUM louth = mccFocusing_nose_louth;
-MCNUM R0 = mccFocusing_nose_R0;
-MCNUM Qcx = mccFocusing_nose_Qcx;
-MCNUM Qcy = mccFocusing_nose_Qcy;
-MCNUM alphax = mccFocusing_nose_alphax;
-MCNUM alphay = mccFocusing_nose_alphay;
-MCNUM W = mccFocusing_nose_W;
-MCNUM mx = mccFocusing_nose_mx;
-MCNUM my = mccFocusing_nose_my;
-MCNUM segno = mccFocusing_nose_segno;
-MCNUM curvature = mccFocusing_nose_curvature;
-MCNUM curvature_v = mccFocusing_nose_curvature_v;
+#define w1c mccFocusing_nose_ell_w1c
+#define w2c mccFocusing_nose_ell_w2c
+#define ww mccFocusing_nose_ell_ww
+#define hh mccFocusing_nose_ell_hh
+#define whalf mccFocusing_nose_ell_whalf
+#define hhalf mccFocusing_nose_ell_hhalf
+#define lwhalf mccFocusing_nose_ell_lwhalf
+#define lhhalf mccFocusing_nose_ell_lhhalf
+#define h1_in mccFocusing_nose_ell_h1_in
+#define h2_out mccFocusing_nose_ell_h2_out
+#define w1_in mccFocusing_nose_ell_w1_in
+#define w2_out mccFocusing_nose_ell_w2_out
+#define l_seg mccFocusing_nose_ell_l_seg
+#define seg mccFocusing_nose_ell_seg
+#define h12 mccFocusing_nose_ell_h12
+#define h2 mccFocusing_nose_ell_h2
+#define w12 mccFocusing_nose_ell_w12
+#define w2 mccFocusing_nose_ell_w2
+#define a_ell_q mccFocusing_nose_ell_a_ell_q
+#define b_ell_q mccFocusing_nose_ell_b_ell_q
+#define lbw mccFocusing_nose_ell_lbw
+#define lbh mccFocusing_nose_ell_lbh
+#define mxi mccFocusing_nose_ell_mxi
+#define u1 mccFocusing_nose_ell_u1
+#define u2 mccFocusing_nose_ell_u2
+#define div1 mccFocusing_nose_ell_div1
+#define p2_para mccFocusing_nose_ell_p2_para
+#define test mccFocusing_nose_ell_test
+#define Div1 mccFocusing_nose_ell_Div1
+#define i mccFocusing_nose_ell_i
+#define ii mccFocusing_nose_ell_ii
+#define seg mccFocusing_nose_ell_seg
+#define fu mccFocusing_nose_ell_fu
+#define pos mccFocusing_nose_ell_pos
+#define file_name mccFocusing_nose_ell_file_name
+#define ep mccFocusing_nose_ell_ep
+#define num mccFocusing_nose_ell_num
+#define rotation_h mccFocusing_nose_ell_rotation_h
+#define rotation_v mccFocusing_nose_ell_rotation_v
+{   /* Declarations of Focusing_nose_ell=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_ell_option;
+MCNUM w1 = mccFocusing_nose_ell_w1;
+MCNUM h1 = mccFocusing_nose_ell_h1;
+MCNUM l = mccFocusing_nose_ell_l;
+MCNUM linw = mccFocusing_nose_ell_linw;
+MCNUM loutw = mccFocusing_nose_ell_loutw;
+MCNUM linh = mccFocusing_nose_ell_linh;
+MCNUM louth = mccFocusing_nose_ell_louth;
+MCNUM R0 = mccFocusing_nose_ell_R0;
+MCNUM Qcx = mccFocusing_nose_ell_Qcx;
+MCNUM Qcy = mccFocusing_nose_ell_Qcy;
+MCNUM alphax = mccFocusing_nose_ell_alphax;
+MCNUM alphay = mccFocusing_nose_ell_alphay;
+MCNUM W = mccFocusing_nose_ell_W;
+MCNUM mx = mccFocusing_nose_ell_mx;
+MCNUM my = mccFocusing_nose_ell_my;
+MCNUM segno = mccFocusing_nose_ell_segno;
+MCNUM curvature = mccFocusing_nose_ell_curvature;
+MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
 #line 609 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
 {
   free(w1c);
@@ -15035,8 +16096,8 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 15029 "./NERA_guide_3x3_sample.c"
-}   /* End of Focusing_nose=Guide_tapering() SETTING parameter declarations. */
+#line 16088 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
 #undef num
@@ -15080,17 +16141,144 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[10]) fprintf(stderr, "Warning: No neutron could reach Component[10] Focusing_nose\n");
-    if (mcAbsorbProp[10]) fprintf(stderr, "Warning: %g events were removed in Component[10] Focusing_nose=Guide_tapering()\n"
+    if (!mcNCounter[10]) fprintf(stderr, "Warning: No neutron could reach Component[10] Focusing_nose_ell\n");
+    if (mcAbsorbProp[10]) fprintf(stderr, "Warning: %g events were removed in Component[10] Focusing_nose_ell=Guide_tapering()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[10]);
-    if (!mcNCounter[11]) fprintf(stderr, "Warning: No neutron could reach Component[11] guide_end\n");
-    if (mcAbsorbProp[11]) fprintf(stderr, "Warning: %g events were removed in Component[11] guide_end=Arm()\n"
+  /* User FINALLY code for component 'Focusing_nose_par'. */
+  SIG_MESSAGE("Focusing_nose_par (Finally)");
+#define mccompcurname  Focusing_nose_par
+#define mccompcurtype  Guide_tapering
+#define mccompcurindex 11
+#define w1c mccFocusing_nose_par_w1c
+#define w2c mccFocusing_nose_par_w2c
+#define ww mccFocusing_nose_par_ww
+#define hh mccFocusing_nose_par_hh
+#define whalf mccFocusing_nose_par_whalf
+#define hhalf mccFocusing_nose_par_hhalf
+#define lwhalf mccFocusing_nose_par_lwhalf
+#define lhhalf mccFocusing_nose_par_lhhalf
+#define h1_in mccFocusing_nose_par_h1_in
+#define h2_out mccFocusing_nose_par_h2_out
+#define w1_in mccFocusing_nose_par_w1_in
+#define w2_out mccFocusing_nose_par_w2_out
+#define l_seg mccFocusing_nose_par_l_seg
+#define seg mccFocusing_nose_par_seg
+#define h12 mccFocusing_nose_par_h12
+#define h2 mccFocusing_nose_par_h2
+#define w12 mccFocusing_nose_par_w12
+#define w2 mccFocusing_nose_par_w2
+#define a_ell_q mccFocusing_nose_par_a_ell_q
+#define b_ell_q mccFocusing_nose_par_b_ell_q
+#define lbw mccFocusing_nose_par_lbw
+#define lbh mccFocusing_nose_par_lbh
+#define mxi mccFocusing_nose_par_mxi
+#define u1 mccFocusing_nose_par_u1
+#define u2 mccFocusing_nose_par_u2
+#define div1 mccFocusing_nose_par_div1
+#define p2_para mccFocusing_nose_par_p2_para
+#define test mccFocusing_nose_par_test
+#define Div1 mccFocusing_nose_par_Div1
+#define i mccFocusing_nose_par_i
+#define ii mccFocusing_nose_par_ii
+#define seg mccFocusing_nose_par_seg
+#define fu mccFocusing_nose_par_fu
+#define pos mccFocusing_nose_par_pos
+#define file_name mccFocusing_nose_par_file_name
+#define ep mccFocusing_nose_par_ep
+#define num mccFocusing_nose_par_num
+#define rotation_h mccFocusing_nose_par_rotation_h
+#define rotation_v mccFocusing_nose_par_rotation_v
+{   /* Declarations of Focusing_nose_par=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_par_option;
+MCNUM w1 = mccFocusing_nose_par_w1;
+MCNUM h1 = mccFocusing_nose_par_h1;
+MCNUM l = mccFocusing_nose_par_l;
+MCNUM linw = mccFocusing_nose_par_linw;
+MCNUM loutw = mccFocusing_nose_par_loutw;
+MCNUM linh = mccFocusing_nose_par_linh;
+MCNUM louth = mccFocusing_nose_par_louth;
+MCNUM R0 = mccFocusing_nose_par_R0;
+MCNUM Qcx = mccFocusing_nose_par_Qcx;
+MCNUM Qcy = mccFocusing_nose_par_Qcy;
+MCNUM alphax = mccFocusing_nose_par_alphax;
+MCNUM alphay = mccFocusing_nose_par_alphay;
+MCNUM W = mccFocusing_nose_par_W;
+MCNUM mx = mccFocusing_nose_par_mx;
+MCNUM my = mccFocusing_nose_par_my;
+MCNUM segno = mccFocusing_nose_par_segno;
+MCNUM curvature = mccFocusing_nose_par_curvature;
+MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
+#line 609 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+{
+  free(w1c);
+  free(w2c);
+  free(ww);
+  free(hh);
+  free(whalf);
+  free(hhalf);
+  free(lwhalf);
+  free(lhhalf);
+  free(h1_in);
+  free(h2_out);
+  free(w1_in);
+  free(w2_out);
+}
+#line 16214 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
+#undef rotation_v
+#undef rotation_h
+#undef num
+#undef ep
+#undef file_name
+#undef pos
+#undef fu
+#undef seg
+#undef ii
+#undef i
+#undef Div1
+#undef test
+#undef p2_para
+#undef div1
+#undef u2
+#undef u1
+#undef mxi
+#undef lbh
+#undef lbw
+#undef b_ell_q
+#undef a_ell_q
+#undef w2
+#undef w12
+#undef h2
+#undef h12
+#undef seg
+#undef l_seg
+#undef w2_out
+#undef w1_in
+#undef h2_out
+#undef h1_in
+#undef lhhalf
+#undef lwhalf
+#undef hhalf
+#undef whalf
+#undef hh
+#undef ww
+#undef w2c
+#undef w1c
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+    if (!mcNCounter[11]) fprintf(stderr, "Warning: No neutron could reach Component[11] Focusing_nose_par\n");
+    if (mcAbsorbProp[11]) fprintf(stderr, "Warning: %g events were removed in Component[11] Focusing_nose_par=Guide_tapering()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[11]);
+    if (!mcNCounter[12]) fprintf(stderr, "Warning: No neutron could reach Component[12] guide_end\n");
+    if (mcAbsorbProp[12]) fprintf(stderr, "Warning: %g events were removed in Component[12] guide_end=Arm()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[12]);
   /* User FINALLY code for component 'monitor_nd_xy'. */
   SIG_MESSAGE("monitor_nd_xy (Finally)");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -15127,7 +16315,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 15119 "./NERA_guide_3x3_sample.c"
+#line 16304 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -15140,9 +16328,9 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[12]) fprintf(stderr, "Warning: No neutron could reach Component[12] monitor_nd_xy\n");
-    if (mcAbsorbProp[12]) fprintf(stderr, "Warning: %g events were removed in Component[12] monitor_nd_xy=Monitor_nD()\n"
-"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[12]);
+    if (!mcNCounter[13]) fprintf(stderr, "Warning: No neutron could reach Component[13] monitor_nd_xy\n");
+    if (mcAbsorbProp[13]) fprintf(stderr, "Warning: %g events were removed in Component[13] monitor_nd_xy=Monitor_nD()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[13]);
   /* User FINALLY code from instrument definition. */
   SIG_MESSAGE("Nera (Finally)");
 #define mccompcurname  Nera
@@ -15154,23 +16342,23 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #define guide_width mcipguide_width
 #define guide_height mcipguide_height
 #define focusing_length mcipfocusing_length
-#define shape mcipshape
+#define guide_shape mcipguide_shape
 #define linh mciplinh
 #define louth mciplouth
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 144 "NERA_guide_3x3_sample.instr"
+#line 158 "NERA_guide_3x3_sample.instr"
 {
 
 }
-#line 15155 "./NERA_guide_3x3_sample.c"
+#line 16340 "./NERA_guide_3x3_sample.c"
 #undef sample_size
 #undef loutw
 #undef linw
 #undef louth
 #undef linh
-#undef shape
+#undef guide_shape
 #undef focusing_length
 #undef guide_height
 #undef guide_width
@@ -15215,7 +16403,7 @@ MCNUM minutes = mccorigin_minutes;
 {
   
 }
-#line 15206 "./NERA_guide_3x3_sample.c"
+#line 16391 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -15264,7 +16452,7 @@ int target_index = mccSource_simple_target_index;
     dashed_line(0,0,0, -focus_xw/2+tx, focus_yh/2+ty,tz, 4);
   }
 }
-#line 15255 "./NERA_guide_3x3_sample.c"
+#line 16440 "./NERA_guide_3x3_sample.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -15310,7 +16498,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 15301 "./NERA_guide_3x3_sample.c"
+#line 16486 "./NERA_guide_3x3_sample.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15353,7 +16541,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 15344 "./NERA_guide_3x3_sample.c"
+#line 16529 "./NERA_guide_3x3_sample.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15396,7 +16584,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 15387 "./NERA_guide_3x3_sample.c"
+#line 16572 "./NERA_guide_3x3_sample.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15439,7 +16627,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 15430 "./NERA_guide_3x3_sample.c"
+#line 16615 "./NERA_guide_3x3_sample.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15459,7 +16647,7 @@ MCNUM yheight = mccslit4_yheight;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 15450 "./NERA_guide_3x3_sample.c"
+#line 16635 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -15570,7 +16758,7 @@ char* reflect = mccMain_guide_reflect;
   }
 
 }
-#line 15561 "./NERA_guide_3x3_sample.c"
+#line 16746 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -15592,76 +16780,76 @@ char* reflect = mccMain_guide_reflect;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 15583 "./NERA_guide_3x3_sample.c"
+#line 16768 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* MCDISPLAY code for component 'Focusing_nose'. */
-  SIG_MESSAGE("Focusing_nose (McDisplay)");
-  printf("MCDISPLAY: component %s\n", "Focusing_nose");
-#define mccompcurname  Focusing_nose
+  /* MCDISPLAY code for component 'Focusing_nose_ell'. */
+  SIG_MESSAGE("Focusing_nose_ell (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "Focusing_nose_ell");
+#define mccompcurname  Focusing_nose_ell
 #define mccompcurtype  Guide_tapering
 #define mccompcurindex 10
-#define w1c mccFocusing_nose_w1c
-#define w2c mccFocusing_nose_w2c
-#define ww mccFocusing_nose_ww
-#define hh mccFocusing_nose_hh
-#define whalf mccFocusing_nose_whalf
-#define hhalf mccFocusing_nose_hhalf
-#define lwhalf mccFocusing_nose_lwhalf
-#define lhhalf mccFocusing_nose_lhhalf
-#define h1_in mccFocusing_nose_h1_in
-#define h2_out mccFocusing_nose_h2_out
-#define w1_in mccFocusing_nose_w1_in
-#define w2_out mccFocusing_nose_w2_out
-#define l_seg mccFocusing_nose_l_seg
-#define seg mccFocusing_nose_seg
-#define h12 mccFocusing_nose_h12
-#define h2 mccFocusing_nose_h2
-#define w12 mccFocusing_nose_w12
-#define w2 mccFocusing_nose_w2
-#define a_ell_q mccFocusing_nose_a_ell_q
-#define b_ell_q mccFocusing_nose_b_ell_q
-#define lbw mccFocusing_nose_lbw
-#define lbh mccFocusing_nose_lbh
-#define mxi mccFocusing_nose_mxi
-#define u1 mccFocusing_nose_u1
-#define u2 mccFocusing_nose_u2
-#define div1 mccFocusing_nose_div1
-#define p2_para mccFocusing_nose_p2_para
-#define test mccFocusing_nose_test
-#define Div1 mccFocusing_nose_Div1
-#define i mccFocusing_nose_i
-#define ii mccFocusing_nose_ii
-#define seg mccFocusing_nose_seg
-#define fu mccFocusing_nose_fu
-#define pos mccFocusing_nose_pos
-#define file_name mccFocusing_nose_file_name
-#define ep mccFocusing_nose_ep
-#define num mccFocusing_nose_num
-#define rotation_h mccFocusing_nose_rotation_h
-#define rotation_v mccFocusing_nose_rotation_v
-{   /* Declarations of Focusing_nose=Guide_tapering() SETTING parameters. */
-char* option = mccFocusing_nose_option;
-MCNUM w1 = mccFocusing_nose_w1;
-MCNUM h1 = mccFocusing_nose_h1;
-MCNUM l = mccFocusing_nose_l;
-MCNUM linw = mccFocusing_nose_linw;
-MCNUM loutw = mccFocusing_nose_loutw;
-MCNUM linh = mccFocusing_nose_linh;
-MCNUM louth = mccFocusing_nose_louth;
-MCNUM R0 = mccFocusing_nose_R0;
-MCNUM Qcx = mccFocusing_nose_Qcx;
-MCNUM Qcy = mccFocusing_nose_Qcy;
-MCNUM alphax = mccFocusing_nose_alphax;
-MCNUM alphay = mccFocusing_nose_alphay;
-MCNUM W = mccFocusing_nose_W;
-MCNUM mx = mccFocusing_nose_mx;
-MCNUM my = mccFocusing_nose_my;
-MCNUM segno = mccFocusing_nose_segno;
-MCNUM curvature = mccFocusing_nose_curvature;
-MCNUM curvature_v = mccFocusing_nose_curvature_v;
+#define w1c mccFocusing_nose_ell_w1c
+#define w2c mccFocusing_nose_ell_w2c
+#define ww mccFocusing_nose_ell_ww
+#define hh mccFocusing_nose_ell_hh
+#define whalf mccFocusing_nose_ell_whalf
+#define hhalf mccFocusing_nose_ell_hhalf
+#define lwhalf mccFocusing_nose_ell_lwhalf
+#define lhhalf mccFocusing_nose_ell_lhhalf
+#define h1_in mccFocusing_nose_ell_h1_in
+#define h2_out mccFocusing_nose_ell_h2_out
+#define w1_in mccFocusing_nose_ell_w1_in
+#define w2_out mccFocusing_nose_ell_w2_out
+#define l_seg mccFocusing_nose_ell_l_seg
+#define seg mccFocusing_nose_ell_seg
+#define h12 mccFocusing_nose_ell_h12
+#define h2 mccFocusing_nose_ell_h2
+#define w12 mccFocusing_nose_ell_w12
+#define w2 mccFocusing_nose_ell_w2
+#define a_ell_q mccFocusing_nose_ell_a_ell_q
+#define b_ell_q mccFocusing_nose_ell_b_ell_q
+#define lbw mccFocusing_nose_ell_lbw
+#define lbh mccFocusing_nose_ell_lbh
+#define mxi mccFocusing_nose_ell_mxi
+#define u1 mccFocusing_nose_ell_u1
+#define u2 mccFocusing_nose_ell_u2
+#define div1 mccFocusing_nose_ell_div1
+#define p2_para mccFocusing_nose_ell_p2_para
+#define test mccFocusing_nose_ell_test
+#define Div1 mccFocusing_nose_ell_Div1
+#define i mccFocusing_nose_ell_i
+#define ii mccFocusing_nose_ell_ii
+#define seg mccFocusing_nose_ell_seg
+#define fu mccFocusing_nose_ell_fu
+#define pos mccFocusing_nose_ell_pos
+#define file_name mccFocusing_nose_ell_file_name
+#define ep mccFocusing_nose_ell_ep
+#define num mccFocusing_nose_ell_num
+#define rotation_h mccFocusing_nose_ell_rotation_h
+#define rotation_v mccFocusing_nose_ell_rotation_v
+{   /* Declarations of Focusing_nose_ell=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_ell_option;
+MCNUM w1 = mccFocusing_nose_ell_w1;
+MCNUM h1 = mccFocusing_nose_ell_h1;
+MCNUM l = mccFocusing_nose_ell_l;
+MCNUM linw = mccFocusing_nose_ell_linw;
+MCNUM loutw = mccFocusing_nose_ell_loutw;
+MCNUM linh = mccFocusing_nose_ell_linh;
+MCNUM louth = mccFocusing_nose_ell_louth;
+MCNUM R0 = mccFocusing_nose_ell_R0;
+MCNUM Qcx = mccFocusing_nose_ell_Qcx;
+MCNUM Qcy = mccFocusing_nose_ell_Qcy;
+MCNUM alphax = mccFocusing_nose_ell_alphax;
+MCNUM alphay = mccFocusing_nose_ell_alphay;
+MCNUM W = mccFocusing_nose_ell_W;
+MCNUM mx = mccFocusing_nose_ell_mx;
+MCNUM my = mccFocusing_nose_ell_my;
+MCNUM segno = mccFocusing_nose_ell_segno;
+MCNUM curvature = mccFocusing_nose_ell_curvature;
+MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
 #line 625 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
 {
   double x;
@@ -15695,8 +16883,151 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   }
 
 }
-#line 15686 "./NERA_guide_3x3_sample.c"
-}   /* End of Focusing_nose=Guide_tapering() SETTING parameter declarations. */
+#line 16871 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
+#undef rotation_v
+#undef rotation_h
+#undef num
+#undef ep
+#undef file_name
+#undef pos
+#undef fu
+#undef seg
+#undef ii
+#undef i
+#undef Div1
+#undef test
+#undef p2_para
+#undef div1
+#undef u2
+#undef u1
+#undef mxi
+#undef lbh
+#undef lbw
+#undef b_ell_q
+#undef a_ell_q
+#undef w2
+#undef w12
+#undef h2
+#undef h12
+#undef seg
+#undef l_seg
+#undef w2_out
+#undef w1_in
+#undef h2_out
+#undef h1_in
+#undef lhhalf
+#undef lwhalf
+#undef hhalf
+#undef whalf
+#undef hh
+#undef ww
+#undef w2c
+#undef w1c
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* MCDISPLAY code for component 'Focusing_nose_par'. */
+  SIG_MESSAGE("Focusing_nose_par (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "Focusing_nose_par");
+#define mccompcurname  Focusing_nose_par
+#define mccompcurtype  Guide_tapering
+#define mccompcurindex 11
+#define w1c mccFocusing_nose_par_w1c
+#define w2c mccFocusing_nose_par_w2c
+#define ww mccFocusing_nose_par_ww
+#define hh mccFocusing_nose_par_hh
+#define whalf mccFocusing_nose_par_whalf
+#define hhalf mccFocusing_nose_par_hhalf
+#define lwhalf mccFocusing_nose_par_lwhalf
+#define lhhalf mccFocusing_nose_par_lhhalf
+#define h1_in mccFocusing_nose_par_h1_in
+#define h2_out mccFocusing_nose_par_h2_out
+#define w1_in mccFocusing_nose_par_w1_in
+#define w2_out mccFocusing_nose_par_w2_out
+#define l_seg mccFocusing_nose_par_l_seg
+#define seg mccFocusing_nose_par_seg
+#define h12 mccFocusing_nose_par_h12
+#define h2 mccFocusing_nose_par_h2
+#define w12 mccFocusing_nose_par_w12
+#define w2 mccFocusing_nose_par_w2
+#define a_ell_q mccFocusing_nose_par_a_ell_q
+#define b_ell_q mccFocusing_nose_par_b_ell_q
+#define lbw mccFocusing_nose_par_lbw
+#define lbh mccFocusing_nose_par_lbh
+#define mxi mccFocusing_nose_par_mxi
+#define u1 mccFocusing_nose_par_u1
+#define u2 mccFocusing_nose_par_u2
+#define div1 mccFocusing_nose_par_div1
+#define p2_para mccFocusing_nose_par_p2_para
+#define test mccFocusing_nose_par_test
+#define Div1 mccFocusing_nose_par_Div1
+#define i mccFocusing_nose_par_i
+#define ii mccFocusing_nose_par_ii
+#define seg mccFocusing_nose_par_seg
+#define fu mccFocusing_nose_par_fu
+#define pos mccFocusing_nose_par_pos
+#define file_name mccFocusing_nose_par_file_name
+#define ep mccFocusing_nose_par_ep
+#define num mccFocusing_nose_par_num
+#define rotation_h mccFocusing_nose_par_rotation_h
+#define rotation_v mccFocusing_nose_par_rotation_v
+{   /* Declarations of Focusing_nose_par=Guide_tapering() SETTING parameters. */
+char* option = mccFocusing_nose_par_option;
+MCNUM w1 = mccFocusing_nose_par_w1;
+MCNUM h1 = mccFocusing_nose_par_h1;
+MCNUM l = mccFocusing_nose_par_l;
+MCNUM linw = mccFocusing_nose_par_linw;
+MCNUM loutw = mccFocusing_nose_par_loutw;
+MCNUM linh = mccFocusing_nose_par_linh;
+MCNUM louth = mccFocusing_nose_par_louth;
+MCNUM R0 = mccFocusing_nose_par_R0;
+MCNUM Qcx = mccFocusing_nose_par_Qcx;
+MCNUM Qcy = mccFocusing_nose_par_Qcy;
+MCNUM alphax = mccFocusing_nose_par_alphax;
+MCNUM alphay = mccFocusing_nose_par_alphay;
+MCNUM W = mccFocusing_nose_par_W;
+MCNUM mx = mccFocusing_nose_par_mx;
+MCNUM my = mccFocusing_nose_par_my;
+MCNUM segno = mccFocusing_nose_par_segno;
+MCNUM curvature = mccFocusing_nose_par_curvature;
+MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
+#line 625 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+{
+  double x;
+  int i,ii;
+
+  
+
+  for (ii=0; ii < segno; ii++)
+  {
+     multiline(5,
+        -w1_in[ii]/2.0, -h1_in[ii]/2.0,l_seg*(double)ii,
+        -w2_out[ii]/2.0, -h2_out[ii]/2.0,l_seg*((double)ii+1.0),
+        -w2_out[ii]/2.0,  h2_out[ii]/2.0,l_seg*((double)ii+1.0),
+        -w1_in[ii]/2.0,  h1_in[ii]/2.0,l_seg*(double)ii,
+        -w1_in[ii]/2.0, -h1_in[ii]/2.0,l_seg*(double)ii);
+     multiline(5,
+        w1_in[ii]/2.0, -h1_in[ii]/2.0,l_seg*(double)ii,
+        w2_out[ii]/2.0, -h2_out[ii]/2.0,l_seg*((double)ii+1.0),
+        w2_out[ii]/2.0,  h2_out[ii]/2.0,l_seg*((double)ii+1.0),
+        w1_in[ii]/2.0,  h1_in[ii]/2.0,l_seg*(double)ii,
+        w1_in[ii]/2.0, -h1_in[ii]/2.0,l_seg*(double)ii);
+  }
+  line(-w1/2.0, -h1/2.0, 0.0, w1/2.0, -h1/2.0, 0.0);
+  line(-w1/2.0, h1/2.0, 0.0, w1/2.0, h1/2.0, 0.0);
+  for(i=0; i<segno;i++)
+  {
+     line(-w2_out[i]/2.0, -h2_out[i]/2.0, l_seg*(double)(i+1),
+     w2_out[i]/2.0, -h2_out[i]/2.0, l_seg*(double)(i+1));
+     line(-w2_out[i]/2.0, h2_out[i]/2.0, l_seg*(double)(i+1),
+     w2_out[i]/2.0, h2_out[i]/2.0, l_seg*(double)(i+1));
+  }
+
+}
+#line 17014 "./NERA_guide_3x3_sample.c"
+}   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
 #undef num
@@ -15745,7 +17076,7 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   printf("MCDISPLAY: component %s\n", "guide_end");
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
-#define mccompcurindex 11
+#define mccompcurindex 12
 #line 40 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
@@ -15754,7 +17085,7 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 15745 "./NERA_guide_3x3_sample.c"
+#line 17073 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -15764,7 +17095,7 @@ MCNUM curvature_v = mccFocusing_nose_curvature_v;
   printf("MCDISPLAY: component %s\n", "monitor_nd_xy");
 #define mccompcurname  monitor_nd_xy
 #define mccompcurtype  Monitor_nD
-#define mccompcurindex 12
+#define mccompcurindex 13
 #define user1 mccmonitor_nd_xy_user1
 #define user2 mccmonitor_nd_xy_user2
 #define user3 mccmonitor_nd_xy_user3
@@ -15803,7 +17134,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 15794 "./NERA_guide_3x3_sample.c"
+#line 17122 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
