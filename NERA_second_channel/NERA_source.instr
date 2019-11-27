@@ -17,31 +17,35 @@
 * guide_height:        [m] initial guide height
 *
 *******************************************************************************/
-DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.1, source_lambda_max = 20, source_pulse_number=2, guide_width = 0.05, guide_height = 0.16)
+DEFINE INSTRUMENT NERA_source(source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.05, guide_height = 0.16)
 
 DECLARE
 %{
-double source_I = 1e16, source_T = 330;
+double source_I = 1e16;
 double source_height=0.2, source_width=0.15; //check and change
 
-double pulse_length = 340; //in microsec
-double T; //for defining the number of pulse
-double source_freq = 5; //in Hz
-double source_pulse_number_help;
+//double pulse_length = 340; //in microsec
+//double T; //for defining the number of pulse
+//double source_freq = 5; //in Hz
+//double source_pulse_number_help;
 double source_optics_dist = 4.2;
+
+double lambda0, dlambda;
 %}
 
 INITIALIZE
 %{
-source_pulse_number_help = source_pulse_number;
-source_I = source_I*source_pulse_number/4/PI;
+//source_pulse_number_help = source_pulse_number;
+//source_I = source_I*source_pulse_number/4/PI;
+lambda0=(source_lambda_min + source_lambda_max)/2;
+dlambda=source_lambda_max - lambda0;
 %}
 
 TRACE
 
 COMPONENT origin = Progress_bar()
 AT (0, 0, 0) RELATIVE ABSOLUTE
-
+/*
 COMPONENT Source = Source_gen(
     dist=source_optics_dist, 
     focus_xw=guide_width, 
@@ -58,6 +62,17 @@ EXTEND
 T = floor(rand01()*source_pulse_number_help);
 t = rand01()*pulse_length*1e-6 + T*1/source_freq;
 %}
+*/
+COMPONENT Source_simple = Source_simple(
+    yheight=source_height, 
+    xwidth=source_width, 
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    lambda0=lambda0, 
+    dlambda=dlambda, 
+    flux=source_I)
+AT (0, 0, 0) RELATIVE origin
 /*
 COMPONENT source_time_mon_one_pulse = Monitor_nD(
     xwidth=0.5, 
@@ -73,11 +88,11 @@ COMPONENT source_time_mon_many_pulses = Monitor_nD(
     options="time limits = [0 1]")
 AT (0, 0, 0.00011) RELATIVE origin
 */
-/************ first version ****************/
+
 COMPONENT slit1 = Slit(
     xwidth=0.22, 
     yheight=0.42)
-AT (0, 0, 1.167) RELATIVE origin
+AT (0, 0, 1.17) RELATIVE origin
 
 COMPONENT slit2 = Slit(
     xwidth=0.3, 
@@ -94,38 +109,16 @@ COMPONENT slit4 = Slit(
     yheight=0.42)
 AT (0, 0, 2.56) RELATIVE origin
 
-/***************** second version *******************/
-/*
-COMPONENT slit1 = Slit(
-    xwidth=0.22, 
-    yheight=0.42)
-AT (0, 0, 1.167) RELATIVE origin
-
-COMPONENT slit2 = Slit(
-    xwidth=0.196, 
-    yheight=0.42)
-AT (0, 0, 1.335) RELATIVE origin
-
-COMPONENT slit3 = Slit(
-    xwidth=0.22, 
-    yheight=0.42)
-AT (0, 0, 1.8) RELATIVE origin
-
-COMPONENT slit4 = Slit(
-    xwidth=0.34, 
-    yheight=0.42)
-AT (0, 0, 2.2) RELATIVE origin
-
-COMPONENT slit5 = Slit(
-    xwidth=0.36, 
-    yheight=0.42)
-AT (0, 0, 2.56) RELATIVE origin
-
-/**************** end ***************************/
-
 COMPONENT Guide_start_arm = Arm()
 AT (0, 0, source_optics_dist) RELATIVE origin
-
+/*
+COMPONENT Source_lambda = Monitor_nD(
+    xwidth=guide_width, 
+    yheight=guide_height, 
+    restore_neutron=1, 
+    options="lambda limits = [0 2]")
+AT (0, 0, 0) RELATIVE PREVIOUS
+*/
 FINALLY
 %{
 %}
