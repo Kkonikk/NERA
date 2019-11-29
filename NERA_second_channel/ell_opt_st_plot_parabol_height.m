@@ -1,5 +1,5 @@
 clear all
-model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=6');
+model = mccode('NERA_guide_ell_st_3part_parabol.instr','mpi=4;ncount=1e10');
 fix(model, 'all');
 i=1;
 <<<<<<< HEAD
