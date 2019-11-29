@@ -32,9 +32,14 @@ DECLARE
 //Source description
 double source_I = 1e16;
 double source_height=0.405, source_width=0.335;
+double source_shift;
 double lambda0, dlambda;
 
-//Shutter description
+//Channel description
+double slit01_dist =0.29;
+double slit02_dist =0.48;
+double slit03_dist = 0.86;
+double slit_width;
 double shutter_height = 0.42;
 double shutter_width1 = 0.22, shutter_dist1 = 1.17;
 double shutter_width2 = 0.30, shutter_dist2 = 1.80;
@@ -57,6 +62,11 @@ INITIALIZE
 
 lambda0=(source_lambda_min + source_lambda_max)/2;
 dlambda=source_lambda_max - lambda0;
+
+source_shift = -source_height/4;
+source_height = source_height/2;
+
+slit_width = shutter_width1/2;
 
 total_length = total_length - source_optics_dist - distance_before_sample;
 guide_length_st = total_length-focusing_length;
@@ -81,7 +91,24 @@ COMPONENT Source_simple = Source_simple(
     lambda0=lambda0, 
     dlambda=dlambda, 
     flux=source_I)
-AT (0, 0, 0) RELATIVE origin
+AT (0, source_shift, 0) RELATIVE origin
+
+//Channel
+
+COMPONENT slit01 = Slit(
+    xmin = -slit_width, xmax = 1,
+    yheight=1)
+AT (0, 0, slit01_dist) RELATIVE origin
+
+COMPONENT slit02 = Slit(
+    xmin = -1, xmax = slit_width, 
+    yheight=1)
+AT (0, 0, slit02_dist) RELATIVE origin
+
+COMPONENT slit03 = Slit(
+    xwidth=shutter_width1, 
+    yheight=1)
+AT (0, 0, slit03_dist) RELATIVE origin
 
 //Shutter
 
@@ -105,15 +132,21 @@ COMPONENT slit4 = Slit(
     yheight=shutter_height)
 AT (0, 0, shutter_dist4) RELATIVE origin
 
+COMPONENT Last_slit = Slit(
+    xmin=-1, 
+    xmax=1, 
+    ymin=-1, ymax=0)
+AT (0, 0, source_optics_dist) RELATIVE origin
+
 //Guide
 
 COMPONENT Guide_start_arm = Arm()
-AT (0, 0, source_optics_dist) RELATIVE origin
+AT (0, source_shift, source_optics_dist) RELATIVE origin
 
 COMPONENT  Main_guide = Guide_gravity(
     w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m, mright = m, 
 mtop = m, mbottom = m, R0=R0, Qc=Qc, alpha=alpha, W=W)
-  AT (0, 0, 0) RELATIVE Guide_start_arm
+  AT (0, 0, 0.001) RELATIVE Guide_start_arm
 
 COMPONENT Main_guide_arm = Arm()
 AT (0, 0, guide_length_st) RELATIVE Main_guide

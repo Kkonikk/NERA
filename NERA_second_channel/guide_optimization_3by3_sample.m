@@ -3,30 +3,31 @@ clear variables;
 %CHECK EVERYTHING BELOW BEFORE START
 
 date = datestr(today('datetime'));
-type = "elliptical"; %only elliptical or parabolical
-dimension_plane = "horizontal"; %only vertical or horizontal
+type = "parabolical"; %only elliptical or parabolical
+dimension_plane = "vertical"; %only vertical or horizontal
 name = date + "_" + type + "_" + dimension_plane + "_scan";
 
-model = mccode('NERA_guide_3x3_sample.instr','mpi=6;ncount=1e7');
+model = mccode('NERA_guide_3x3_sample.instr','mpi=6;ncount=1e6');
 fix(model, 'all');
 
 model.sample_size=0.03;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
 
-left_focus_min = 5;
+left_focus_min = 50;
 left_focus_max = 200;
-left_focus_guess = 110;
-right_focus_min = 0.3;
-right_focus_max = 0.8;
-right_focus_guess = 0.5;
+left_focus_guess = 100;
+right_focus_min = 0.1;
+right_focus_max = 4;
+right_focus_guess = 1;
 
-dimension_min = 0.1; dimension_step = 0.15; dimension_max = 0.25;
-nose_length_min = 5; nose_length_step = 20; nose_length_max = 25;
+dimension_min = 0.2; dimension_step = 0.05; dimension_max = 0.4;
+nose_length_min = 10; nose_length_step = 10; nose_length_max = 50;
 
 %CHECK EVERYTHING ABOVE BEFORE START
 
 dimension = dimension_min:dimension_step:dimension_max;
+%dimension = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.24];
 D = length(dimension);
 nose_length = nose_length_min:nose_length_step:nose_length_max;
 L = length(nose_length);
@@ -85,7 +86,7 @@ for i = 1:L
         model.guide_height = height_array(j);
         
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=2', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=50', nan);
 
         best = model(parameters,nan);
         flux(i,j) = sum(sum(best,'double'));
