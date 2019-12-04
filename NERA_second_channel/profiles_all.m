@@ -16,17 +16,21 @@ name_dh = '26_11_parab_dh';
 %EH11,l=12,w=0.11,linw=45.62,loutw=0.96
 %EH15,l=15,w=0.15,linw=122.86,loutw=0.69
 
+%vertical_new
+%parabola;h=0.2,l=20,louth=0.65
+%elliptic;h-0.2,l=22,linh=44.68,louth=0.52
 
-model = mccode('NERA_guide_parabol_profiles.instr','mpi=4;ncount=1e8');
-%PV14,l=15,h=0.14,louth=0.99
+model = mccode('NERA_guide_profiles.instr','mpi=4;ncount=1e8');
+%parabola;h=0.2,l=20,lout=0.65
 parameters.sample_size=0.03;
 parameters.source_lambda_min=0.5;
 parameters.source_lambda_max=1;
 
-parameters.ell_length = 15;
-parameters.guide_height = 0.14;
+parameters.focusing_length = 20;
+parameters.guide_shape = 0;
+parameters.guide_height = 0.2;
 parameters.guide_width = 0.15;
-parameters.louth = 0.99;
+parameters.louth = 0.65;
 
 results = iData(model, parameters);
 Signal_all{1,1} = {'y',results.UserData.monitors(3).Data.x,results.UserData.monitors(3).Data.data;...
@@ -35,14 +39,16 @@ Signal_all{1,1} = {'y',results.UserData.monitors(3).Data.x,results.UserData.moni
 clear parameters
 clear model
 model = mccode('NERA_guide_parabol_profiles.instr','mpi=4;ncount=1e8');
-%PV19,l=20,h=0.19,louth=0.85
+%elliptic;h=0.2,l=22,linh=44.68,louth=0.52
 parameters.sample_size=0.03;
 parameters.source_lambda_min=0.5;
 parameters.source_lambda_max=1;
 
-parameters.ell_length = 20;
+parameters.focusing_length = 22;
+parameters.guide_shape = 1;
 parameters.guide_height = 0.19;
 parameters.guide_width = 0.15;
+parameters.linh = 44.68;
 parameters.louth = 0.85;
 
 results = iData(model, parameters);
