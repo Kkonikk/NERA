@@ -3,33 +3,37 @@ clear variables;
 %CHECK EVERYTHING BELOW BEFORE START
 
 date = datestr(today('datetime'));
-type = "parabolical"; %only elliptical or parabolical
+type = "elliptical"; %only elliptical or parabolical
 dimension_plane = "vertical"; %only vertical or horizontal
 name = date + "_" + type + "_" + dimension_plane + "_scan";
 
-model = mccode('NERA_guide_3x3_sample.instr','mpi=6;ncount=1e6');
+model = mccode('NERA_guide_3x3_sample.instr','mpi=6;ncount=5e6');
 fix(model, 'all');
 
 model.sample_size=0.03;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
 
-left_focus_min = 50;
-left_focus_max = 200;
+left_focus_min = 0.1;
+left_focus_max = 600;
 left_focus_guess = 100;
 right_focus_min = 0.1;
-right_focus_max = 4;
-right_focus_guess = 1;
+right_focus_max = 2;
+right_focus_guess = 0.5;
 
-dimension_min = 0.2; dimension_step = 0.05; dimension_max = 0.4;
-nose_length_min = 10; nose_length_step = 10; nose_length_max = 50;
-
-%CHECK EVERYTHING ABOVE BEFORE START
+dimension_min = 0.1; dimension_step = 0.01; dimension_max = 0.22;
+nose_length_min = 5; nose_length_step = 1; nose_length_max = 30;
 
 dimension = dimension_min:dimension_step:dimension_max;
 %dimension = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.24];
-D = length(dimension);
+
 nose_length = nose_length_min:nose_length_step:nose_length_max;
+nose_length(end+1) = 102;
+%nose_length = [5 10 15 20 25 30 102];
+%%
+%CHECK EVERYTHING ABOVE BEFORE START
+
+D = length(dimension);
 L = length(nose_length);
 
 if dimension_plane == "vertical"
@@ -86,7 +90,7 @@ for i = 1:L
         model.guide_height = height_array(j);
         
         [parameters, fval, status, output]=fmax(model,[], ...
-        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=50', nan);
+        'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=200', nan);
 
         best = model(parameters,nan);
         flux(i,j) = sum(sum(best,'double'));
@@ -130,7 +134,7 @@ saveas(gcf,name + "_max.fig");
 
 fig = figure;
 set(fig,'Color','White');
-h = histogram(left_foc_vertical);
+h = histogram(left_foc_vertical,10);
     title('Left vertical focus distribution')
     xlabel('Left focus position, m')
     ylabel('Number')
