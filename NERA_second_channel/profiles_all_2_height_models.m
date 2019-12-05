@@ -31,6 +31,9 @@ parameters.guide_shape = 0;
 parameters.guide_height = 0.2;
 parameters.guide_width = 0.15;
 parameters.louth = 0.65;
+parameters.linh = 0;
+parameters.linw = 0;
+parameters.loutw = 0;
 
 results = iData(model, parameters);
 Signal_all{1,1} = {'y',results.UserData.monitors(3).Data.x,results.UserData.monitors(3).Data.data;...
@@ -50,6 +53,8 @@ parameters.guide_height = 0.2;
 parameters.guide_width = 0.15;
 parameters.linh = 44.68;
 parameters.louth = 0.52;
+parameters.linw = 0;
+parameters.loutw = 0;
 
 results = iData(model, parameters);
 Signal_all{1,2} = {'y',results.UserData.monitors(3).Data.x,results.UserData.monitors(3).Data.data;...
