@@ -1,10 +1,10 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr (Nera)
- * Date:       Wed Dec  4 18:41:01 2019
- * File:       /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c
- * Compile:    cc -o Nera.out /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c 
+ * Instrument: NERA_guide_profiles.instr (Nera)
+ * Date:       Tue Dec 17 04:14:43 2019
+ * File:       ./NERA_guide_profiles.c
+ * Compile:    cc -o Nera.out ./NERA_guide_profiles.c 
  * CFLAGS=
  */
 
@@ -692,7 +692,7 @@ NXhandle nxhandle;
 #endif /* MCCODE_R_H */
 /* End of file "mccode-r.h". */
 
-#line 695 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 695 "./NERA_guide_profiles.c"
 
 #line 1 "mcstas-r.h"
 /*******************************************************************************
@@ -925,7 +925,7 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 #endif /* MCSTAS_R_H */
 /* End of file "mcstas-r.h". */
 
-#line 928 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 928 "./NERA_guide_profiles.c"
 
 #line 1 "mccode-r.c"
 /*******************************************************************************
@@ -4944,7 +4944,7 @@ void neutronics_main_(float *inx, float *iny, float *inz, float *invx, float *in
 /* End of file "mccode-r.c". */
 /* End of file "mccode-r.c". */
 
-#line 4947 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 4947 "./NERA_guide_profiles.c"
 
 #line 1 "mcstas-r.c"
 /*******************************************************************************
@@ -5304,16 +5304,16 @@ plane_intersect(double *t, double x, double y, double z,
 #endif /* !MCSTAS_H */
 /* End of file "mcstas-r.c". */
 
-#line 5307 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 5307 "./NERA_guide_profiles.c"
 #ifdef MC_TRACE_ENABLED
 int mctraceenabled = 1;
 #else
 int mctraceenabled = 0;
 #endif
-#define MCSTAS "/usr/share/mcstas/2.5/"
+#define MCSTAS "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../"
 int mcdefaultmain = 1;
 char mcinstrument_name[] = "Nera";
-char mcinstrument_source[] = "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr";
+char mcinstrument_source[] = "NERA_guide_profiles.instr";
 char *mcinstrument_exe=NULL; /* will be set to argv[0] in main */
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 void mcinit(void);
@@ -5323,7 +5323,7 @@ void mcfinally(void);
 void mcdisplay(void);
 
 /* Shared user declarations for all components 'Guide_gravity'. */
-#line 124 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 124 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 /*****************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -7112,15 +7112,15 @@ void TableReflecFunc(double mc_pol_q, t_Table *mc_pol_par, double *mc_pol_r) {
 
 
 #endif
-#line 7115 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 7115 "./NERA_guide_profiles.c"
 
 /* Shared user declarations for all components 'Guide_tapering'. */
-#line 91 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 91 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 
-#line 7120 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 7120 "./NERA_guide_profiles.c"
 
 /* Shared user declarations for all components 'Monitor_nD'. */
-#line 214 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 214 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -10052,9 +10052,11 @@ void off_display(off_struct data)
 
 /* end of interoff-lib.c */
 
-#line 10055 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10055 "./NERA_guide_profiles.c"
 
 /* Instrument parameters. */
+MCNUM mcipmx;
+MCNUM mcipmy;
 MCNUM mcipsource_lambda_min;
 MCNUM mcipsource_lambda_max;
 MCNUM mcipguide_width;
@@ -10067,9 +10069,11 @@ MCNUM mciplinw;
 MCNUM mciploutw;
 MCNUM mcipsample_size;
 
-#define mcNUMIPAR 11
-int mcnumipar = 11;
+#define mcNUMIPAR 13
+int mcnumipar = 13;
 struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
+  "mx", &mcipmx, instr_type_double, "7", 
+  "my", &mcipmy, instr_type_double, "7", 
   "source_lambda_min", &mcipsource_lambda_min, instr_type_double, "0.5", 
   "source_lambda_max", &mcipsource_lambda_max, instr_type_double, "1", 
   "guide_width", &mcipguide_width, instr_type_double, "0.15", 
@@ -10089,6 +10093,8 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
+#define mx mcipmx
+#define my mcipmy
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
 #define guide_width mcipguide_width
@@ -10100,7 +10106,7 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 32 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 32 "NERA_guide_profiles.instr"
 //Source description
 double source_I = 1e16;
 double source_height=0.405, source_width=0.335;
@@ -10125,9 +10131,9 @@ double distance_before_sample = 0.35;
 double guide_length_st;
 
 //Reflectivity description
-double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218;//, m=7;
 
-#line 10130 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10136 "./NERA_guide_profiles.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -10139,6 +10145,8 @@ double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
 #undef guide_width
 #undef source_lambda_max
 #undef source_lambda_min
+#undef my
+#undef mx
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -10510,7 +10518,7 @@ int mccmonitor_nd_lambda_45_nowritefile;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 44 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 44 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 #ifndef PROGRESS_BAR
 #define PROGRESS_BAR
 #else
@@ -10521,7 +10529,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 10524 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10532 "./NERA_guide_profiles.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10554,11 +10562,11 @@ time_t CurrentTime;
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 60 "/usr/share/mcstas/2.5/sources/Source_simple.comp"
+#line 60 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 double pmul, srcArea;
 int square;
 double tx,ty,tz;
-#line 10561 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10569 "./NERA_guide_profiles.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -10803,10 +10811,10 @@ double tx,ty,tz;
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 334 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 334 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
   Gravity_guide_Vars_type GVars;
   t_Table pTable;
-#line 10809 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10817 "./NERA_guide_profiles.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -10917,7 +10925,7 @@ double tx,ty,tz;
 #define segno mccFocusing_nose_ell_segno
 #define curvature mccFocusing_nose_ell_curvature
 #define curvature_v mccFocusing_nose_ell_curvature_v
-#line 97 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -10934,7 +10942,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10937 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 10945 "./NERA_guide_profiles.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -11059,7 +11067,7 @@ double rotation_h, rotation_v;
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 97 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -11076,7 +11084,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 11079 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11087 "./NERA_guide_profiles.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -11179,12 +11187,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_x_username2
 #define username3 mccmonitor_nd_x_username3
 #define nowritefile mccmonitor_nd_x_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11187 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11195 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11249,12 +11257,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_dx_username2
 #define username3 mccmonitor_nd_dx_username3
 #define nowritefile mccmonitor_nd_dx_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11257 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11265 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11319,12 +11327,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_y_username2
 #define username3 mccmonitor_nd_y_username3
 #define nowritefile mccmonitor_nd_y_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11327 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11335 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11389,12 +11397,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_dy_username2
 #define username3 mccmonitor_nd_dy_username3
 #define nowritefile mccmonitor_nd_dy_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11397 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11405 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11459,12 +11467,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_lambda_1_username2
 #define username3 mccmonitor_nd_lambda_1_username3
 #define nowritefile mccmonitor_nd_lambda_1_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11467 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11475 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11529,12 +11537,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_lambda_45_username2
 #define username3 mccmonitor_nd_lambda_45_username3
 #define nowritefile mccmonitor_nd_lambda_45_nowritefile
-#line 222 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 222 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11537 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11545 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11621,6 +11629,8 @@ void mcinit(void) {
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
+#define mx mcipmx
+#define my mcipmy
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
 #define guide_width mcipguide_width
@@ -11632,7 +11642,7 @@ void mcinit(void) {
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 61 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 61 "NERA_guide_profiles.instr"
 {
 
 lambda0=(source_lambda_min + source_lambda_max)/2;
@@ -11647,7 +11657,7 @@ total_length = total_length - source_optics_dist - distance_before_sample;
 guide_length_st = total_length-focusing_length;
 
 }
-#line 11650 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11660 "./NERA_guide_profiles.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -11659,6 +11669,8 @@ guide_length_st = total_length-focusing_length;
 #undef guide_width
 #undef source_lambda_max
 #undef source_lambda_min
+#undef my
+#undef mx
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -11676,31 +11688,31 @@ guide_length_st = total_length-focusing_length;
     /* Component origin. */
   /* Setting parameters for component origin. */
   SIG_MESSAGE("origin (Init:SetPar)");
-#line 39 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 39 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccorigin_profile, "NULL" ? "NULL" : "", 16384); else mccorigin_profile[0]='\0';
-#line 39 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 39 "NERA_guide_profiles.instr"
   mccorigin_percent = 10;
-#line 39 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 39 "NERA_guide_profiles.instr"
   mccorigin_flag_save = 0;
-#line 39 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 39 "NERA_guide_profiles.instr"
   mccorigin_minutes = 0;
-#line 11687 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11699 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11694 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11706 "./NERA_guide_profiles.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
     0,
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
     0,
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
     0);
-#line 11703 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11715 "./NERA_guide_profiles.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -11711,51 +11723,51 @@ guide_length_st = total_length-focusing_length;
     /* Component Source_simple. */
   /* Setting parameters for component Source_simple. */
   SIG_MESSAGE("Source_simple (Init:SetPar)");
-#line 52 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 52 "NERA_guide_profiles.instr"
   mccSource_simple_radius = 0.1;
-#line 86 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 86 "NERA_guide_profiles.instr"
   mccSource_simple_yheight = source_height;
-#line 87 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 87 "NERA_guide_profiles.instr"
   mccSource_simple_xwidth = source_width;
-#line 88 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 88 "NERA_guide_profiles.instr"
   mccSource_simple_dist = source_optics_dist;
-#line 89 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 89 "NERA_guide_profiles.instr"
   mccSource_simple_focus_xw = mcipguide_width;
-#line 90 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 90 "NERA_guide_profiles.instr"
   mccSource_simple_focus_yh = mcipguide_height;
-#line 54 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 54 "NERA_guide_profiles.instr"
   mccSource_simple_E0 = 0;
-#line 54 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 54 "NERA_guide_profiles.instr"
   mccSource_simple_dE = 0;
-#line 91 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 91 "NERA_guide_profiles.instr"
   mccSource_simple_lambda0 = lambda0;
-#line 92 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 92 "NERA_guide_profiles.instr"
   mccSource_simple_dlambda = dlambda;
-#line 93 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 93 "NERA_guide_profiles.instr"
   mccSource_simple_flux = source_I;
-#line 55 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 55 "NERA_guide_profiles.instr"
   mccSource_simple_gauss = 0;
-#line 55 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 55 "NERA_guide_profiles.instr"
   mccSource_simple_target_index = + 1;
-#line 11740 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11752 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("Source_simple (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11747 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11759 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource_simple);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource_simple, mctr1, mcrotrSource_simple);
   mctc1 = coords_set(
-#line 94 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 94 "NERA_guide_profiles.instr"
     0,
-#line 94 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 94 "NERA_guide_profiles.instr"
     source_shift,
-#line 94 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 94 "NERA_guide_profiles.instr"
     0);
-#line 11758 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11770 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource_simple = coords_add(mcposaorigin, mctc2);
@@ -11769,39 +11781,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit01. */
   /* Setting parameters for component slit01. */
   SIG_MESSAGE("slit01 (Init:SetPar)");
-#line 99 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 99 "NERA_guide_profiles.instr"
   mccslit01_xmin = - slit_width;
-#line 99 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 99 "NERA_guide_profiles.instr"
   mccslit01_xmax = 1;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit01_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit01_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit01_radius = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit01_xwidth = 0;
-#line 100 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 100 "NERA_guide_profiles.instr"
   mccslit01_yheight = 1;
-#line 11786 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11798 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit01 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11793 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11805 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit01);
   rot_transpose(mcrotaSource_simple, mctr1);
   rot_mul(mcrotaslit01, mctr1, mcrotrslit01);
   mctc1 = coords_set(
-#line 101 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 101 "NERA_guide_profiles.instr"
     0,
-#line 101 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 101 "NERA_guide_profiles.instr"
     0,
-#line 101 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 101 "NERA_guide_profiles.instr"
     slit01_dist);
-#line 11804 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11816 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit01 = coords_add(mcposaorigin, mctc2);
@@ -11815,39 +11827,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit02. */
   /* Setting parameters for component slit02. */
   SIG_MESSAGE("slit02 (Init:SetPar)");
-#line 104 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 104 "NERA_guide_profiles.instr"
   mccslit02_xmin = -1;
-#line 104 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 104 "NERA_guide_profiles.instr"
   mccslit02_xmax = slit_width;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit02_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit02_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit02_radius = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit02_xwidth = 0;
-#line 105 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 105 "NERA_guide_profiles.instr"
   mccslit02_yheight = 1;
-#line 11832 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11844 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit02 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11839 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11851 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit02);
   rot_transpose(mcrotaslit01, mctr1);
   rot_mul(mcrotaslit02, mctr1, mcrotrslit02);
   mctc1 = coords_set(
-#line 106 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 106 "NERA_guide_profiles.instr"
     0,
-#line 106 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 106 "NERA_guide_profiles.instr"
     0,
-#line 106 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 106 "NERA_guide_profiles.instr"
     slit02_dist);
-#line 11850 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11862 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit02 = coords_add(mcposaorigin, mctc2);
@@ -11861,39 +11873,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit03. */
   /* Setting parameters for component slit03. */
   SIG_MESSAGE("slit03 (Init:SetPar)");
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit03_xmin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit03_xmax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit03_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit03_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit03_radius = 0;
-#line 109 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 109 "NERA_guide_profiles.instr"
   mccslit03_xwidth = shutter_width1;
-#line 110 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 110 "NERA_guide_profiles.instr"
   mccslit03_yheight = 1;
-#line 11878 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11890 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit03 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11885 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11897 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit03);
   rot_transpose(mcrotaslit02, mctr1);
   rot_mul(mcrotaslit03, mctr1, mcrotrslit03);
   mctc1 = coords_set(
-#line 111 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 111 "NERA_guide_profiles.instr"
     0,
-#line 111 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 111 "NERA_guide_profiles.instr"
     0,
-#line 111 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 111 "NERA_guide_profiles.instr"
     slit03_dist);
-#line 11896 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11908 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit03 = coords_add(mcposaorigin, mctc2);
@@ -11907,39 +11919,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit1. */
   /* Setting parameters for component slit1. */
   SIG_MESSAGE("slit1 (Init:SetPar)");
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit1_xmin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit1_xmax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit1_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit1_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit1_radius = 0;
-#line 116 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 116 "NERA_guide_profiles.instr"
   mccslit1_xwidth = shutter_width1;
-#line 117 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 117 "NERA_guide_profiles.instr"
   mccslit1_yheight = shutter_height;
-#line 11924 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11936 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11931 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11943 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
   rot_transpose(mcrotaslit03, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
   mctc1 = coords_set(
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
     0,
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
     0,
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
     shutter_dist1);
-#line 11942 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11954 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
@@ -11953,39 +11965,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit2. */
   /* Setting parameters for component slit2. */
   SIG_MESSAGE("slit2 (Init:SetPar)");
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit2_xmin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit2_xmax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit2_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit2_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit2_radius = 0;
-#line 121 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 121 "NERA_guide_profiles.instr"
   mccslit2_xwidth = shutter_width2;
-#line 122 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 122 "NERA_guide_profiles.instr"
   mccslit2_yheight = shutter_height;
-#line 11970 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11982 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11977 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 11989 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
   mctc1 = coords_set(
-#line 123 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 123 "NERA_guide_profiles.instr"
     0,
-#line 123 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 123 "NERA_guide_profiles.instr"
     0,
-#line 123 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 123 "NERA_guide_profiles.instr"
     shutter_dist2);
-#line 11988 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12000 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaorigin, mctc2);
@@ -11999,39 +12011,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit3. */
   /* Setting parameters for component slit3. */
   SIG_MESSAGE("slit3 (Init:SetPar)");
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit3_xmin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit3_xmax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit3_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit3_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit3_radius = 0;
-#line 126 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 126 "NERA_guide_profiles.instr"
   mccslit3_xwidth = shutter_width3;
-#line 127 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 127 "NERA_guide_profiles.instr"
   mccslit3_yheight = shutter_height;
-#line 12016 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12028 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12023 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12035 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
   mctc1 = coords_set(
-#line 128 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 128 "NERA_guide_profiles.instr"
     0,
-#line 128 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 128 "NERA_guide_profiles.instr"
     0,
-#line 128 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 128 "NERA_guide_profiles.instr"
     shutter_dist3);
-#line 12034 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12046 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaorigin, mctc2);
@@ -12045,39 +12057,39 @@ guide_length_st = total_length-focusing_length;
     /* Component slit4. */
   /* Setting parameters for component slit4. */
   SIG_MESSAGE("slit4 (Init:SetPar)");
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit4_xmin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit4_xmax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit4_ymin = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit4_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccslit4_radius = 0;
-#line 131 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 131 "NERA_guide_profiles.instr"
   mccslit4_xwidth = shutter_width4;
-#line 132 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 132 "NERA_guide_profiles.instr"
   mccslit4_yheight = shutter_height;
-#line 12062 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12074 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12069 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12081 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
   mctc1 = coords_set(
-#line 133 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 133 "NERA_guide_profiles.instr"
     0,
-#line 133 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 133 "NERA_guide_profiles.instr"
     0,
-#line 133 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 133 "NERA_guide_profiles.instr"
     shutter_dist4);
-#line 12080 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12092 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaorigin, mctc2);
@@ -12091,39 +12103,39 @@ guide_length_st = total_length-focusing_length;
     /* Component Last_slit. */
   /* Setting parameters for component Last_slit. */
   SIG_MESSAGE("Last_slit (Init:SetPar)");
-#line 136 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 136 "NERA_guide_profiles.instr"
   mccLast_slit_xmin = -1;
-#line 137 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 137 "NERA_guide_profiles.instr"
   mccLast_slit_xmax = 1;
-#line 138 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 138 "NERA_guide_profiles.instr"
   mccLast_slit_ymin = -1;
-#line 138 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 138 "NERA_guide_profiles.instr"
   mccLast_slit_ymax = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccLast_slit_radius = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccLast_slit_xwidth = 0;
-#line 46 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 46 "NERA_guide_profiles.instr"
   mccLast_slit_yheight = 0;
-#line 12108 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12120 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("Last_slit (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12115 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12127 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaLast_slit);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaLast_slit, mctr1, mcrotrLast_slit);
   mctc1 = coords_set(
-#line 139 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 139 "NERA_guide_profiles.instr"
     0,
-#line 139 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 139 "NERA_guide_profiles.instr"
     0,
-#line 139 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 139 "NERA_guide_profiles.instr"
     source_optics_dist);
-#line 12126 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12138 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaLast_slit = coords_add(mcposaorigin, mctc2);
@@ -12143,18 +12155,18 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12146 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12158 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaLast_slit, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
   mctc1 = coords_set(
-#line 144 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 144 "NERA_guide_profiles.instr"
     0,
-#line 144 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 144 "NERA_guide_profiles.instr"
     source_shift,
-#line 144 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 144 "NERA_guide_profiles.instr"
     source_optics_dist);
-#line 12157 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12169 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -12168,93 +12180,93 @@ guide_length_st = total_length-focusing_length;
     /* Component Main_guide. */
   /* Setting parameters for component Main_guide. */
   SIG_MESSAGE("Main_guide (Init:SetPar)");
-#line 147 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 147 "NERA_guide_profiles.instr"
   mccMain_guide_w1 = mcipguide_width;
-#line 147 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 147 "NERA_guide_profiles.instr"
   mccMain_guide_h1 = mcipguide_height;
-#line 113 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 113 "NERA_guide_profiles.instr"
   mccMain_guide_w2 = 0;
-#line 113 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 113 "NERA_guide_profiles.instr"
   mccMain_guide_h2 = 0;
-#line 147 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 147 "NERA_guide_profiles.instr"
   mccMain_guide_l = guide_length_st;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 148 "NERA_guide_profiles.instr"
   mccMain_guide_R0 = R0;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 148 "NERA_guide_profiles.instr"
   mccMain_guide_Qc = Qc;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 148 "NERA_guide_profiles.instr"
   mccMain_guide_alpha = alpha;
-#line 114 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 114 "NERA_guide_profiles.instr"
   mccMain_guide_m = 1.0;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 148 "NERA_guide_profiles.instr"
   mccMain_guide_W = W;
-#line 114 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 114 "NERA_guide_profiles.instr"
   mccMain_guide_nslit = 1;
-#line 114 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 114 "NERA_guide_profiles.instr"
   mccMain_guide_d = 0.0005;
-#line 147 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccMain_guide_mleft = m;
-#line 147 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccMain_guide_mright = m;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccMain_guide_mtop = m;
-#line 148 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccMain_guide_mbottom = m;
-#line 115 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 147 "NERA_guide_profiles.instr"
+  mccMain_guide_mleft = mcipmx;
+#line 147 "NERA_guide_profiles.instr"
+  mccMain_guide_mright = mcipmx;
+#line 148 "NERA_guide_profiles.instr"
+  mccMain_guide_mtop = mcipmy;
+#line 148 "NERA_guide_profiles.instr"
+  mccMain_guide_mbottom = mcipmy;
+#line 115 "NERA_guide_profiles.instr"
   mccMain_guide_nhslit = 1;
-#line 115 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 115 "NERA_guide_profiles.instr"
   mccMain_guide_G = 0;
-#line 116 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 116 "NERA_guide_profiles.instr"
   mccMain_guide_aleft = -1;
-#line 116 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 116 "NERA_guide_profiles.instr"
   mccMain_guide_aright = -1;
-#line 116 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 116 "NERA_guide_profiles.instr"
   mccMain_guide_atop = -1;
-#line 116 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 116 "NERA_guide_profiles.instr"
   mccMain_guide_abottom = -1;
-#line 117 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 117 "NERA_guide_profiles.instr"
   mccMain_guide_wavy = 0;
-#line 117 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 117 "NERA_guide_profiles.instr"
   mccMain_guide_wavy_z = 0;
-#line 117 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 117 "NERA_guide_profiles.instr"
   mccMain_guide_wavy_tb = 0;
-#line 117 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 117 "NERA_guide_profiles.instr"
   mccMain_guide_wavy_lr = 0;
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
   mccMain_guide_chamfers = 0;
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
   mccMain_guide_chamfers_z = 0;
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
   mccMain_guide_chamfers_lr = 0;
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
   mccMain_guide_chamfers_tb = 0;
-#line 118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 118 "NERA_guide_profiles.instr"
   mccMain_guide_nelements = 1;
-#line 119 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 119 "NERA_guide_profiles.instr"
   mccMain_guide_nu = 0;
-#line 119 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 119 "NERA_guide_profiles.instr"
   mccMain_guide_phase = 0;
-#line 119 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 119 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccMain_guide_reflect, "NULL" ? "NULL" : "", 16384); else mccMain_guide_reflect[0]='\0';
-#line 12239 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12251 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("Main_guide (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12246 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12258 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaMain_guide);
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   rot_mul(mcrotaMain_guide, mctr1, mcrotrMain_guide);
   mctc1 = coords_set(
-#line 149 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 149 "NERA_guide_profiles.instr"
     0,
-#line 149 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 149 "NERA_guide_profiles.instr"
     0,
-#line 149 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 149 "NERA_guide_profiles.instr"
     0.001);
-#line 12257 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12269 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide = coords_add(mcposaGuide_start_arm, mctc2);
@@ -12274,18 +12286,18 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12277 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12289 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaMain_guide, mcrotaMain_guide_arm);
   rot_transpose(mcrotaMain_guide, mctr1);
   rot_mul(mcrotaMain_guide_arm, mctr1, mcrotrMain_guide_arm);
   mctc1 = coords_set(
-#line 152 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 152 "NERA_guide_profiles.instr"
     0,
-#line 152 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 152 "NERA_guide_profiles.instr"
     0,
-#line 152 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 152 "NERA_guide_profiles.instr"
     guide_length_st);
-#line 12288 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12300 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaMain_guide, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide_arm = coords_add(mcposaMain_guide, mctc2);
@@ -12299,63 +12311,63 @@ guide_length_st = total_length-focusing_length;
     /* Component Focusing_nose_ell. */
   /* Setting parameters for component Focusing_nose_ell. */
   SIG_MESSAGE("Focusing_nose_ell (Init:SetPar)");
-#line 155 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 155 "NERA_guide_profiles.instr"
   if("elliptical") strncpy(mccFocusing_nose_ell_option, "elliptical" ? "elliptical" : "", 16384); else mccFocusing_nose_ell_option[0]='\0';
-#line 156 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 156 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_w1 = mcipguide_width;
-#line 157 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 157 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_h1 = mcipguide_height;
-#line 158 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 158 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_l = mcipfocusing_length;
-#line 161 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 161 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_linw = mciplinw;
-#line 162 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 162 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_loutw = mciploutw;
-#line 159 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 159 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_linh = mciplinh;
-#line 160 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 160 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_louth = mciplouth;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_R0 = R0;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_Qcx = Qc;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_Qcy = Qc;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_alphax = alpha;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_alphay = alpha;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 164 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_W = W;
-#line 163 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccFocusing_nose_ell_mx = m;
-#line 164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccFocusing_nose_ell_my = m;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 163 "NERA_guide_profiles.instr"
+  mccFocusing_nose_ell_mx = mcipmx;
+#line 164 "NERA_guide_profiles.instr"
+  mccFocusing_nose_ell_my = mcipmy;
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_segno = 800;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_curvature = 0;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_ell_curvature_v = 0;
-#line 12340 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12352 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("Focusing_nose_ell (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12347 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12359 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_ell);
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   rot_mul(mcrotaFocusing_nose_ell, mctr1, mcrotrFocusing_nose_ell);
   mctc1 = coords_set(
-#line 165 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 165 "NERA_guide_profiles.instr"
     0,
-#line 165 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 165 "NERA_guide_profiles.instr"
     0,
-#line 165 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 165 "NERA_guide_profiles.instr"
     0.001);
-#line 12358 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12370 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_ell = coords_add(mcposaMain_guide_arm, mctc2);
@@ -12369,63 +12381,63 @@ guide_length_st = total_length-focusing_length;
     /* Component Focusing_nose_par. */
   /* Setting parameters for component Focusing_nose_par. */
   SIG_MESSAGE("Focusing_nose_par (Init:SetPar)");
-#line 168 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 168 "NERA_guide_profiles.instr"
   if("parabolical") strncpy(mccFocusing_nose_par_option, "parabolical" ? "parabolical" : "", 16384); else mccFocusing_nose_par_option[0]='\0';
-#line 169 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 169 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_w1 = mcipguide_width;
-#line 170 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 170 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_h1 = mcipguide_height;
-#line 171 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 171 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_l = mcipfocusing_length;
-#line 174 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 174 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_linw = 0;
-#line 175 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 175 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_loutw = mciploutw;
-#line 172 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 172 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_linh = 0;
-#line 173 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 173 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_louth = mciplouth;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_R0 = R0;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_Qcx = Qc;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_Qcy = Qc;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_alphax = alpha;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_alphay = alpha;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 177 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_W = W;
-#line 176 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccFocusing_nose_par_mx = m;
-#line 177 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
-  mccFocusing_nose_par_my = m;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 176 "NERA_guide_profiles.instr"
+  mccFocusing_nose_par_mx = mcipmx;
+#line 177 "NERA_guide_profiles.instr"
+  mccFocusing_nose_par_my = mcipmy;
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_segno = 800;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_curvature = 0;
-#line 83 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 83 "NERA_guide_profiles.instr"
   mccFocusing_nose_par_curvature_v = 0;
-#line 12410 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12422 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("Focusing_nose_par (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12417 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12429 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_par);
   rot_transpose(mcrotaFocusing_nose_ell, mctr1);
   rot_mul(mcrotaFocusing_nose_par, mctr1, mcrotrFocusing_nose_par);
   mctc1 = coords_set(
-#line 178 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 178 "NERA_guide_profiles.instr"
     0,
-#line 178 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 178 "NERA_guide_profiles.instr"
     0,
-#line 178 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 178 "NERA_guide_profiles.instr"
     0.001);
-#line 12428 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12440 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_par = coords_add(mcposaMain_guide_arm, mctc2);
@@ -12445,18 +12457,18 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12448 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12460 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaguide_end);
   rot_transpose(mcrotaFocusing_nose_par, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
   mctc1 = coords_set(
-#line 181 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 181 "NERA_guide_profiles.instr"
     0,
-#line 181 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 181 "NERA_guide_profiles.instr"
     0,
-#line 181 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 181 "NERA_guide_profiles.instr"
     mcipfocusing_length);
-#line 12459 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12471 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaguide_end = coords_add(mcposaMain_guide_arm, mctc2);
@@ -12470,67 +12482,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_x. */
   /* Setting parameters for component monitor_nd_x. */
   SIG_MESSAGE("monitor_nd_x (Init:SetPar)");
-#line 186 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 186 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_xwidth = mcipsample_size;
-#line 186 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 186 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_yheight = 0.2;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_zmax = 0;
-#line 186 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 186 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_max = 1e40;
-#line 186 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 186 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_radius = 0;
-#line 187 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 187 "NERA_guide_profiles.instr"
   if("x") strncpy(mccmonitor_nd_x_options, "x" ? "x" : "", 16384); else mccmonitor_nd_x_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_x_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_x_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_x_nowritefile = 0;
-#line 12515 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12527 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_x (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12522 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12534 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_x);
   rot_transpose(mcrotaguide_end, mctr1);
   rot_mul(mcrotamonitor_nd_x, mctr1, mcrotrmonitor_nd_x);
   mctc1 = coords_set(
-#line 188 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 188 "NERA_guide_profiles.instr"
     0,
-#line 188 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 188 "NERA_guide_profiles.instr"
     0,
-#line 188 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 188 "NERA_guide_profiles.instr"
     distance_before_sample);
-#line 12533 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12545 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_x = coords_add(mcposaguide_end, mctc2);
@@ -12544,67 +12556,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_dx. */
   /* Setting parameters for component monitor_nd_dx. */
   SIG_MESSAGE("monitor_nd_dx (Init:SetPar)");
-#line 191 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 191 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_xwidth = mcipsample_size;
-#line 191 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 191 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_yheight = 0.2;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_zmax = 0;
-#line 191 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 191 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_max = 1e40;
-#line 191 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 191 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_radius = 0;
-#line 192 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 192 "NERA_guide_profiles.instr"
   if("dx limits = [-2 2]") strncpy(mccmonitor_nd_dx_options, "dx limits = [-2 2]" ? "dx limits = [-2 2]" : "", 16384); else mccmonitor_nd_dx_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dx_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dx_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dx_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dx_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dx_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dx_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dx_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dx_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dx_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dx_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_dx_nowritefile = 0;
-#line 12589 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12601 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_dx (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12596 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12608 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_dx);
   rot_transpose(mcrotamonitor_nd_x, mctr1);
   rot_mul(mcrotamonitor_nd_dx, mctr1, mcrotrmonitor_nd_dx);
   mctc1 = coords_set(
-#line 193 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 193 "NERA_guide_profiles.instr"
     0,
-#line 193 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 193 "NERA_guide_profiles.instr"
     0,
-#line 193 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 193 "NERA_guide_profiles.instr"
     distance_before_sample + 0.001);
-#line 12607 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12619 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_dx = coords_add(mcposaguide_end, mctc2);
@@ -12618,67 +12630,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_y. */
   /* Setting parameters for component monitor_nd_y. */
   SIG_MESSAGE("monitor_nd_y (Init:SetPar)");
-#line 196 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 196 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_xwidth = 0.15;
-#line 196 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 196 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_yheight = mcipsample_size;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_zmax = 0;
-#line 196 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 196 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_max = 1e40;
-#line 196 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 196 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_radius = 0;
-#line 197 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 197 "NERA_guide_profiles.instr"
   if("y") strncpy(mccmonitor_nd_y_options, "y" ? "y" : "", 16384); else mccmonitor_nd_y_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_y_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_y_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_y_nowritefile = 0;
-#line 12663 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12675 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_y (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12670 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12682 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_y);
   rot_transpose(mcrotamonitor_nd_dx, mctr1);
   rot_mul(mcrotamonitor_nd_y, mctr1, mcrotrmonitor_nd_y);
   mctc1 = coords_set(
-#line 198 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 198 "NERA_guide_profiles.instr"
     0,
-#line 198 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 198 "NERA_guide_profiles.instr"
     0,
-#line 198 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 198 "NERA_guide_profiles.instr"
     distance_before_sample + 0.002);
-#line 12681 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12693 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_y = coords_add(mcposaguide_end, mctc2);
@@ -12692,67 +12704,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_dy. */
   /* Setting parameters for component monitor_nd_dy. */
   SIG_MESSAGE("monitor_nd_dy (Init:SetPar)");
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_xwidth = 0.15;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_yheight = mcipsample_size;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_zmax = 0;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_max = 1e40;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_radius = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   if("dy limits = [-2 2]") strncpy(mccmonitor_nd_dy_options, "dy limits = [-2 2]" ? "dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_dy_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dy_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dy_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dy_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dy_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dy_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dy_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dy_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_dy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_dy_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_dy_nowritefile = 0;
-#line 12737 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12749 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_dy (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12744 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12756 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_dy);
   rot_transpose(mcrotamonitor_nd_y, mctr1);
   rot_mul(mcrotamonitor_nd_dy, mctr1, mcrotrmonitor_nd_dy);
   mctc1 = coords_set(
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
     0,
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
     0,
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
     distance_before_sample + 0.003);
-#line 12755 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12767 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_dy = coords_add(mcposaguide_end, mctc2);
@@ -12766,67 +12778,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_lambda_1. */
   /* Setting parameters for component monitor_nd_lambda_1. */
   SIG_MESSAGE("monitor_nd_lambda_1 (Init:SetPar)");
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_xwidth = mcipsample_size;
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_yheight = mcipsample_size;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_zmax = 0;
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_max = 1e40;
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_radius = 0;
-#line 207 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 207 "NERA_guide_profiles.instr"
   if("lambda limits = [0.5 1]") strncpy(mccmonitor_nd_lambda_1_options, "lambda limits = [0.5 1]" ? "lambda limits = [0.5 1]" : "", 16384); else mccmonitor_nd_lambda_1_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_1_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_1_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_1_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_1_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_1_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_1_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_1_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_1_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_1_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_1_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_1_nowritefile = 0;
-#line 12811 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12823 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_lambda_1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12818 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12830 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_lambda_1);
   rot_transpose(mcrotamonitor_nd_dy, mctr1);
   rot_mul(mcrotamonitor_nd_lambda_1, mctr1, mcrotrmonitor_nd_lambda_1);
   mctc1 = coords_set(
-#line 208 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 208 "NERA_guide_profiles.instr"
     0,
-#line 208 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 208 "NERA_guide_profiles.instr"
     0,
-#line 208 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 208 "NERA_guide_profiles.instr"
     distance_before_sample + 0.004);
-#line 12829 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12841 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_lambda_1 = coords_add(mcposaguide_end, mctc2);
@@ -12840,67 +12852,67 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_lambda_45. */
   /* Setting parameters for component monitor_nd_lambda_45. */
   SIG_MESSAGE("monitor_nd_lambda_45 (Init:SetPar)");
-#line 211 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 211 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_xwidth = mcipsample_size;
-#line 211 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 211 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_yheight = mcipsample_size;
-#line 201 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 201 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_zdepth = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_xmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_xmax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_ymin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_ymax = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_zmin = 0;
-#line 202 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 202 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_zmax = 0;
-#line 211 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 211 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_bins = 100;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_min = -1e40;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_max = 1e40;
-#line 211 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 211 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_restore_neutron = 1;
-#line 203 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 203 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_radius = 0;
-#line 212 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 212 "NERA_guide_profiles.instr"
   if("lambda limits = [0.5 4.5]") strncpy(mccmonitor_nd_lambda_45_options, "lambda limits = [0.5 4.5]" ? "lambda limits = [0.5 4.5]" : "", 16384); else mccmonitor_nd_lambda_45_options[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_45_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_45_filename[0]='\0';
-#line 204 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 204 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_45_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_45_geometry[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_45_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_45_username1[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_45_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_45_username2[0]='\0';
-#line 205 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 205 "NERA_guide_profiles.instr"
   if("NULL") strncpy(mccmonitor_nd_lambda_45_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_lambda_45_username3[0]='\0';
-#line 206 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 206 "NERA_guide_profiles.instr"
   mccmonitor_nd_lambda_45_nowritefile = 0;
-#line 12885 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12897 "./NERA_guide_profiles.c"
 
   SIG_MESSAGE("monitor_nd_lambda_45 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12892 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12904 "./NERA_guide_profiles.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_lambda_45);
   rot_transpose(mcrotamonitor_nd_lambda_1, mctr1);
   rot_mul(mcrotamonitor_nd_lambda_45, mctr1, mcrotrmonitor_nd_lambda_45);
   mctc1 = coords_set(
-#line 213 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 213 "NERA_guide_profiles.instr"
     0,
-#line 213 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 213 "NERA_guide_profiles.instr"
     0,
-#line 213 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 213 "NERA_guide_profiles.instr"
     distance_before_sample + 0.005);
-#line 12903 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12915 "./NERA_guide_profiles.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_lambda_45 = coords_add(mcposaguide_end, mctc2);
@@ -12925,7 +12937,7 @@ guide_length_st = total_length-focusing_length;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 57 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 57 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
 IntermediateCnts=0;
 StartTime=0;
@@ -12937,7 +12949,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 12940 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 12952 "./NERA_guide_profiles.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -12971,7 +12983,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 65 "/usr/share/mcstas/2.5/sources/Source_simple.comp"
+#line 65 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
 square = 0;
 /* Determine source area */
@@ -13031,7 +13043,7 @@ if (radius && !yheight && !xwidth ) {
       exit(0);
   }
 }
-#line 13034 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13046 "./NERA_guide_profiles.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -13064,7 +13076,7 @@ if (radius && !yheight && !xwidth ) {
 #define radius mccslit01_radius
 #define xwidth mccslit01_xwidth
 #define yheight mccslit01_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13084,7 +13096,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13087 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13099 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13108,7 +13120,7 @@ if (xwidth > 0)  {
 #define radius mccslit02_radius
 #define xwidth mccslit02_xwidth
 #define yheight mccslit02_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13128,7 +13140,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13131 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13143 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13152,7 +13164,7 @@ if (xwidth > 0)  {
 #define radius mccslit03_radius
 #define xwidth mccslit03_xwidth
 #define yheight mccslit03_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13172,7 +13184,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13175 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13187 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13196,7 +13208,7 @@ if (xwidth > 0)  {
 #define radius mccslit1_radius
 #define xwidth mccslit1_xwidth
 #define yheight mccslit1_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13216,7 +13228,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13219 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13231 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13240,7 +13252,7 @@ if (xwidth > 0)  {
 #define radius mccslit2_radius
 #define xwidth mccslit2_xwidth
 #define yheight mccslit2_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13260,7 +13272,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13263 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13275 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13284,7 +13296,7 @@ if (xwidth > 0)  {
 #define radius mccslit3_radius
 #define xwidth mccslit3_xwidth
 #define yheight mccslit3_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13304,7 +13316,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13307 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13319 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13328,7 +13340,7 @@ if (xwidth > 0)  {
 #define radius mccslit4_radius
 #define xwidth mccslit4_xwidth
 #define yheight mccslit4_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13348,7 +13360,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13351 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13363 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13372,7 +13384,7 @@ if (xwidth > 0)  {
 #define radius mccLast_slit_radius
 #define xwidth mccLast_slit_xwidth
 #define yheight mccLast_slit_yheight
-#line 50 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -13392,7 +13404,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 13395 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13407 "./NERA_guide_profiles.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -13448,7 +13460,7 @@ if (xwidth > 0)  {
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 339 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 339 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   double Gx=0, Gy=-GRAVITY, Gz=0;
   Coords mcLocG;
@@ -13500,7 +13512,7 @@ if (xwidth > 0)  {
   } else printf("Guide_gravity: %s: unactivated (l=0 or nelements=0)\n", NAME_CURRENT_COMP);
 
 }
-#line 13503 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13515 "./NERA_guide_profiles.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -13607,7 +13619,7 @@ if (xwidth > 0)  {
 #define segno mccFocusing_nose_ell_segno
 #define curvature mccFocusing_nose_ell_curvature
 #define curvature_v mccFocusing_nose_ell_curvature_v
-#line 116 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -13943,7 +13955,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 13946 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 13958 "./NERA_guide_profiles.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -14069,7 +14081,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 116 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -14405,7 +14417,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 14408 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 14420 "./NERA_guide_profiles.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -14504,7 +14516,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define username2 mccmonitor_nd_x_username2
 #define username3 mccmonitor_nd_x_username3
 #define nowritefile mccmonitor_nd_x_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -14583,7 +14595,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 14586 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 14598 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -14649,7 +14661,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_dx_username2
 #define username3 mccmonitor_nd_dx_username3
 #define nowritefile mccmonitor_nd_dx_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -14728,7 +14740,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 14731 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 14743 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -14794,7 +14806,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_y_username2
 #define username3 mccmonitor_nd_y_username3
 #define nowritefile mccmonitor_nd_y_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -14873,7 +14885,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 14876 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 14888 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -14939,7 +14951,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_dy_username2
 #define username3 mccmonitor_nd_dy_username3
 #define nowritefile mccmonitor_nd_dy_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -15018,7 +15030,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 15021 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15033 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -15084,7 +15096,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_lambda_1_username2
 #define username3 mccmonitor_nd_lambda_1_username3
 #define nowritefile mccmonitor_nd_lambda_1_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -15163,7 +15175,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 15166 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15178 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -15229,7 +15241,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_lambda_45_username2
 #define username3 mccmonitor_nd_lambda_45_username3
 #define nowritefile mccmonitor_nd_lambda_45_nowritefile
-#line 229 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 229 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -15308,7 +15320,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 15311 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15323 "./NERA_guide_profiles.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -15450,7 +15462,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 70 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 70 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   double ncount;
   ncount = mcget_run_num();
@@ -15494,7 +15506,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 15497 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15509 "./NERA_guide_profiles.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -15620,7 +15632,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 125 "/usr/share/mcstas/2.5/sources/Source_simple.comp"
+#line 125 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
  double chi,E,lambda,v,r, xf, yf, rf, dx, dy, pdir;
 
@@ -15665,7 +15677,7 @@ int target_index = mccSource_simple_target_index;
  vy=v*dy/rf;
  vx=v*dx/rf;
 }
-#line 15668 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15680 "./NERA_guide_profiles.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -15781,7 +15793,7 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15790,7 +15802,7 @@ MCNUM yheight = mccslit01_yheight;
     else
         SCATTER;
 }
-#line 15793 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15805 "./NERA_guide_profiles.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15903,7 +15915,7 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15912,7 +15924,7 @@ MCNUM yheight = mccslit02_yheight;
     else
         SCATTER;
 }
-#line 15915 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 15927 "./NERA_guide_profiles.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16025,7 +16037,7 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16034,7 +16046,7 @@ MCNUM yheight = mccslit03_yheight;
     else
         SCATTER;
 }
-#line 16037 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16049 "./NERA_guide_profiles.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16147,7 +16159,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16156,7 +16168,7 @@ MCNUM yheight = mccslit1_yheight;
     else
         SCATTER;
 }
-#line 16159 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16171 "./NERA_guide_profiles.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16269,7 +16281,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16278,7 +16290,7 @@ MCNUM yheight = mccslit2_yheight;
     else
         SCATTER;
 }
-#line 16281 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16293 "./NERA_guide_profiles.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16391,7 +16403,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16400,7 +16412,7 @@ MCNUM yheight = mccslit3_yheight;
     else
         SCATTER;
 }
-#line 16403 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16415 "./NERA_guide_profiles.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16513,7 +16525,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16522,7 +16534,7 @@ MCNUM yheight = mccslit4_yheight;
     else
         SCATTER;
 }
-#line 16525 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16537 "./NERA_guide_profiles.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16635,7 +16647,7 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 71 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -16644,7 +16656,7 @@ MCNUM yheight = mccLast_slit_yheight;
     else
         SCATTER;
 }
-#line 16647 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 16659 "./NERA_guide_profiles.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -16889,7 +16901,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 392 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 392 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   if (l > 0 && nelements > 0) {
     double B, C, dt;
@@ -17058,7 +17070,7 @@ char* reflect = mccMain_guide_reflect;
 
   } /* if l */
 }
-#line 17061 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 17073 "./NERA_guide_profiles.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -17330,7 +17342,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
 /* 'Focusing_nose_ell=Guide_tapering()' component instance has conditional execution */
 if (( mcipguide_shape == 1 ))
 
-#line 453 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -17485,7 +17497,7 @@ if (( mcipguide_shape == 1 ))
   } /* loop on segments */
 
 }
-#line 17487 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 17499 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -17691,7 +17703,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
 /* 'Focusing_nose_par=Guide_tapering()' component instance has conditional execution */
 if (( mcipguide_shape == 0 ))
 
-#line 453 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -17846,7 +17858,7 @@ if (( mcipguide_shape == 0 ))
   } /* loop on segments */
 
 }
-#line 17847 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 17859 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -18122,7 +18134,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -18291,7 +18303,7 @@ int nowritefile = mccmonitor_nd_x_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 18292 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 18304 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -18432,7 +18444,7 @@ char* username1 = mccmonitor_nd_dx_username1;
 char* username2 = mccmonitor_nd_dx_username2;
 char* username3 = mccmonitor_nd_dx_username3;
 int nowritefile = mccmonitor_nd_dx_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -18601,7 +18613,7 @@ int nowritefile = mccmonitor_nd_dx_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 18602 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 18614 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dx=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -18742,7 +18754,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -18911,7 +18923,7 @@ int nowritefile = mccmonitor_nd_y_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 18912 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 18924 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -19052,7 +19064,7 @@ char* username1 = mccmonitor_nd_dy_username1;
 char* username2 = mccmonitor_nd_dy_username2;
 char* username3 = mccmonitor_nd_dy_username3;
 int nowritefile = mccmonitor_nd_dy_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -19221,7 +19233,7 @@ int nowritefile = mccmonitor_nd_dy_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 19222 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 19234 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -19362,7 +19374,7 @@ char* username1 = mccmonitor_nd_lambda_1_username1;
 char* username2 = mccmonitor_nd_lambda_1_username2;
 char* username3 = mccmonitor_nd_lambda_1_username3;
 int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -19531,7 +19543,7 @@ int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 19532 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 19544 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_1=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -19672,7 +19684,7 @@ char* username1 = mccmonitor_nd_lambda_45_username1;
 char* username2 = mccmonitor_nd_lambda_45_username2;
 char* username3 = mccmonitor_nd_lambda_45_username3;
 int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
-#line 309 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 309 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -19841,7 +19853,7 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 19842 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 19854 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_45=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -19940,7 +19952,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 115 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 115 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   MPI_MASTER(fprintf(stdout, "\nSave [%s]\n", mcinstrument_name););
   if (profile && strlen(profile) && strcmp(profile,"NULL") && strcmp(profile,"0")) {
@@ -19957,7 +19969,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 19958 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 19970 "./NERA_guide_profiles.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -20001,12 +20013,12 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20007 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20019 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20053,12 +20065,12 @@ char* username1 = mccmonitor_nd_dx_username1;
 char* username2 = mccmonitor_nd_dx_username2;
 char* username3 = mccmonitor_nd_dx_username3;
 int nowritefile = mccmonitor_nd_dx_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20059 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20071 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dx=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20105,12 +20117,12 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20111 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20123 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20157,12 +20169,12 @@ char* username1 = mccmonitor_nd_dy_username1;
 char* username2 = mccmonitor_nd_dy_username2;
 char* username3 = mccmonitor_nd_dy_username3;
 int nowritefile = mccmonitor_nd_dy_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20163 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20175 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20209,12 +20221,12 @@ char* username1 = mccmonitor_nd_lambda_1_username1;
 char* username2 = mccmonitor_nd_lambda_1_username2;
 char* username3 = mccmonitor_nd_lambda_1_username3;
 int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20215 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20227 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_1=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20261,12 +20273,12 @@ char* username1 = mccmonitor_nd_lambda_45_username1;
 char* username2 = mccmonitor_nd_lambda_45_username2;
 char* username3 = mccmonitor_nd_lambda_45_username3;
 int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
-#line 479 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 479 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 20267 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20279 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_45=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20300,7 +20312,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 133 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 133 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   time_t NowTime;
   time(&NowTime);
@@ -20313,7 +20325,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 20314 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20326 "./NERA_guide_profiles.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -20398,14 +20410,14 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 562 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 562 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 if (GVars.warnings > 100) {
   fprintf(stderr,"%s: warning: neutron has entered guide, but can not exit !\n", GVars.compcurname);
   fprintf(stderr,"%s: warning: This message has been repeated %g times\n", GVars.compcurname, GVars.warnings);
 }
 }
-#line 20395 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20407 "./NERA_guide_profiles.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -20483,7 +20495,7 @@ MCNUM my = mccFocusing_nose_ell_my;
 MCNUM segno = mccFocusing_nose_ell_segno;
 MCNUM curvature = mccFocusing_nose_ell_curvature;
 MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
-#line 609 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -20498,7 +20510,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 20486 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20498 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -20610,7 +20622,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 609 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -20625,7 +20637,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 20612 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20624 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -20710,14 +20722,14 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20702 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20714 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20767,14 +20779,14 @@ char* username1 = mccmonitor_nd_dx_username1;
 char* username2 = mccmonitor_nd_dx_username2;
 char* username3 = mccmonitor_nd_dx_username3;
 int nowritefile = mccmonitor_nd_dx_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20758 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20770 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dx=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20824,14 +20836,14 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20814 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20826 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20881,14 +20893,14 @@ char* username1 = mccmonitor_nd_dy_username1;
 char* username2 = mccmonitor_nd_dy_username2;
 char* username3 = mccmonitor_nd_dy_username3;
 int nowritefile = mccmonitor_nd_dy_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20870 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20882 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20938,14 +20950,14 @@ char* username1 = mccmonitor_nd_lambda_1_username1;
 char* username2 = mccmonitor_nd_lambda_1_username2;
 char* username3 = mccmonitor_nd_lambda_1_username3;
 int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20926 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20938 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_1=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -20995,14 +21007,14 @@ char* username1 = mccmonitor_nd_lambda_45_username1;
 char* username2 = mccmonitor_nd_lambda_45_username2;
 char* username3 = mccmonitor_nd_lambda_45_username3;
 int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
-#line 485 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 485 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   if (!nowritefile) {
     Monitor_nD_Finally(&DEFS, &Vars);
   }
 }
-#line 20982 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 20994 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_45=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -21024,6 +21036,8 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
 #define mccompcurtype  INSTRUMENT
 #define mccompcurindex 0
 #define mcposaNera coords_set(0,0,0)
+#define mx mcipmx
+#define my mcipmy
 #define source_lambda_min mcipsource_lambda_min
 #define source_lambda_max mcipsource_lambda_max
 #define guide_width mcipguide_width
@@ -21035,11 +21049,11 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
 #define linw mciplinw
 #define loutw mciploutw
 #define sample_size mcipsample_size
-#line 219 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.instr"
+#line 219 "NERA_guide_profiles.instr"
 {
 //printf("floats: %4.2f",LT0);
 }
-#line 21018 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21032 "./NERA_guide_profiles.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -21051,6 +21065,8 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
 #undef guide_width
 #undef source_lambda_max
 #undef source_lambda_min
+#undef my
+#undef mx
 #undef mcposaNera
 #undef mccompcurindex
 #undef mccompcurtype
@@ -21086,11 +21102,11 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 147 "/usr/share/mcstas/2.5/misc/Progress_bar.comp"
+#line 147 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   
 }
-#line 21069 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21085 "./NERA_guide_profiles.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -21123,7 +21139,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 171 "/usr/share/mcstas/2.5/sources/Source_simple.comp"
+#line 171 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
   if (square == 1) {
     
@@ -21139,7 +21155,7 @@ int target_index = mccSource_simple_target_index;
     dashed_line(0,0,0, -focus_xw/2+tx, focus_yh/2+ty,tz, 4);
   }
 }
-#line 21118 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21134 "./NERA_guide_profiles.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -21162,7 +21178,7 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21185,7 +21201,7 @@ MCNUM yheight = mccslit01_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21164 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21180 "./NERA_guide_profiles.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21205,7 +21221,7 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21228,7 +21244,7 @@ MCNUM yheight = mccslit02_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21207 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21223 "./NERA_guide_profiles.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21248,7 +21264,7 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21271,7 +21287,7 @@ MCNUM yheight = mccslit03_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21250 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21266 "./NERA_guide_profiles.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21291,7 +21307,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21314,7 +21330,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21293 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21309 "./NERA_guide_profiles.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21334,7 +21350,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21357,7 +21373,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21336 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21352 "./NERA_guide_profiles.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21377,7 +21393,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21400,7 +21416,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21379 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21395 "./NERA_guide_profiles.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21420,7 +21436,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21443,7 +21459,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21422 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21438 "./NERA_guide_profiles.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21463,7 +21479,7 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 81 "/usr/share/mcstas/2.5/optics/Slit.comp"
+#line 81 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -21486,7 +21502,7 @@ MCNUM yheight = mccLast_slit_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 21465 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21481 "./NERA_guide_profiles.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -21498,7 +21514,7 @@ MCNUM yheight = mccLast_slit_yheight;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 11
-#line 40 "/usr/share/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -21506,7 +21522,7 @@ MCNUM yheight = mccLast_slit_yheight;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 21485 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21501 "./NERA_guide_profiles.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -21554,7 +21570,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 571 "/usr/share/mcstas/2.5/optics/Guide_gravity.comp"
+#line 571 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 
   if (l > 0 && nelements > 0) {
@@ -21617,7 +21633,7 @@ char* reflect = mccMain_guide_reflect;
   }
 
 }
-#line 21596 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21612 "./NERA_guide_profiles.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -21631,7 +21647,7 @@ char* reflect = mccMain_guide_reflect;
 #define mccompcurname  Main_guide_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 13
-#line 40 "/usr/share/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -21639,7 +21655,7 @@ char* reflect = mccMain_guide_reflect;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 21618 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21634 "./NERA_guide_profiles.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -21709,7 +21725,7 @@ MCNUM my = mccFocusing_nose_ell_my;
 MCNUM segno = mccFocusing_nose_ell_segno;
 MCNUM curvature = mccFocusing_nose_ell_curvature;
 MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
-#line 625 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -21742,7 +21758,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   }
 
 }
-#line 21721 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21737 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -21852,7 +21868,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 625 "/usr/share/mcstas/2.5/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -21885,7 +21901,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   }
 
 }
-#line 21864 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21880 "./NERA_guide_profiles.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -21936,7 +21952,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
 #define mccompcurindex 16
-#line 40 "/usr/share/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -21944,7 +21960,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 21923 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21939 "./NERA_guide_profiles.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -21984,7 +22000,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -21993,7 +22009,7 @@ int nowritefile = mccmonitor_nd_x_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 21972 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 21988 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22041,7 +22057,7 @@ char* username1 = mccmonitor_nd_dx_username1;
 char* username2 = mccmonitor_nd_dx_username2;
 char* username3 = mccmonitor_nd_dx_username3;
 int nowritefile = mccmonitor_nd_dx_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -22050,7 +22066,7 @@ int nowritefile = mccmonitor_nd_dx_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 22029 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 22045 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dx=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22098,7 +22114,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -22107,7 +22123,7 @@ int nowritefile = mccmonitor_nd_y_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 22086 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 22102 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22155,7 +22171,7 @@ char* username1 = mccmonitor_nd_dy_username1;
 char* username2 = mccmonitor_nd_dy_username2;
 char* username3 = mccmonitor_nd_dy_username3;
 int nowritefile = mccmonitor_nd_dy_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -22164,7 +22180,7 @@ int nowritefile = mccmonitor_nd_dy_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 22143 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 22159 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_dy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22212,7 +22228,7 @@ char* username1 = mccmonitor_nd_lambda_1_username1;
 char* username2 = mccmonitor_nd_lambda_1_username2;
 char* username3 = mccmonitor_nd_lambda_1_username3;
 int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -22221,7 +22237,7 @@ int nowritefile = mccmonitor_nd_lambda_1_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 22200 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 22216 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_1=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22269,7 +22285,7 @@ char* username1 = mccmonitor_nd_lambda_45_username1;
 char* username2 = mccmonitor_nd_lambda_45_username2;
 char* username3 = mccmonitor_nd_lambda_45_username3;
 int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
-#line 493 "/usr/share/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 493 "/usr/share/mcstas/2.5/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -22278,7 +22294,7 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 22257 "/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c"
+#line 22273 "./NERA_guide_profiles.c"
 }   /* End of monitor_nd_lambda_45=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -22302,4 +22318,4 @@ int nowritefile = mccmonitor_nd_lambda_45_nowritefile;
 #undef circle
 #undef cylinder
 #undef sphere
-/* end of generated C code /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles.c */
+/* end of generated C code ./NERA_guide_profiles.c */

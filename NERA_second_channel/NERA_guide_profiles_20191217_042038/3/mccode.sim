@@ -1,0 +1,157 @@
+McStas simulation description file for Nera.
+Date:    Tue Dec 17 04:21:03 2019
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20191217_042038/3/mccode
+  Source: NERA_guide_profiles.instr
+  Parameters:  mx(double) my(double) source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20191217_042038/3
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_guide_profiles.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1576551964
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20191217_042038/3
+  Param: mx=7
+  Param: my=4
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.15
+  Param: guide_height=0.2
+  Param: focusing_length=20
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0.65
+  Param: linw=0
+  Param: loutw=0
+  Param: sample_size=0.03
+end simulation
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_x
+  position: 0 -0.10125 105.001
+  title: x [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_x_1576545663.x
+  statistics: X0=6.71171e-05; dX=0.00869704;
+  signal: Min=6.12842e+10; Max=1.09006e+11; Mean=8.81085e+10;
+  values: 8.81085e+12 9.38222e+10 20185
+  xvar: x
+  yvar: (I,I_err)
+  xlabel: x [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.015 0.015
+  variables: x I I_err N
+end data
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_dx
+  position: 0 -0.10125 105.002
+  title: Hor. Divergence [deg] monitor
+  Ncount: 10000000
+  filename: monitor_nd_dx_1576545663.hd
+  statistics: X0=0.00218819; dX=0.203514;
+  signal: Min=0; Max=6.4371e+11; Mean=8.80976e+10;
+  values: 8.80976e+12 9.38162e+10 20184
+  xvar: hd
+  yvar: (I,I_err)
+  xlabel: Hor. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: hd I I_err N
+end data
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_y
+  position: 0 -0.10125 105.003
+  title: y [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_y_1576545663.y
+  statistics: X0=-6.37878e-05; dX=0.00872976;
+  signal: Min=3.12383e+11; Max=4.8813e+11; Mean=3.84215e+11;
+  values: 3.84215e+13 1.96052e+11 86675
+  xvar: y
+  yvar: (I,I_err)
+  xlabel: y [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.015 0.015
+  variables: y I I_err N
+end data
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_dy
+  position: 0 -0.10125 105.004
+  title: Vert. Divergence [deg] monitor
+  Ncount: 10000000
+  filename: monitor_nd_dy_1576545663.vd
+  statistics: X0=-9.43024e-05; dX=0.382379;
+  signal: Min=0; Max=1.58878e+12; Mean=3.84252e+11;
+  values: 3.84252e+13 1.96068e+11 86671
+  xvar: vd
+  yvar: (I,I_err)
+  xlabel: Vert. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: vd I I_err N
+end data
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_lambda_1
+  position: 0 -0.10125 105.005
+  title: Wavelength [Angs] monitor
+  Ncount: 10000000
+  filename: monitor_nd_lambda_1_1576545663.L
+  statistics: X0=0.796788; dX=0.137493;
+  signal: Min=3.15894e+10; Max=1.34677e+11; Mean=7.70602e+10;
+  values: 7.70602e+12 8.78061e+10 17433
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0.5 1
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Tue Dec 17 04:21:14 2019 (1576545674)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles.instr)
+  component: monitor_nd_lambda_45
+  position: 0 -0.10125 105.006
+  title: Wavelength [Angs] monitor
+  Ncount: 10000000
+  filename: monitor_nd_lambda_45_1576545663.L
+  statistics: X0=0.796954; dX=0.137814;
+  signal: Min=0; Max=8.95729e+11; Mean=7.70316e+10;
+  values: 7.70316e+12 8.77917e+10 17427
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0.5 4.5
+  variables: L I I_err N
+end data
