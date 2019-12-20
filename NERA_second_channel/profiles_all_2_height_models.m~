@@ -94,17 +94,17 @@ legend
 legend('Location','south')
 set(gca, 'FontSize',16);
 
-plot(Signal_all{1,2}{1,2},Signal_all{1,3}{1,3},'LineWidth',2,'DisplayName','straight guide')
+plot(ki,Signal_all{1,3}{1,3},'LineWidth',2,'DisplayName','straight guide')
 hold on
 grid on
-xlabel('height, m')
+xlabel('k, AA-1')
 ylabel('I, arb.u.')
 legend
-legend('Location','south')
+legend('Location','northeast')
 set(gca, 'FontSize',16);
 
-print(gcf,[char(name) '_h'],'-dpng','-r300')
-saveas(gcf,[char(name) '_h.fig']);
+print(gcf,name_h,'-dpng','-r300')
+saveas(gcf,[name_h '.fig']);
 
 
 %plotting dy
@@ -129,17 +129,8 @@ legend
 legend('Location','south')
 set(gca, 'FontSize',16);
 
-plot(Signal_all{1,2}{2,2},Signal_all{1,3}{2,3},'LineWidth',2,'DisplayName','straight guide')
-hold on
-grid on
-xlabel('vertical divergence, deg')
-ylabel('I, arb.u.')
-legend
-legend('Location','south')
-set(gca, 'FontSize',16);
-
-print(gcf,[char(name) '_hdiv'],'-dpng','-r300')
-saveas(gcf,[char(name) '_hdiv.fig']);
+print(gcf,[name_h '_lambda'],'-dpng','-r300')
+saveas(gcf,[name_h '_lambda.fig']);
 
 
 %PH11,l=11,w=0.11,loutw=1.21
