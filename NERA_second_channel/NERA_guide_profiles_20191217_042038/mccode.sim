@@ -1,0 +1,27 @@
+begin instrument:
+  Creator: mcstas 2.5
+  Source: NERA_guide_profiles.instr
+  Parameters:  my
+  Trace_enabled: no
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation
+Date: Tue Dec 17 04 20 2019
+Ncount: 10000000
+Numpoints: 2
+Param: my = 1, my = 8
+end simulation
+
+begin data
+type: multiarray_1d(2)
+title: Scan of my
+xvars: my
+yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_dx_I,monitor_nd_dx_ERR) (monitor_nd_y_I,monitor_nd_y_ERR) (monitor_nd_dy_I,monitor_nd_dy_ERR) (monitor_nd_lambda_1_I,monitor_nd_lambda_1_ERR) (monitor_nd_lambda_45_I,monitor_nd_lambda_45_ERR)
+xlabel: 'my'
+ylabel: 'Intensity'
+xlimits: 1 8
+filename: mccode.dat
+variables: my monitor_nd_x_I monitor_nd_x_ERR monitor_nd_dx_I monitor_nd_dx_ERR monitor_nd_y_I monitor_nd_y_ERR monitor_nd_dy_I monitor_nd_dy_ERR monitor_nd_lambda_1_I monitor_nd_lambda_1_ERR monitor_nd_lambda_45_I monitor_nd_lambda_45_ERR
+end data

@@ -1,0 +1,287 @@
+/*******************************************************************************
+* Instrument: NERA_guide_3x3_sample.instr
+*
+* Written by: Peter Konik and Yurii Kireenko
+* Date: 27.11.19
+* Origin: PNPI
+*
+* new NERA TOF-spectrometer guide
+*
+* IBR-2M guide for channel 2
+*
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_optics_dist:      [m] distance between moderator and optics
+* guide_widtht:               [m] Initial guide width
+* guide_height:               [m] Initial guide height
+*focusing_length:           [m] Length of the focusing nose
+*shape:                          [0 or 1] Shape of the focusing nose - either elliptical (1) or parabolical (0)
+*linh:                              [m] Distance from the focusing nose to the left focus in vertical plane
+*louth:                            [m] Distance from the focusing nose to the right focus in vertical plane
+*linw:                              [m] Distance from the focusing nose to the left focus in horizontal plane
+*lputw:                           [m] Distance from the focusing nose to the right focus in horizontal plane
+*sample_size                   [m] Sample width and height
+* ...
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, 
+focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
+
+DECLARE
+%{
+/* Variables for calculation of neutron divergence  */
+double VertDiv,HorDiv;
+/* Arrays for storing the calculated brilliance transfer */
+double BT_N[101];
+double BT_p[101];
+double BT_p2[101];
+double maxhd=3, maxvd=3;
+
+//Source description
+double source_I = 1e16;
+double source_height=0.405, source_width=0.335;
+double source_shift;
+double lambda0, dlambda;
+
+//Channel description
+double slit01_dist =0.29;
+double slit02_dist =0.48;
+double slit03_dist = 0.86;
+double slit_width;
+double shutter_height = 0.42;
+double shutter_width1 = 0.22, shutter_dist1 = 1.17;
+double shutter_width2 = 0.30, shutter_dist2 = 1.80;
+double shutter_width3 = 0.36, shutter_dist3 = 2.16;
+double shutter_width4 = 0.46, shutter_dist4 = 2.56;
+
+//Guide description
+double source_optics_dist = 2.6;
+double total_length = 105;
+double distance_before_sample = 0.35;
+double guide_length_st;
+
+//Reflectivity description
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
+
+%}
+
+INITIALIZE
+%{
+
+lambda0=(source_lambda_min + source_lambda_max)/2;
+dlambda=source_lambda_max - lambda0;
+
+source_shift = -source_height/4;
+source_height = source_height/2;
+
+slit_width = shutter_width1/2;
+
+total_length = total_length - source_optics_dist - distance_before_sample;
+guide_length_st = total_length-focusing_length;
+
+%}
+
+TRACE
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+EXTEND %{
+  /* Initialize divergencies to 0 */
+  VertDiv = 0;
+  HorDiv = 0;
+%}
+
+COMPONENT Source_simple = Source_simple(
+    yheight=source_height, 
+    xwidth=source_width, 
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    lambda0=lambda0, 
+    dlambda=dlambda, 
+    flux=source_I)
+AT (0, source_shift, 0) RELATIVE origin
+
+
+COMPONENT CalcDiv1 = Arm()
+AT (0,0,0) RELATIVE PREVIOUS
+EXTEND %{
+  /* Calculate divergence of ray as emitted by the source */
+  VertDiv = RAD2DEG*atan2(vy,vz);
+  HorDiv = RAD2DEG*atan2(vx,vz);
+%}
+
+/* Measure incoming phase-space */
+COMPONENT BT_in = L_monitor(xwidth=0.03, yheight=0.03, filename="BT_in.dat",Lmin=source_lambda_min, Lmax=source_lambda_max, nL=101, restore_neutron=1)
+WHEN ((VertDiv <= maxvd) && (HorDiv <=  maxhd)) AT (0,0,source_optics_dist) RELATIVE  origin
+
+
+/* Visualise incoming divergence */
+COMPONENT Div_in = Divergence_monitor(nh=20, nv=20, filename="Div_in",
+				      xwidth=guide_width,yheight=guide_height, maxdiv_h=2, maxdiv_v=2, restore_neutron=1)
+AT (0,0,source_optics_dist) RELATIVE  origin
+
+/* Visualise incoming beam footprint */
+COMPONENT PSD_in = PSD_monitor(ny=20, nx=20, filename="PSD_in",
+				      xwidth=guide_width,yheight=guide_height,restore_neutron=1)
+AT (0,0,source_optics_dist) RELATIVE  origin
+
+//Channel
+
+COMPONENT slit01 = Slit(
+    xmin = -slit_width, xmax = 1,
+    yheight=1)
+AT (0, 0, slit01_dist) RELATIVE origin
+
+COMPONENT slit02 = Slit(
+    xmin = -1, xmax = slit_width, 
+    yheight=1)
+AT (0, 0, slit02_dist) RELATIVE origin
+
+COMPONENT slit03 = Slit(
+    xwidth=shutter_width1, 
+    yheight=1)
+AT (0, 0, slit03_dist) RELATIVE origin
+
+//Shutter
+
+COMPONENT slit1 = Slit(
+    xwidth=shutter_width1, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist1) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=shutter_width2, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist2) RELATIVE origin
+
+COMPONENT slit3 = Slit(
+    xwidth=shutter_width3, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist3) RELATIVE origin
+
+COMPONENT slit4 = Slit(
+    xwidth=shutter_width4, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist4) RELATIVE origin
+
+COMPONENT Last_slit = Slit(
+    xmin=-1, 
+    xmax=1, 
+    ymin=-1, ymax=0)
+AT (0, 0, source_optics_dist) RELATIVE origin
+
+//Guide
+
+COMPONENT Guide_start_arm = Arm()
+AT (0, source_shift, source_optics_dist) RELATIVE origin
+
+COMPONENT  Main_guide = Guide_gravity(
+    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m, mright = m, 
+mtop = m, mbottom = m, R0=R0, Qc=Qc, alpha=alpha, W=W)
+  AT (0, 0, 0.001) RELATIVE Guide_start_arm
+
+COMPONENT Main_guide_arm = Arm()
+AT (0, 0, guide_length_st) RELATIVE Main_guide
+
+COMPONENT Focusing_nose_ell = Guide_tapering(
+    option="elliptical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = linh, 
+    louth = louth,
+    linw = linw,
+    loutw = loutw,
+    mx=m,
+    my=m, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 1)
+AT (0, 0, 0.001) RELATIVE Main_guide_arm
+
+COMPONENT Focusing_nose_par = Guide_tapering(
+    option="parabolical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = 0, 
+    louth = louth,
+    linw = 0,
+    loutw = loutw,
+    mx=m,
+    my=m, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 0)
+AT (0, 0, 0.001) RELATIVE Main_guide_arm
+
+COMPONENT guide_end = Arm()
+AT (0, 0, focusing_length) RELATIVE Main_guide_arm
+
+/* ******************************* Sample  *************************************/
+
+COMPONENT CalcDiv2 = Arm()
+AT (0,0,0) RELATIVE PREVIOUS
+EXTEND %{
+    /* Calculate divergence of ray after the guide */
+    VertDiv = RAD2DEG*atan2(vy,vz);
+    HorDiv = RAD2DEG*atan2(vx,vz);
+%}
+
+/* Measure outgoing phase-space @ sample position */
+COMPONENT BT_out = L_monitor(xwidth=0.03, yheight=0.03, filename="BT_out.dat",Lmin=lambda0-dlambda, Lmax=lambda0+dlambda, nL=101, restore_neutron=1)
+WHEN ((VertDiv <= maxvd) && (HorDiv <=  maxhd)) AT (0,0,distance_before_sample) RELATIVE  guide_end
+
+
+/* Visualise outgoing divergence */
+COMPONENT Div_out = Divergence_monitor(nh=20, nv=20, filename="Div_out",
+				      xwidth=guide_width,yheight=guide_height, maxdiv_h=2, maxdiv_v=2, restore_neutron=1)
+AT (0,0,distance_before_sample) RELATIVE  guide_end
+
+/* Visualise outgoing beam footprint */
+COMPONENT PSD_out = PSD_monitor(ny=20, nx=20, filename="PSD_out",
+				      xwidth=guide_width,yheight=guide_height,restore_neutron=1)
+AT (0,0,0) RELATIVE  PREVIOUS
+
+FINALLY
+%{
+  /* This adds another "monitor" that measures BT_out / BT_in */
+  /* In MPI-mode renormalisation by mpi_node_count needs doing */
+  int j;
+  double* tmpN;
+  double* tmpp1;
+  double* tmpp2;
+  double* tmpd1; 
+  double* tmpd2;
+  tmpN=MC_GETPAR(BT_out,L_N);
+  tmpp1=MC_GETPAR(BT_in,L_p);
+  tmpp2=MC_GETPAR(BT_out,L_p);
+  tmpd1=MC_GETPAR(BT_in,L_p2);
+  tmpd2=MC_GETPAR(BT_out,L_p2);
+  for (j=0;j<101;j++) {
+    
+    BT_N[j]=tmpN[j];
+    if (tmpp1[j] != 0) {
+      BT_p[j]=tmpp2[j]/tmpp1[j];
+    } else {
+      BT_p[j]=0;
+    }    
+    if ((tmpp1[j] != 0) && (tmpp2[j] != 0)) {    
+      BT_p2[j]=sqrt((tmpd1[j]/tmpp1[j])*(tmpd1[j]/tmpp1[j])  + (tmpd2[j]/tmpp2[j])*(tmpd2[j]/tmpp2[j]));
+    } else
+      BT_p2[j]=0;
+#if defined (USE_MPI)
+      BT_p[j] /= mpi_node_count;
+      BT_p2[j] /= mpi_node_count;
+#endif
+
+    
+  }
+  DETECTOR_OUT_1D(
+		  "Brilliance transfer",
+		  "Wavelength [AA]",
+		  "BT",
+		  "L", lambda0-dlambda, lambda0+dlambda, 101,
+		  &BT_N[0],&BT_p[0],&BT_p2[0],
+		  "Brilliance_transfer");
+
+%}
+
+END
+

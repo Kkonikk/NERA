@@ -1,0 +1,183 @@
+McStas simulation description file for BTsimple.
+Date:    Fri Dec  6 15:05:12 2019
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: BTsimple
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test_20191206_150512/mccode
+  Source: /home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr
+  Parameters:  lambda(double) dlambda(double) maxhd(double) maxvd(double) gw(double) gh(double) gL(double) gm(double) delta1(double) delta2(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test_20191206_150512
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: /home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1575639082
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test_20191206_150512
+  Nodes: 4
+  Param: lambda=10
+  Param: dlambda=9.9
+  Param: maxhd=3
+  Param: maxvd=3
+  Param: gw=0.1
+  Param: gh=0.1
+  Param: gL=50
+  Param: gm=6
+  Param: delta1=0
+  Param: delta2=0
+end simulation
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_1d(101)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: BT_in
+  position: 0 0 2
+  title: Wavelength monitor
+  Ncount: 10000000
+  filename: BT_in.dat
+  statistics: X0=2.89609; dX=1.87738;
+  signal: Min=12.8669; Max=5.81856e+10; Mean=8.08753e+09;
+  values: 8.16841e+11 2.7128e+09 400230
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0.1 19.9
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_2d(20, 20)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: Div_in
+  position: 0 0 2
+  title: Divergence monitor
+  Ncount: 10000000
+  filename: Div_in.dat
+  statistics: X0=0.000861814; dX=1.20011; Y0=-0.000417902; dY=1.19995;
+  signal: Min=0; Max=4.87215e+11; Mean=5.10415e+10;
+  values: 2.04166e+13 1.35499e+10 1e+07
+  xvar: X 
+  yvar: Y 
+  xlabel: X divergence [deg]
+  ylabel: Y divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_2d(20, 20)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: PSD_in
+  position: 0 0 2
+  title: PSD monitor
+  Ncount: 10000000
+  filename: PSD_in.dat
+  statistics: X0=0.00161493; dX=2.88322; Y0=0.00078407; dY=2.88192;
+  signal: Min=4.92e+10; Max=5.32474e+10; Mean=5.10415e+10;
+  values: 2.04166e+13 1.35499e+10 1e+07
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_1d(101)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: BT_out
+  position: 0 0 54
+  title: Wavelength monitor
+  Ncount: 10000000
+  filename: BT_out.dat
+  statistics: X0=3.38819; dX=1.98431;
+  signal: Min=2.81501e-11; Max=2.76492e+10; Mean=4.75799e+09;
+  values: 4.80557e+11 1.66841e+09 326873
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: Intensity
+  xlimits: 0.1 19.9
+  variables: L I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_2d(20, 20)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: Div_out
+  position: 0 0 54
+  title: Divergence monitor
+  Ncount: 10000000
+  filename: Div_out.dat
+  statistics: X0=-0.000629569; dX=0.830055; Y0=0.00328786; dY=0.830172;
+  signal: Min=0; Max=3.66691e+11; Mean=1.65657e+10;
+  values: 6.62627e+12 5.75566e+09 6.0728e+06
+  xvar: X 
+  yvar: Y 
+  xlabel: X divergence [deg]
+  ylabel: Y divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_2d(20, 20)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: PSD_out
+  position: 0 0 54
+  title: PSD monitor
+  Ncount: 10000000
+  filename: PSD_out.dat
+  statistics: X0=0.00314976; dX=2.50742; Y0=0.00847783; dY=2.50685;
+  signal: Min=4.58236e+09; Max=3.21776e+10; Mean=1.65657e+10;
+  values: 6.62627e+12 5.75566e+09 6.0728e+06
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Dec  6 15:05:29 2019 (1575633929)
+  type: array_1d(101)
+  Source: BTsimple (/home/nerde/JOB/github/NERA/NERA_second_channel/Brulliance/Brilliance_test.instr)
+  component: BTsimple
+  position: 0 0 0
+  title: Brilliance transfer
+  Ncount: 10000000
+  filename: Brilliance_transfer.dat
+  statistics: X0=10.6825; dX=5.21839;
+  signal: Min=5.46947e-13; Max=0.225786; Mean=0.187363;
+  values: 18.9237 0.975874 326873
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [AA]
+  ylabel: BT
+  xlimits: 0.1 19.9
+  variables: L I I_err N
+end data

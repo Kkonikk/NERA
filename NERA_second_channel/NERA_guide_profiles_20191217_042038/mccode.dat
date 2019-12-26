@@ -1,0 +1,22 @@
+# Instrument-source: 'NERA_guide_profiles.instr'
+# Date: Tue Dec 17 04 20 2019
+# Ncount: 10000000
+# Numpoints: 2
+# Param: my = 1
+# type: multiarray_1d(2)
+# title: Scan of my
+# xlabel: 'my'
+# ylabel: 'Intensity'
+# xvars: my
+# yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_dx_I,monitor_nd_dx_ERR) (monitor_nd_y_I,monitor_nd_y_ERR) (monitor_nd_dy_I,monitor_nd_dy_ERR) (monitor_nd_lambda_1_I,monitor_nd_lambda_1_ERR) (monitor_nd_lambda_45_I,monitor_nd_lambda_45_ERR)
+# xlimits: 1 8
+# filename: mccode.dat
+# variables: my monitor_nd_x_I monitor_nd_x_ERR monitor_nd_dx_I monitor_nd_dx_ERR monitor_nd_y_I monitor_nd_y_ERR monitor_nd_dy_I monitor_nd_dy_ERR monitor_nd_lambda_1_I monitor_nd_lambda_1_ERR monitor_nd_lambda_45_I monitor_nd_lambda_45_ERR
+1 1.41622E+12 3.98468E+10 1.4152E+12 3.98338E+10 5.80771E+12 8.02836E+10 5.80772E+12 8.02836E+10 1.19446E+12 3.66256E+10 1.19573E+12 3.66477E+10
+2 3.47169E+12 6.06505E+10 3.4711E+12 6.06488E+10 1.48914E+13 1.25377E+11 1.48941E+13 1.25387E+11 2.99173E+12 5.61913E+10 2.99261E+12 5.61958E+10
+3 6.37151E+12 8.09524E+10 6.37079E+12 8.09475E+10 2.82504E+13 1.70337E+11 2.8252E+13 1.70343E+11 5.55387E+12 7.54571E+10 5.55464E+12 7.54662E+10
+4 8.81085E+12 9.38222E+10 8.80976E+12 9.38162E+10 3.84215E+13 1.96052E+11 3.84252E+13 1.96068E+11 7.70602E+12 8.78061E+10 7.70316E+12 8.77917E+10
+5 1.02582E+13 9.96155E+10 1.02581E+13 9.96149E+10 4.45416E+13 2.08355E+11 4.45401E+13 2.08352E+11 8.91729E+12 9.30009E+10 8.91941E+12 9.30166E+10
+6 1.16013E+13 1.04668E+11 1.16012E+13 1.04667E+11 4.99622E+13 2.18068E+11 4.99567E+13 2.18055E+11 1.00484E+13 9.75907E+10 1.00419E+13 9.75629E+10
+7 1.23848E+13 1.06962E+11 1.23875E+13 1.06972E+11 5.36565E+13 2.23909E+11 5.36505E+13 2.23904E+11 1.06828E+13 9.97501E+10 1.06819E+13 9.97472E+10
+8 1.3132E+13 1.08993E+11 1.31323E+13 1.08993E+11 5.66097E+13 2.27427E+11 5.66014E+13 2.27416E+11 1.13255E+13 1.01766E+11 1.13214E+13 1.0175E+11
