@@ -4,7 +4,7 @@ clear variables;
 
 date = datestr(today('datetime'));
 type = "elliptical"; %only elliptical or parabolical
-dimension_plane = "vertical"; %only vertical or horizontal
+dimension_plane = "horizontal"; %only vertical or horizontal
 name = date + "_" + type + "_" + dimension_plane + "_scan";
 
 model = mccode('NERA_guide_3x3_sample.instr','mpi=6;ncount=5e6');
@@ -21,8 +21,8 @@ right_focus_min = 0.1;
 right_focus_max = 2;
 right_focus_guess = 0.5;
 
-dimension_min = 0.1; dimension_step = 0.01; dimension_max = 0.22;
-nose_length_min = 5; nose_length_step = 1; nose_length_max = 30;
+dimension_min = 0.07; dimension_step = 0.01; dimension_max = 0.24;
+nose_length_min = 25; nose_length_step = 1; nose_length_max = 30;
 
 dimension = dimension_min:dimension_step:dimension_max;
 %dimension = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.24];
