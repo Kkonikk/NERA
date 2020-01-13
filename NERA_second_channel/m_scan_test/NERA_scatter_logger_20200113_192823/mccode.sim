@@ -1,0 +1,150 @@
+McStas simulation description file for Nera.
+Date:    Mon Jan 13 19:28:25 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger_20200113_192823/mccode
+  Source: /home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr
+  Parameters:  mx(double) my(double) m_str_x(double) m_str_y(double) source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger_20200113_192823
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: /home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1578945887
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger_20200113_192823
+  Nodes: 4
+  Param: mx=7
+  Param: my=7
+  Param: m_str_x=7
+  Param: m_str_y=7
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=4.5
+  Param: guide_width=0.15
+  Param: guide_height=0.2
+  Param: focusing_length=22
+  Param: guide_shape=1
+  Param: linh=44.68
+  Param: louth=0.52
+  Param: linw=0
+  Param: loutw=0
+  Param: sample_size=0.03
+end simulation
+
+begin data
+  Date: Mon Jan 13 19:29:08 2020 (1578932948)
+  type: array_2d(100, 20)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr)
+  component: mnd1
+  position: 0 -0.10125 93.652
+  title:  Intensity Position m Monitor (Banana) [out] per bin
+  Ncount: 10000000
+  filename: mnd1.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: y 
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Mon Jan 13 19:29:08 2020 (1578932948)
+  type: array_2d(100, 20)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr)
+  component: mnd2
+  position: 0 -0.10125 93.652
+  title:  Intensity Position m Monitor (Banana) [out] per bin
+  Ncount: 10000000
+  filename: mnd2.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: y 
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Mon Jan 13 19:29:08 2020 (1578932948)
+  type: array_2d(100, 20)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr)
+  component: mnd3
+  position: 0 -0.10125 93.652
+  title:  Intensity Position m Monitor (Banana) [out] per bin
+  Ncount: 10000000
+  filename: mnd3.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: y 
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Mon Jan 13 19:29:08 2020 (1578932948)
+  type: array_2d(100, 20)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr)
+  component: mnd4
+  position: 0 -0.10125 93.652
+  title:  Intensity Position m Monitor (Banana) [out] per bin
+  Ncount: 10000000
+  filename: mnd4.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: y 
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Mon Jan 13 19:29:08 2020 (1578932948)
+  type: array_2d(100, 20)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/m_scan_test/NERA_scatter_logger.instr)
+  component: mndtot
+  position: 0 -0.10125 93.652
+  title:  Intensity Position m Monitor (Banana) [out] per bin
+  Ncount: 10000000
+  filename: mndtot.dat
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: y 
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 0 4
+  variables: I I_err N
+end data

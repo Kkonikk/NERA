@@ -1,0 +1,334 @@
+/*******************************************************************************
+* Instrument: NERA_guide_3x3_sample.instr
+*
+* Written by: Peter Konik and Yurii Kireenko
+* Date: 27.11.19
+* Origin: PNPI
+*
+* new NERA TOF-spectrometer guide
+*
+* IBR-2M guide for channel 2
+*
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_optics_dist:      [m] distance between moderator and optics
+* guide_widtht:               [m] Initial guide width
+* guide_height:               [m] Initial guide height
+*focusing_length:           [m] Length of the focusing nose
+*shape:                          [0 or 1] Shape of the focusing nose - either elliptical (1) or parabolical (0)
+*linh:                              [m] Distance from the focusing nose to the left focus in vertical plane
+*louth:                            [m] Distance from the focusing nose to the right focus in vertical plane
+*linw:                              [m] Distance from the focusing nose to the left focus in horizontal plane
+*lputw:                           [m] Distance from the focusing nose to the right focus in horizontal plane
+*sample_size                   [m] Sample width and height
+* ...
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Nera (mx =7, my = 7, m_str_x = 7, m_str_y = 7, source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
+
+DECLARE
+%{
+//Source description
+double source_I = 1e16;
+double source_height=0.405, source_width=0.335;
+double source_shift;
+double lambda0, dlambda;
+
+//Channel description
+double slit01_dist =0.29;
+double slit02_dist =0.48;
+double slit03_dist = 0.86;
+double slit_width;
+double shutter_height = 0.42;
+double shutter_width1 = 0.22, shutter_dist1 = 1.17;
+double shutter_width2 = 0.30, shutter_dist2 = 1.80;
+double shutter_width3 = 0.36, shutter_dist3 = 2.16;
+double shutter_width4 = 0.46, shutter_dist4 = 2.56;
+
+//Guide description
+double source_optics_dist = 2.6;
+double total_length = 105;
+double distance_before_sample = 0.35;
+double guide_length_st;
+
+//Reflectivity description
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
+
+
+  double mvalue;
+  int reflc;
+
+  /*This is the specialized pseudo-neutron function that computes
+   necessary m-value from logged before and after SCATTER neutron states*/
+  int necessary_m_value(double *ns_tilde, struct Generalized_State_t *S0, struct Generalized_State_t *S1){
+    /*Compute a pseudo state from before and after SCATTER*/
+    ns_tilde[0]=S1->_x;ns_tilde[1]=S1->_y;ns_tilde[2]=S1->_z;
+    ns_tilde[3]=S0->_vx;ns_tilde[4]=S0->_vy;ns_tilde[5]=S0->_vz;
+    ns_tilde[6]=S1->_t;
+    ns_tilde[7]=S1->_sx;ns_tilde[8]=S1->_sy;ns_tilde[9]=S1->_sz;
+    ns_tilde[10]=S0->_p;
+
+    /*compute m-value and index of reflection to expose them to the rest of the instrument*/
+    double v = sqrt(S0->_vx*S0->_vx+S0->_vy*S0->_vy+S0->_vz*S0->_vz);
+    double k = v*V2K;
+    double scal_prod = scalar_prod(S0->_vx,S0->_vy,S0->_vz,S1->_vx,S1->_vy,S1->_vz) / (v*v);
+    if ( (S0->_vx)==(S1->_vx) && ((S0->_vy)==(S1->_vy)) ) {
+      mvalue=0.0;
+      ns_tilde[10]=0;
+    }else{
+      double theta  = 0.5*acos(scalar_prod(S0->_vx,S0->_vy,S0->_vz,S1->_vx,S1->_vy,S1->_vz)/(v*v));
+      mvalue = 2*k*sin(theta)/0.0219;
+      reflc=S1->_idx;
+    }
+    return 0;
+  }
+
+%}
+
+INITIALIZE
+%{
+
+lambda0=(source_lambda_min + source_lambda_max)/2;
+dlambda=source_lambda_max - lambda0;
+
+source_shift = -source_height/4;
+source_height = source_height/2;
+
+slit_width = shutter_width1/2;
+
+total_length = total_length - source_optics_dist - distance_before_sample;
+guide_length_st = total_length-focusing_length;
+
+%}
+
+TRACE
+
+
+
+//Source
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT Source_simple = Source_simple(
+    yheight=source_height, 
+    xwidth=source_width, 
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    lambda0=lambda0, 
+    dlambda=dlambda, 
+    flux=source_I)
+AT (0, source_shift, 0) RELATIVE origin
+
+//Channel
+
+COMPONENT slit01 = Slit(
+    xmin = -slit_width, xmax = 1,
+    yheight=1)
+AT (0, 0, slit01_dist) RELATIVE origin
+
+COMPONENT slit02 = Slit(
+    xmin = -1, xmax = slit_width, 
+    yheight=1)
+AT (0, 0, slit02_dist) RELATIVE origin
+
+COMPONENT slit03 = Slit(
+    xwidth=shutter_width1, 
+    yheight=1)
+AT (0, 0, slit03_dist) RELATIVE origin
+
+//Shutter
+
+COMPONENT slit1 = Slit(
+    xwidth=shutter_width1, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist1) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=shutter_width2, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist2) RELATIVE origin
+
+COMPONENT slit3 = Slit(
+    xwidth=shutter_width3, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist3) RELATIVE origin
+
+COMPONENT slit4 = Slit(
+    xwidth=shutter_width4, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist4) RELATIVE origin
+
+COMPONENT Last_slit = Slit(
+    xmin=-1, 
+    xmax=1, 
+    ymin=-1, ymax=0)
+AT (0, 0, source_optics_dist) RELATIVE origin
+
+//Guide
+
+COMPONENT Guide_start_arm = Arm()
+AT (0, source_shift, source_optics_dist) RELATIVE origin
+
+COMPONENT  Main_guide = Guide_gravity(
+    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m_str_x, mright = m_str_x, 
+mtop = m_str_y, mbottom = m_str_y, R0=R0, Qc=Qc, alpha=alpha, W=W)
+  AT (0, 0, 0.001) RELATIVE Guide_start_arm
+
+COMPONENT Main_guide_arm = Arm()
+AT (0, 0, guide_length_st) RELATIVE Main_guide
+
+COMPONENT s1=Scatter_logger()
+AT(0,0,0) RELATIVE Main_guide_arm
+
+COMPONENT Focusing_nose_ell = Guide_tapering(
+    option="elliptical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = linh, 
+    louth = louth,
+    linw = linw,
+    loutw = loutw,
+    mx=mx,
+    my=my, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 1)
+AT (0, 0, 0.001) RELATIVE s1
+
+COMPONENT Focusing_nose_par = Guide_tapering(
+    option="parabolical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = 0, 
+    louth = louth,
+    linw = 0,
+    loutw = loutw,
+    mx=mx,
+    my=my, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 0)
+AT (0, 0, 0.001) RELATIVE s1
+
+COMPONENT s2=Scatter_logger_stop(logger=s1)
+AT(0,0,0) RELATIVE PREVIOUS
+
+COMPONENT guide_end = Arm()
+AT (0, 0, focusing_length) RELATIVE Main_guide_arm
+
+/*************** iterator ********************************/
+
+/*The iterator test code*/
+
+COMPONENT a0=Arm()
+AT(0,0,0) RELATIVE Main_guide_arm
+
+COMPONENT iter1 = Scatter_log_iterator(compute_func=necessary_m_value)
+AT(0,0,0)  RELATIVE Main_guide_arm
+
+/*monitor the m-value needed for 1st reflection*/
+COMPONENT mnd1=Monitor_nD (
+    restore_neutron=1, yheight=10, user1=mvalue, username1="m", radius=M_SQRT2*0.1,
+    options="previous no slit y bins=100 user1 limits=[0 4]", filename="mnd1.dat")
+WHEN(reflc==1) AT(0,0,focusing_length/2) RELATIVE Focusing_nose_ell
+ROTATED (90,0,0) RELATIVE Focusing_nose_ell
+
+/*monitor the m-value needed for 2nd reflection*/
+COMPONENT mnd2=Monitor_nD (
+    restore_neutron=1, yheight=10, user1=mvalue, username1="m", radius=M_SQRT2*0.1,
+    options="previous no slit y bins=100 user1 limits=[0 4]", filename="mnd2.dat")
+WHEN(reflc==2) AT(0,0,focusing_length/2) RELATIVE Focusing_nose_ell
+ROTATED (90,0,0) RELATIVE Focusing_nose_ell
+
+/*monitor the m-value needed for 3rd reflection*/
+COMPONENT mnd3=Monitor_nD (
+    restore_neutron=1, yheight=10, user1=mvalue, username1="m", radius=M_SQRT2*0.1,
+    options="previous no slit y bins=100 user1 limits=[0 4]", filename="mnd3.dat")
+WHEN(reflc==3) AT(0,0,focusing_length/2) RELATIVE Focusing_nose_ell
+ROTATED (90,0,0) RELATIVE Focusing_nose_ell
+
+/*monitor the m-value needed for 4th reflection*/
+COMPONENT mnd4=Monitor_nD (
+    restore_neutron=1, yheight=10, user1=mvalue, username1="m", radius=M_SQRT2*0.1,
+    options="previous no slit y bins=100 user1 limits=[0 4]", filename="mnd4.dat")
+WHEN(reflc==4) AT(0,0,focusing_length/2) RELATIVE Focusing_nose_ell
+ROTATED (90,0,0) RELATIVE Focusing_nose_ell
+
+/*monitor the m-value needed for all reflection*/
+COMPONENT mndtot=Monitor_nD (
+    restore_neutron=1, yheight=10, user1=mvalue, username1="m", radius=M_SQRT2*0.1,
+    options="previous no slit y bins=100 user1 limits=[0 4]", filename="mndtot.dat")
+WHEN (reflc!=0) AT(0,0,focusing_length/2) RELATIVE Focusing_nose_ell
+ROTATED (90,0,0) RELATIVE Focusing_nose_ell
+
+/*COMPONENT printout = Arm()*/
+/*AT(0,0,0) ABSOLUTE*/
+/*EXTEND*/
+/*%{*/
+  /*print the neutron state*/
+/*  printf("SCATTERLOG_ITERATOR: %llu %g %g %g  %g %g %g  %g  %g %g %g  %g  %d %d\n", \*/
+/*	     mcget_run_num(),x,y,z, vx, vy, vz, t, \*/
+/*	     sx, sy, sz, p, reflc, INDEX_CURRENT_COMP);*/
+/*%}*/
+
+
+
+COMPONENT iter2 = Scatter_log_iterator_stop(iterator=iter1)
+AT(0,0,0) RELATIVE iter1
+
+COMPONENT a1 = Arm()
+AT (0,0,0) ABSOLUTE
+EXTEND
+%{
+  /*This is necessary to reset the monitored values*/
+  reflc=0;mvalue=0;
+%}
+JUMP a0 WHEN(MC_GETPAR(iter2,loop))
+
+COMPONENT axxx=Arm()
+At(0,0,distance_before_sample) RELATIVE guide_end
+
+
+
+/* ******************************* Sample  *************************************/
+/*
+COMPONENT monitor_nd_x = Monitor_nD(
+    xwidth=sample_size, yheight=0.2, bins=100, restore_neutron=1, 
+    options="x")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_dx = Monitor_nD(
+    xwidth=sample_size, yheight=0.2, bins=100, restore_neutron=1, 
+    options="dx limits = [-2 2]")
+AT (0, 0, distance_before_sample+0.001) RELATIVE guide_end
+
+COMPONENT monitor_nd_y = Monitor_nD(
+    xwidth=0.15, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="y")
+AT (0, 0, distance_before_sample + 0.002) RELATIVE guide_end
+
+COMPONENT monitor_nd_dy = Monitor_nD(
+    xwidth=0.15, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="dy limits = [-2 2]")
+AT (0, 0, distance_before_sample + 0.003) RELATIVE guide_end
+
+COMPONENT monitor_nd_lambda_1 = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="lambda limits = [0.5 1]")
+AT (0, 0, distance_before_sample + 0.004) RELATIVE guide_end
+
+COMPONENT monitor_nd_lambda_45 = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="lambda limits = [0.5 4.5]")
+AT (0, 0, distance_before_sample + 0.005) RELATIVE guide_end
+
+/********* end ********************/
+
+
+FINALLY
+%{
+
+%}
+
+END
+
+

@@ -1,0 +1,85 @@
+McStas simulation description file for Nera.
+Date:    Mon Jan 13 19:48:05 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender_20200113_194706/13/mccode
+  Source: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender.instr
+  Parameters:  mx(double) my(double) m_str_x_l(double) m_str_x_r(double) m_str_y(double) source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double) bender_number_channels(double) rot(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender_20200113_194706/13
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1578947639
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender_20200113_194706/13
+  Nodes: 4
+  Param: mx=7
+  Param: my=7
+  Param: m_str_x_l=7
+  Param: m_str_x_r=7
+  Param: m_str_y=7
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.15
+  Param: guide_height=0.2
+  Param: focusing_length=22
+  Param: guide_shape=1
+  Param: linh=44.68
+  Param: louth=0.52
+  Param: linw=0
+  Param: loutw=0
+  Param: sample_size=0.03
+  Param: bender_number_channels=1
+  Param: rot=2821.43
+end simulation
+
+begin data
+  Date: Mon Jan 13 19:48:09 2020 (1578934089)
+  type: array_2d(100, 100)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender.instr)
+  component: monitor_nd_x
+  position: 0.0773509 -0.10125 2.73729
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 10000000
+  filename: monitor_nd_x_1578934085.x_y
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.075 0.075 -0.1 0.1
+  variables: I I_err N
+end data
+
+begin data
+  Date: Mon Jan 13 19:48:09 2020 (1578934089)
+  type: array_1d(100)
+  Source: Nera (/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender.instr)
+  component: monitor_nd_lambda_45
+  position: 0.0810162 -0.10125 2.74069
+  title: Wavelength [Angs] monitor
+  Ncount: 10000000
+  filename: monitor_nd_lambda_45_1578934085.L
+  statistics: X0=0; dX=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: L
+  yvar: (I,I_err)
+  xlabel: Wavelength [Angs]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0.5 4.5
+  variables: L I I_err N
+end data
