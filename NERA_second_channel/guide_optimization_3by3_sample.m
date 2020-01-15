@@ -106,7 +106,7 @@ end
 fig = figure;
 set(fig,'Color','White');
 for i=1:D
-    plot(nose_length,flux(:,i),'LineWidth',2,'DisplayName',['d = ' num2str(dimension(i))]);
+    plot(nose_length,flux(:,D-i+1),'LineWidth',2,'DisplayName',['d = ' num2str(dimension(D-i+1))]);
     hold on;
 end  
 title(type + "_" + dimension_plane + "_scan",'Interpreter','none');
