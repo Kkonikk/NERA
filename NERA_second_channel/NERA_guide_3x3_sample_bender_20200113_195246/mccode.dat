@@ -1,0 +1,46 @@
+# Instrument-source: '/home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_bender.instr'
+# Date: Mon Jan 13 19:52:51 2020
+# Ncount: 1e7
+# Numpoints: 15
+# Param: mx = 7
+# Param: my = 7
+# Param: m_str_x_l = 7
+# Param: m_str_x_r = 7
+# Param: m_str_y = 7
+# Param: source_lambda_min = 0.5
+# Param: source_lambda_max = 1
+# Param: guide_width = 0.15
+# Param: guide_height = 0.2
+# Param: focusing_length = 22
+# Param: guide_shape = 1
+# Param: linh = 44.68
+# Param: louth = 0.52
+# Param: linw = 0
+# Param: loutw = 0
+# Param: sample_size = 0.03
+# Param: bender_number_channels = 1
+# Param: R_curv = 500
+# type: multiarray_1d(15)
+# title: Scan of R_curv
+# xvars: R_curv
+# yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_lambda_45_I,monitor_nd_lambda_45_ERR)
+# xlabel: 'R_curv'
+# ylabel: 'Intensity'
+# xlimits: 500 3000
+# filename: mccode.dat
+# variables: R_curv  monitor_nd_x_I monitor_nd_x_ERR monitor_nd_lambda_45_I monitor_nd_lambda_45_ERR
+500  0 0 0 0
+678.571428571429  0 0 0 0
+857.142857142857  0 0 0 0
+1035.71428571429  0 0 0 0
+1214.28571428571  0 0 0 0
+1392.85714285714  0 0 0 0
+1571.42857142857  0 0 0 0
+1750  0 0 0 0
+1928.57142857143  0 0 0 0
+2107.14285714286  0 0 0 0
+2285.71428571429  0 0 0 0
+2464.28571428571  0 0 0 0
+2642.85714285714  0 0 0 0
+2821.42857142857  0 0 0 0
+3000  0 0 0 0
