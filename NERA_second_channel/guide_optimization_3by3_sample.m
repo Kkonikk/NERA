@@ -22,7 +22,7 @@ right_focus_max = 2;
 right_focus_guess = 0.5;
 
 dimension_min = 0.07; dimension_step = 0.01; dimension_max = 0.24;
-nose_length_min = 25; nose_length_step = 1; nose_length_max = 30;
+nose_length_min = 5; nose_length_step = 1; nose_length_max = 30;
 
 dimension = dimension_min:dimension_step:dimension_max;
 %dimension = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.24];
