@@ -2,14 +2,14 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_source.instr (NERA_source)
- * Date:       Sun Oct 28 00:12:10 2018
+ * Date:       Fri Feb  7 15:42:48 2020
  * File:       ./NERA_source.c
  * Compile:    cc -o NERA_source.out ./NERA_source.c 
  * CFLAGS=
  */
 
 
-#define MCCODE_STRING "McStas 2.4.1 - Jun. 26, 2017"
+#define MCCODE_STRING "McStas 2.5 - Dec. 12, 2018"
 #define FLAVOR "mcstas"
 #define FLAVOR_UPPER "MCSTAS"
 #define MC_USE_DEFAULT_MAIN
@@ -29,7 +29,7 @@
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: McStas 2.4.1
+* Release: McStas 2.5
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -107,15 +107,15 @@
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#define MCCODE_STRING "McStas 2.4.1 - Jun. 26, 2017"
+#define MCCODE_STRING "McStas 2.5 - Dec. 12, 2018"
 #endif
 
 #ifndef MCCODE_DATE
-#define MCCODE_DATE "Jun. 26, 2017"
+#define MCCODE_DATE "Dec. 12, 2018"
 #endif
 
 #ifndef MCCODE_VERSION
-#define MCCODE_VERSION "2.4.1"
+#define MCCODE_VERSION "2.5"
 #endif
 
 #ifndef MCCODE_NAME
@@ -346,7 +346,7 @@ unsigned long long mcget_run_num(void);           /* wrapper to get mcrun_num=0:
 #endif
 
 #ifdef DEBUG
-#define mcDEBUG_INSTR() if(!mcdotrace); else { printf("INSTRUMENT:\n"); printf("Instrument '%s' (%s)\n", mcinstrument_name, mcinstrument_source); }
+#define mcDEBUG_INSTR() if(!mcdotrace); else { printf("\nINSTRUMENT:\n"); printf("Instrument '%s' (%s)\n", mcinstrument_name, mcinstrument_source); }
 #define mcDEBUG_COMPONENT(name,c,t) if(!mcdotrace); else {\
   printf("COMPONENT: \"%s\"\n" \
          "POS: %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g\n", \
@@ -393,6 +393,10 @@ void mcdis_rectangle(char* plane, double x, double y, double z,
 void mcdis_box(double x, double y, double z,
 	       double width, double height, double length);
 void mcdis_circle(char *plane, double x, double y, double z, double r);
+void mcdis_Circle(double x, double y, double z, double r, double nx, double ny, double nz);
+void mcdis_cylinder( double x, double y, double z,
+        double r, double height, int N, double nx, double ny, double nz);
+void mcdis_sphere(double x, double y, double z, double r, int N);
 
 /* selection of random number generator. default is MT */
 #ifndef MC_RAND_ALG
@@ -688,7 +692,7 @@ NXhandle nxhandle;
 #endif /* MCCODE_R_H */
 /* End of file "mccode-r.h". */
 
-#line 691 "./NERA_source.c"
+#line 695 "./NERA_source.c"
 
 #line 1 "mcstas-r.h"
 /*******************************************************************************
@@ -921,7 +925,7 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 #endif /* MCSTAS_R_H */
 /* End of file "mcstas-r.h". */
 
-#line 924 "./NERA_source.c"
+#line 928 "./NERA_source.c"
 
 #line 1 "mccode-r.c"
 /*******************************************************************************
@@ -970,9 +974,13 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 // UNIX specific headers (non-Windows)
 #if defined(__unix__) || defined(__APPLE__)
 #include <unistd.h>
-#include <sys/stat.h>
 #endif
 
+#include <sys/stat.h>
+
+#ifdef _WIN32 
+# define  mkdir( D, M )   _mkdir( D ) 
+#endif 
 
 #ifndef DANSE
 #ifdef MC_ANCIENT_COMPATIBILITY
@@ -1028,8 +1036,8 @@ int mc_MPI_Sum(double *sbuf, long count)
     while (offset < count) {
       if (!length || offset+length > count-1) length=count-offset;
       else length=MPI_REDUCE_BLOCKSIZE;
-      if (MPI_Allreduce((double*)(sbuf+offset), (double*)(rbuf+offset),
-              length, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD) != MPI_SUCCESS)
+      if (MPI_Reduce((double*)(sbuf+offset), (double*)(rbuf+offset),
+              length, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD) != MPI_SUCCESS)
         return MPI_ERR_COUNT;
       offset += length;
     }
@@ -1856,16 +1864,17 @@ static void mcruninfo_out(char *pre, FILE *f)
 
   /* output parameter string ================================================ */
   for(i = 0; i < mcnumipar; i++) {
-    if (mcget_run_num() || (mcinputtable[i].val && strlen(mcinputtable[i].val))) {
-      if (mcinputtable[i].par == NULL)
-        strncpy(Parameters, (mcinputtable[i].val ? mcinputtable[i].val : ""), CHAR_BUF_LENGTH);
-      else
-        (*mcinputtypes[mcinputtable[i].type].printer)(Parameters, mcinputtable[i].par);
-
-      fprintf(f, "%sParam: %s=%s\n", pre, mcinputtable[i].name, Parameters);
-    }
+      if (mcinputtable[i].par){
+	/* Parameters with a default value */
+	if(mcinputtable[i].val && strlen(mcinputtable[i].val)){
+	  (*mcinputtypes[mcinputtable[i].type].printer)(Parameters, mcinputtable[i].par);
+	  fprintf(f, "%sParam: %s=%s\n", pre, mcinputtable[i].name, Parameters);
+        /* ... and those without */
+	}else{
+	  fprintf(f, "%sParam: %s=NULL\n", pre, mcinputtable[i].name);
+	}
+      } 
   }
-  fflush(f);
 } /* mcruninfo_out */
 
 /*******************************************************************************
@@ -2193,7 +2202,7 @@ static int nxstr(char type, NXhandle *f, char *tag, char *format, ...)
 *******************************************************************************/
 char *mcinfo_readfile(char *filename)
 {
-  FILE *f = fopen(filename, "r");
+  FILE *f = fopen(filename, "rb");
   if (!f) return(NULL);
   fseek(f, 0, SEEK_END);
   long fsize = ftell(f);
@@ -2667,8 +2676,9 @@ MCDETECTOR mcdetector_out_0D_nexus(MCDETECTOR detector)
   return(detector);
 } /* mcdetector_out_0D_ascii */
 
-MCDETECTOR mcdetector_out_1D_nexus(MCDETECTOR detector)
+MCDETECTOR mcdetector_out_1D_nexus(MCDETECTOR detector_inc)
 {
+  MCDETECTOR detector = detector_inc;
   MPI_MASTER(
   mcdatainfo_out_nexus(nxhandle, detector);
   mcdetector_out_data_nexus(nxhandle, detector);
@@ -2676,8 +2686,9 @@ MCDETECTOR mcdetector_out_1D_nexus(MCDETECTOR detector)
   return(detector);
 } /* mcdetector_out_1D_ascii */
 
-MCDETECTOR mcdetector_out_2D_nexus(MCDETECTOR detector)
+MCDETECTOR mcdetector_out_2D_nexus(MCDETECTOR detector_inc)
 {
+  MCDETECTOR detector = detector_inc;
   MPI_MASTER(
   mcdatainfo_out_nexus(nxhandle, detector);
   mcdetector_out_data_nexus(nxhandle, detector);
@@ -3070,7 +3081,7 @@ mcsetseed(char *arg)
 *******************************************************************************/
 
 void mcdis_magnify(char *what){
-  printf("MCDISPLAY: magnify('%s')\n", what);
+  // Do nothing here, better use interactive zoom from the tools
 }
 
 void mcdis_line(double x1, double y1, double z1,
@@ -3159,6 +3170,86 @@ void mcdis_box(double x, double y, double z,
 
 void mcdis_circle(char *plane, double x, double y, double z, double r){
   printf("MCDISPLAY: circle('%s',%g,%g,%g,%g)\n", plane, x, y, z, r);
+}
+
+/* Draws a circle with center (x,y,z), radius (r), and in the plane
+ * with normal (nx,ny,nz)*/
+void mcdis_Circle(double x, double y, double z, double r, double nx, double ny, double nz){
+    int i;
+    if(nx==0 && ny && nz==0){
+        for (i=0;i<24; i++){
+            mcdis_line(x+r*sin(i*2*M_PI/24),y,z+r*cos(i*2*M_PI/24),
+                    x+r*sin((i+1)*2*M_PI/24),y,z+r*cos((i+1)*2*M_PI/24));
+        }
+    }else{
+        double mx,my,mz;
+        /*generate perpendicular vector using (nx,ny,nz) and (0,1,0)*/
+        vec_prod(mx,my,mz, 0,1,0, nx,ny,nz);
+        NORM(mx,my,mz);
+        /*draw circle*/
+        for (i=0;i<24; i++){
+            double ux,uy,uz;
+            double wx,wy,wz;
+            rotate(ux,uy,uz, mx,my,mz, i*2*M_PI/24, nx,ny,nz);
+            rotate(wx,wy,wz, mx,my,mz, (i+1)*2*M_PI/24, nx,ny,nz);
+            mcdis_line(x+ux*r,y+uy*r,z+uz*r,
+                    x+wx*r,y+wy*r,z+wz*r);
+        }
+    }
+}
+
+/* Draws a cylinder with center at (x,y,z) with extent (r,height).
+ * The cylinder axis is along the vector nx,ny,nz.
+ * N determines how many vertical lines are drawn.*/
+void mcdis_cylinder( double x, double y, double z,
+        double r, double height, int N, double nx, double ny, double nz){
+    int i;
+    /*no lines make little sense - so trigger the default*/
+    if(N<=0) N=5;
+
+    NORM(nx,ny,nz);
+    double h_2=height/2.0;
+    mcdis_Circle(x+nx*h_2,y+ny*h_2,z+nz*h_2,r,nx,ny,nz);
+    mcdis_Circle(x-nx*h_2,y-ny*h_2,z-nz*h_2,r,nx,ny,nz);
+
+    double mx,my,mz;
+    /*generate perpendicular vector using (nx,ny,nz) and (0,1,0)*/
+    if(nx==0 && ny && nz==0){
+        mx=my=0;mz=1;
+    }else{
+        vec_prod(mx,my,mz, 0,1,0, nx,ny,nz);
+        NORM(mx,my,mz);
+    }
+    /*draw circle*/
+    for (i=0; i<24; i++){
+        double ux,uy,uz;
+        rotate(ux,uy,uz, mx,my,mz, i*2*M_PI/24, nx,ny,nz);
+        mcdis_line(x+nx*h_2+ux*r, y+ny*h_2+uy*r, z+nz*h_2+uz*r,
+                 x-nx*h_2+ux*r, y-ny*h_2+uy*r, z-nz*h_2+uz*r);
+    }
+}
+
+/* draws a sphere with center at (x,y,z) with extent (r)
+ * The sphere is drawn using N longitudes and N latitudes.*/
+void mcdis_sphere(double x, double y, double z, double r, int N){
+    double nx,ny,nz;
+    int i;
+    /*no lines make little sense - so trigger the default*/
+    if(N<=0) N=5;
+
+    nx=0;ny=0;nz=1;
+    mcdis_Circle(x,y,z,r,nx,ny,nz);
+    for (i=1;i<N;i++){
+        rotate(nx,ny,nz, nx,ny,nz, M_PI/N, 0,1,0);
+        mcdis_Circle(x,y,z,r,nx,ny,nz);
+    }
+    /*lastly draw a great circle perpendicular to all N circles*/
+    //mcdis_Circle(x,y,z,radius,1,0,0);
+
+    for (i=1;i<=N;i++){
+        double yy=-r+ 2*r*((double)i/(N+1));
+        mcdis_Circle(x,y+yy ,z,  sqrt(r*r-yy*yy) ,0,1,0);
+    }
 }
 
 /* SECTION: coordinates handling ============================================ */
@@ -4432,7 +4523,7 @@ mcparseoptions(int argc, char *argv[])
     else if(!strncmp("--ncount=", argv[i], 9))
       mcsetn_arg(&argv[i][9]);
     else if(!strcmp("-d", argv[i]) && (i + 1) < argc)
-      usedir=argv[++i];  /* will create directory after parsing all arguments (end of this function) */
+      usedir=argv[++i];  /* will create directory after parsing all arguments (end of this function) */
     else if(!strncmp("-d", argv[i], 2))
       usedir=&argv[i][2];
     else if(!strcmp("--dir", argv[i]) && (i + 1) < argc)
@@ -4515,7 +4606,7 @@ mcparseoptions(int argc, char *argv[])
 #ifdef USE_MPI
   if (mcdotrace) mpi_node_count=1; /* disable threading when in trace mode */
 #endif
-  if (usedir && strlen(usedir)) mcuse_dir(usedir);
+  if (usedir && strlen(usedir) && !mcdisable_output_files) mcuse_dir(usedir);
 } /* mcparseoptions */
 
 #ifndef NOSIGNALS
@@ -4853,7 +4944,7 @@ void neutronics_main_(float *inx, float *iny, float *inz, float *invx, float *in
 /* End of file "mccode-r.c". */
 /* End of file "mccode-r.c". */
 
-#line 4856 "./NERA_source.c"
+#line 4947 "./NERA_source.c"
 
 #line 1 "mcstas-r.c"
 /*******************************************************************************
@@ -5213,13 +5304,13 @@ plane_intersect(double *t, double x, double y, double z,
 #endif /* !MCSTAS_H */
 /* End of file "mcstas-r.c". */
 
-#line 5216 "./NERA_source.c"
+#line 5307 "./NERA_source.c"
 #ifdef MC_TRACE_ENABLED
 int mctraceenabled = 1;
 #else
 int mctraceenabled = 0;
 #endif
-#define MCSTAS "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../"
+#define MCSTAS "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/"
 int mcdefaultmain = 1;
 char mcinstrument_name[] = "NERA_source";
 char mcinstrument_source[] = "NERA_source.instr";
@@ -5232,7 +5323,7 @@ void mcfinally(void);
 void mcdisplay(void);
 
 /* Shared user declarations for all components 'Source_gen'. */
-#line 140 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 140 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -5412,10 +5503,11 @@ double z11, double z12, double z21, double z22);
 *******************************************************************************/
 void * Table_File_List_Handler(t_Read_table_file_actions action, void *item, void *item_modifier){
 
-    /* logic here is Read_Table should include a call to FIND. If found the return value shoud just be used as
-     * if the table had been read. If not found then read the table and STORE.
-     * Table_Free should include a call to GC. If this returns non-NULL then we shoudl proceed with freeing the memory
-     * associated with the table item - otherwise do nothing since there are more references that may need it.*/ 
+    /* logic here is Read_Table should include a call to FIND. If found the return value should just be used as
+     * if the table had been read from disk. If not found then read the table and STORE.
+     * Table_Free should include a call to GC. If this returns non-NULL then we should proceed with freeing the memory
+     * associated with the table item - otherwise only decrement the reference counter since there are more references
+     * that may need it.*/
 
     static t_Read_table_file_item read_table_file_list[1024];  
     static int read_table_file_count=0;
@@ -5455,11 +5547,12 @@ void * Table_File_List_Handler(t_Read_table_file_actions action, void *item, voi
                         tr->table_ref->block_number == ((t_Table *)item)->block_number){
                     /*matching item found*/
                     if (tr->ref_count>1){
-                        /*the item is found - no garbage collection needed*/
+                        /*the item is found and no garbage collection needed*/
                         tr->ref_count--;
                         return NULL;
                     }else{
-                        /* The item is found - move remaining list items up one slot,
+                        /* The item is found and the reference counter is 1.
+                         * This means we should garbage collect. Move remaining list items up one slot,
                          * and return the table for garbage collection by caller*/
                         while (tr->table_ref!=NULL){
                             *tr=*(tr+1);
@@ -5471,9 +5564,11 @@ void * Table_File_List_Handler(t_Read_table_file_actions action, void *item, voi
                 }
                 tr++;
             }
-            return (void *)0x1 ;/*item not found*/ 
-    } 
-
+            /* item not found, and so should be garbage collected. This could be the case if freeing a
+             * Table that has been constructed from code - not read from file. Return 0x1 to flag it for
+             * collection.*/
+            return (void *) 0x1 ;
+    }
 }
 
 /* Access functions to the handler*/
@@ -5657,7 +5752,7 @@ void *Table_File_List_store(t_Table *tab){
     t_Table *tab_p= Table_File_List_find(name,block_number,begin);
     if ( tab_p!=NULL ){
         /*table was found in the Table_File_List*/
-        printf("Reusing input file '%s' (Table_Read_Offset)\n", name);
+        // printf("Reusing input file '%s' (Table_Read_Offset)\n", name);
         *Table=*tab_p;
         return Table->rows*Table->columns;
     }
@@ -6158,7 +6253,7 @@ double Table_Value(t_Table Table, double X, long j)
   // Fall back to linear search, if no-one else has set X1, X2 correctly
   if (!((X1 <= X) && (X < X2))) {
     /* look for index surrounding X in the table -> Index */
-    for (Index=1; Index < Table.rows-1; Index++) {
+    for (Index=1; Index <= Table.rows-1; Index++) {
         X1 = Table_Index(Table, Index-1,0);
         X2 = Table_Index(Table, Index  ,0);
         if ((X1 <= X) && (X < X2)) break;
@@ -6231,7 +6326,9 @@ double Table_Value(t_Table Table, double X, long j)
 
 /*******************************************************************************
 * void Table_Free(t_Table *Table)
-*   ACTION: free a single Table
+*   ACTION: free a single Table. First Call Table_File_list_gc. If this returns
+*   non-zero it means there are more refernces to the table, and so the table
+*   should not bee freed.
 *   return: empty Table
 *******************************************************************************/
   void Table_Free(t_Table *Table)
@@ -6465,7 +6562,7 @@ MCDETECTOR Table_Write(t_Table Table, char *file, char *xl, char *yl,
     long allocated=256;
     long nelements=1;
 
-    /* fisrt allocate an initial empty t_Table array */
+    /* first allocate an initial empty t_Table array */
     Table_Array = (t_Table *)malloc(allocated*sizeof(t_Table));
     if (!Table_Array) {
       fprintf(stderr, "Error: Can not allocate memory %li (Table_Read_Array).\n",
@@ -6485,21 +6582,24 @@ MCDETECTOR Table_Write(t_Table Table, char *file, char *xl, char *yl,
       /* access file at offset and get following block. Block number is from the set offset
        * hence the hardcoded 1 - i.e. the next block counted from offset.*/
       nelements = Table_Read_Offset(&Table, File, 1, &offset,0);
-      /* if t_Table array is not long enough, expand and realocate */
-      if (block_number >= allocated-1) {
-        allocated += 256;
-        Table_Array = (t_Table *)realloc(Table_Array,
-           allocated*sizeof(t_Table));
-        if (!Table_Array) {
-          fprintf(stderr, "Error: Can not re-allocate memory %li (Table_Read_Array).\n",
-              allocated*sizeof(t_Table));
-          *blocks = 0;
-          return (NULL);
-        }
+      /*if the block is empty - don't store it*/
+      if (nelements>0){
+          /* if t_Table array is not long enough, expand and realocate */
+          if (block_number >= allocated-1) {
+              allocated += 256;
+              Table_Array = (t_Table *)realloc(Table_Array,
+                      allocated*sizeof(t_Table));
+              if (!Table_Array) {
+                  fprintf(stderr, "Error: Can not re-allocate memory %li (Table_Read_Array).\n",
+                          allocated*sizeof(t_Table));
+                  *blocks = 0;
+                  return (NULL);
+              }
+          }
+          /* store it into t_Table array */
+          //snprintf(Table.filename, 1024, "%s#%li", File, block_number-1);
+          Table_Array[block_number-1] = Table;
       }
-      /* store it into t_Table array */
-      //snprintf(Table.filename, 1024, "%s#%li", File, block_number-1);
-      Table_Array[block_number-1] = Table;
       /* continues until we find an empty block */
     }
     /* send back number of extracted blocks */
@@ -6517,11 +6617,10 @@ MCDETECTOR Table_Write(t_Table Table, char *file, char *xl, char *yl,
 *******************************************************************************/
   void Table_Free_Array(t_Table *Table)
   {
-    long index=0;
+    long index;
     if (!Table) return;
-    while (Table[index].data || Table[index].header){
+    for (index=0;index < Table[0].array_length; index++){
             Table_Free(&Table[index]);
-            index++;
     }
     free(Table);
   } /* end Table_Free_Array */
@@ -6701,10 +6800,10 @@ char *str_dup_numeric(char *orig)
   }
 #endif
 
-#line 6704 "./NERA_source.c"
+#line 6803 "./NERA_source.c"
 
 /* Shared user declarations for all components 'Monitor_nD'. */
-#line 212 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+#line 214 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -6877,7 +6976,7 @@ char *str_dup_numeric(char *orig)
 /* ========================================================================= */
 
 void Monitor_nD_Init(MonitornD_Defines_type *, MonitornD_Variables_type *, MCNUM, MCNUM, MCNUM, MCNUM, MCNUM, MCNUM, MCNUM, MCNUM, MCNUM, int);
-double Monitor_nD_Trace(MonitornD_Defines_type *, MonitornD_Variables_type *);
+int Monitor_nD_Trace(MonitornD_Defines_type *, MonitornD_Variables_type *);
 MCDETECTOR Monitor_nD_Save(MonitornD_Defines_type *, MonitornD_Variables_type *);
 void Monitor_nD_Finally(MonitornD_Defines_type *, MonitornD_Variables_type *);
 void Monitor_nD_McDisplay(MonitornD_Defines_type *,
@@ -7041,7 +7140,13 @@ void Monitor_nD_Init(MonitornD_Defines_type *DEFS,
     Vars->Flag_Binary_List  = 0;   /* save list as a binary file (smaller) */
     Vars->Coord_Number      = 0;   /* total number of variables to monitor, plus intensity (0) */
     Vars->Coord_NumberNoPixel=0;   /* same but without counting PixelID */
-    Vars->Buffer_Block      = 10000;     /* Buffer size for list or auto limits */
+
+/* Allow to specify size of Monitor_nD buffer via a define*/
+#ifndef MONND_BUFSIZ
+    Vars->Buffer_Block      = 100000;     /* Buffer size for list or auto limits */
+#else
+	Vars->Buffer_Block      = MONND_BUFSIZ;     /* Buffer size for list or auto limits */	
+#endif
     Vars->Neutron_Counter   = 0;   /* event counter, simulation total counts is mcget_ncount() */
     Vars->Buffer_Counter    = 0;   /* index in Buffer size (for realloc) */
     Vars->Buffer_Size       = 0;
@@ -7637,12 +7742,14 @@ void Monitor_nD_Init(MonitornD_Defines_type *DEFS,
 
 /* ========================================================================= */
 /* Monitor_nD_Trace: this routine is used to monitor one propagating neutron */
+/* return values: 0=neutron was absorbed, -1=neutron was outside bounds, 1=neutron was measured*/
 /* ========================================================================= */
 
-double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *Vars)
+int Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *Vars)
 {
 
   double  XY=0, pp=0;
+  int     retval;
   long    i =0, j =0;
   double  Coord[MONnD_COORD_NMAX];
   long    Coord_Index[MONnD_COORD_NMAX];
@@ -7700,9 +7807,9 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
     }
   } /* end if Buffer realloc */
 
+  char    outsidebounds=0;
   while (!While_End)
   { /* we generate Coord[] and Coord_index[] from Buffer (auto limits) or passing neutron */
-    char    outsidebounds=0;
     if ((Vars->Flag_Auto_Limits == 2) && (Vars->Coord_Number > 0))
     { /* Vars->Flag_Auto_Limits == 2: read back from Buffer (Buffer is filled or auto limits have been computed) */
       if (While_Buffer < Vars->Buffer_Block)
@@ -7908,8 +8015,8 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
               if (Coord_Index[i] >= Vars->Coord_Bin[i]) Coord_Index[i] = Vars->Coord_Bin[i] - 1;
               if (Coord_Index[i] < 0) Coord_Index[i] = 0;
             }
-            if (0 > Coord_Index[i] || Coord_Index[i] >= Vars->Coord_Bin[i])
-              outsidebounds=1;
+            //if (0 > Coord_Index[i] || Coord_Index[i] >= Vars->Coord_Bin[i])
+            //  outsidebounds=1;
           } /* else will get Index later from Buffer when Flag_Auto_Limits == 2 */
         }
         
@@ -7926,7 +8033,7 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
         pp /= Vars->area;
 
       /* 2D case : Vars->Coord_Number==2 and !Vars->Flag_Multiple and !Vars->Flag_List */
-      if ( Vars->Coord_NumberNoPixel == 2 && !Vars->Flag_Multiple && !outsidebounds)
+      if ( Vars->Coord_NumberNoPixel == 2 && !Vars->Flag_Multiple)
       { /* Dim : Vars->Coord_Bin[1]*Vars->Coord_Bin[2] matrix */
         
         i = Coord_Index[1];
@@ -7940,9 +8047,8 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
           }
         } else {
           outsidebounds=1; 
-          if (Vars->Flag_Absorb) pp=0;
         }
-      } else if (!outsidebounds) {
+      } else {
         /* 1D and n1D case : Vars->Flag_Multiple */
         /* Dim : Vars->Coord_Number*Vars->Coord_Bin[i] vectors (intensity is not included) */
           
@@ -7953,10 +8059,10 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
               Vars->Mon2D_N[i-1][j]++;
               Vars->Mon2D_p[i-1][j]  += pp;
               Vars->Mon2D_p2[i-1][j] += pp*pp;
-            } 
+            }
           } else { 
-            outsidebounds=1; 
-            if (Vars->Flag_Absorb) { pp=0; break; }
+            outsidebounds=1;
+            break;
           }
         }
       }
@@ -7982,8 +8088,16 @@ double Monitor_nD_Trace(MonitornD_Defines_type *DEFS, MonitornD_Variables_type *
   Vars->Nsum++;
   Vars->psum  += pp;
   Vars->p2sum += pp*pp;
-  
-  return pp;
+
+  /*determine return value: 1:neutron was in bounds and measured, -1: outside bounds, 0: outside bounds, should be absorbed.*/
+  if(outsidebounds){
+      if(Vars->Flag_Absorb){
+          return 0;
+      }else{
+          return -1;
+      }
+  }
+  return 1;
 } /* end Monitor_nD_Trace */
 
 /* ========================================================================= */
@@ -8507,8 +8621,8 @@ void Monitor_nD_McDisplay(MonitornD_Defines_type *DEFS,
       
       /* check width and height of elements (sphere) to make sure the nb
          of plates remains limited */
-      if (width < 10  && NH > 1) { width = 10;  NH=(hdiv_max-hdiv_min)/width; }
-      if (height < 10 && NV > 1) { height = 10; NV=(vdiv_max-vdiv_min)/height; }
+      if (width < 10  && NH > 1) { width = 10;  NH=(hdiv_max-hdiv_min)/width; width=(hdiv_max-hdiv_min)/NH; }
+      if (height < 10 && NV > 1) { height = 10; NV=(vdiv_max-vdiv_min)/height; height= (vdiv_max-vdiv_min)/NV; }
       
       mcdis_magnify("xyz");
       for(ih = 0; ih < NH; ih++)
@@ -8991,6 +9105,13 @@ FILE *off_getBlocksIndex(char* filename, long* vtxSize, long* polySize )
   {
     fprintf(stderr, "Error: Can not read 1st line in file %s (interoff/off_getBlocksIndex)\n", filename);
     exit(1);
+  }
+  if (strlen(line)>5)
+  {
+      fprintf(stderr,"Error: First line in %s is too long (=%d). Possibly the line is not terminated by '\\n'.\n" 
+              "       The first line is required to be exactly 'OFF', '3' or 'ply'.\n",filename,strlen(line));
+      fclose(f);
+      return(NULL);
   }
 
   if (strncmp(line,"OFF",3) && strncmp(line,"3",1) && strncmp(line,"ply",1))
@@ -9614,7 +9735,7 @@ void off_display(off_struct data)
 
 /* end of interoff-lib.c */
 
-#line 9617 "./NERA_source.c"
+#line 9738 "./NERA_source.c"
 
 /* Instrument parameters. */
 MCNUM mcipsource_lambda_min;
@@ -9655,7 +9776,7 @@ double pulse_length = 340; //in microsec
 double T; //for defining the number of pulse
 double source_freq = 5; //in Hz
 double source_pulse_number_help;
-#line 9658 "./NERA_source.c"
+#line 9779 "./NERA_source.c"
 #undef guide_height
 #undef guide_width
 #undef source_optics_dist
@@ -9749,6 +9870,7 @@ char mccsource_time_mon_one_pulse_geometry[16384];
 char mccsource_time_mon_one_pulse_username1[16384];
 char mccsource_time_mon_one_pulse_username2[16384];
 char mccsource_time_mon_one_pulse_username3[16384];
+int mccsource_time_mon_one_pulse_nowritefile;
 
 /* Definition parameters for component 'source_time_mon_many_pulses' [4]. */
 #define mccsource_time_mon_many_pulses_user1 FLT_MAX
@@ -9775,6 +9897,7 @@ char mccsource_time_mon_many_pulses_geometry[16384];
 char mccsource_time_mon_many_pulses_username1[16384];
 char mccsource_time_mon_many_pulses_username2[16384];
 char mccsource_time_mon_many_pulses_username3[16384];
+int mccsource_time_mon_many_pulses_nowritefile;
 
 /* Setting parameters for component 'slit1' [5]. */
 MCNUM mccslit1_xmin;
@@ -9835,7 +9958,7 @@ MCNUM mccslit5_yheight;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 44 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 44 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 #ifndef PROGRESS_BAR
 #define PROGRESS_BAR
 #else
@@ -9846,7 +9969,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 9849 "./NERA_source.c"
+#line 9972 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -9910,7 +10033,7 @@ time_t CurrentTime;
 #define I3 mccSource_I3
 #define zdepth mccSource_zdepth
 #define target_index mccSource_target_index
-#line 184 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 184 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 
   double p_in;
   double lambda1;  /* first Maxwellian source */
@@ -9930,7 +10053,7 @@ time_t CurrentTime;
   double pTable_dymin;
   double pTable_dymax;
 
-#line 9933 "./NERA_source.c"
+#line 10056 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -10013,12 +10136,14 @@ time_t CurrentTime;
 #define username1 mccsource_time_mon_one_pulse_username1
 #define username2 mccsource_time_mon_one_pulse_username2
 #define username3 mccsource_time_mon_one_pulse_username3
-#line 220 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+#define nowritefile mccsource_time_mon_one_pulse_nowritefile
+#line 222 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 10021 "./NERA_source.c"
+#line 10145 "./NERA_source.c"
+#undef nowritefile
 #undef username3
 #undef username2
 #undef username1
@@ -10081,12 +10206,14 @@ time_t CurrentTime;
 #define username1 mccsource_time_mon_many_pulses_username1
 #define username2 mccsource_time_mon_many_pulses_username2
 #define username3 mccsource_time_mon_many_pulses_username3
-#line 220 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+#define nowritefile mccsource_time_mon_many_pulses_nowritefile
+#line 222 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 10089 "./NERA_source.c"
+#line 10215 "./NERA_source.c"
+#undef nowritefile
 #undef username3
 #undef username2
 #undef username1
@@ -10277,7 +10404,7 @@ void mcinit(void) {
 source_pulse_number_help = source_pulse_number;
 source_I = source_I*source_pulse_number/4/PI;
 }
-#line 10280 "./NERA_source.c"
+#line 10407 "./NERA_source.c"
 #undef guide_height
 #undef guide_width
 #undef source_optics_dist
@@ -10309,14 +10436,14 @@ source_I = source_I*source_pulse_number/4/PI;
   mccorigin_flag_save = 0;
 #line 39 "NERA_source.instr"
   mccorigin_minutes = 0;
-#line 10312 "./NERA_source.c"
+#line 10439 "./NERA_source.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10319 "./NERA_source.c"
+#line 10446 "./NERA_source.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
 #line 42 "NERA_source.instr"
@@ -10325,7 +10452,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 42 "NERA_source.instr"
     0);
-#line 10328 "./NERA_source.c"
+#line 10455 "./NERA_source.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -10396,14 +10523,14 @@ source_I = source_I*source_pulse_number/4/PI;
   mccSource_zdepth = 0;
 #line 134 "NERA_source.instr"
   mccSource_target_index = + 1;
-#line 10399 "./NERA_source.c"
+#line 10526 "./NERA_source.c"
 
   SIG_MESSAGE("Source (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10406 "./NERA_source.c"
+#line 10533 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource, mctr1, mcrotrSource);
@@ -10414,7 +10541,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 54 "NERA_source.instr"
     0);
-#line 10417 "./NERA_source.c"
+#line 10544 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource = coords_add(mcposaorigin, mctc2);
@@ -10432,50 +10559,52 @@ source_I = source_I*source_pulse_number/4/PI;
   mccsource_time_mon_one_pulse_xwidth = 0.5;
 #line 63 "NERA_source.instr"
   mccsource_time_mon_one_pulse_yheight = 0.5;
-#line 200 "NERA_source.instr"
+#line 201 "NERA_source.instr"
   mccsource_time_mon_one_pulse_zdepth = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_xmin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_xmax = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_ymin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_ymax = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_zmin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_one_pulse_zmax = 0;
 #line 64 "NERA_source.instr"
   mccsource_time_mon_one_pulse_bins = 100;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_one_pulse_min = -1e40;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_one_pulse_max = 1e40;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_one_pulse_restore_neutron = 0;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_one_pulse_radius = 0;
 #line 65 "NERA_source.instr"
   if("time limits = [0 0.00045]") strncpy(mccsource_time_mon_one_pulse_options, "time limits = [0 0.00045]" ? "time limits = [0 0.00045]" : "", 16384); else mccsource_time_mon_one_pulse_options[0]='\0';
-#line 203 "NERA_source.instr"
+#line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_filename[0]='\0';
-#line 203 "NERA_source.instr"
+#line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_geometry[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username1[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username2[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_one_pulse_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_one_pulse_username3[0]='\0';
-#line 10471 "./NERA_source.c"
+#line 206 "NERA_source.instr"
+  mccsource_time_mon_one_pulse_nowritefile = 0;
+#line 10600 "./NERA_source.c"
 
   SIG_MESSAGE("source_time_mon_one_pulse (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10478 "./NERA_source.c"
+#line 10607 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_one_pulse);
   rot_transpose(mcrotaSource, mctr1);
   rot_mul(mcrotasource_time_mon_one_pulse, mctr1, mcrotrsource_time_mon_one_pulse);
@@ -10486,7 +10615,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 66 "NERA_source.instr"
     0.0001);
-#line 10489 "./NERA_source.c"
+#line 10618 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposasource_time_mon_one_pulse = coords_add(mcposaorigin, mctc2);
@@ -10504,50 +10633,52 @@ source_I = source_I*source_pulse_number/4/PI;
   mccsource_time_mon_many_pulses_xwidth = 0.5;
 #line 70 "NERA_source.instr"
   mccsource_time_mon_many_pulses_yheight = 0.5;
-#line 200 "NERA_source.instr"
+#line 201 "NERA_source.instr"
   mccsource_time_mon_many_pulses_zdepth = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_xmin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_xmax = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_ymin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_ymax = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_zmin = 0;
-#line 201 "NERA_source.instr"
+#line 202 "NERA_source.instr"
   mccsource_time_mon_many_pulses_zmax = 0;
 #line 71 "NERA_source.instr"
   mccsource_time_mon_many_pulses_bins = 100;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_many_pulses_min = -1e40;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_many_pulses_max = 1e40;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_many_pulses_restore_neutron = 0;
-#line 202 "NERA_source.instr"
+#line 203 "NERA_source.instr"
   mccsource_time_mon_many_pulses_radius = 0;
 #line 72 "NERA_source.instr"
   if("time limits = [0 1]") strncpy(mccsource_time_mon_many_pulses_options, "time limits = [0 1]" ? "time limits = [0 1]" : "", 16384); else mccsource_time_mon_many_pulses_options[0]='\0';
-#line 203 "NERA_source.instr"
+#line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_filename, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_filename[0]='\0';
-#line 203 "NERA_source.instr"
+#line 204 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_geometry, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_geometry[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_username1, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username1[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_username2, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username2[0]='\0';
-#line 204 "NERA_source.instr"
+#line 205 "NERA_source.instr"
   if("NULL") strncpy(mccsource_time_mon_many_pulses_username3, "NULL" ? "NULL" : "", 16384); else mccsource_time_mon_many_pulses_username3[0]='\0';
-#line 10543 "./NERA_source.c"
+#line 206 "NERA_source.instr"
+  mccsource_time_mon_many_pulses_nowritefile = 0;
+#line 10674 "./NERA_source.c"
 
   SIG_MESSAGE("source_time_mon_many_pulses (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10550 "./NERA_source.c"
+#line 10681 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotasource_time_mon_many_pulses);
   rot_transpose(mcrotasource_time_mon_one_pulse, mctr1);
   rot_mul(mcrotasource_time_mon_many_pulses, mctr1, mcrotrsource_time_mon_many_pulses);
@@ -10558,7 +10689,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 73 "NERA_source.instr"
     0.00011);
-#line 10561 "./NERA_source.c"
+#line 10692 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposasource_time_mon_many_pulses = coords_add(mcposaorigin, mctc2);
@@ -10572,28 +10703,28 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component slit1. */
   /* Setting parameters for component slit1. */
   SIG_MESSAGE("slit1 (Init:SetPar)");
-#line 43 "NERA_source.instr"
-  mccslit1_xmin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit1_xmax = 0.01;
-#line 43 "NERA_source.instr"
-  mccslit1_ymin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit1_ymax = 0.01;
-#line 43 "NERA_source.instr"
+#line 46 "NERA_source.instr"
+  mccslit1_xmin = 0;
+#line 46 "NERA_source.instr"
+  mccslit1_xmax = 0;
+#line 46 "NERA_source.instr"
+  mccslit1_ymin = 0;
+#line 46 "NERA_source.instr"
+  mccslit1_ymax = 0;
+#line 46 "NERA_source.instr"
   mccslit1_radius = 0;
 #line 76 "NERA_source.instr"
   mccslit1_xwidth = 0.22;
 #line 77 "NERA_source.instr"
   mccslit1_yheight = 0.42;
-#line 10589 "./NERA_source.c"
+#line 10720 "./NERA_source.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10596 "./NERA_source.c"
+#line 10727 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
   rot_transpose(mcrotasource_time_mon_many_pulses, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
@@ -10604,7 +10735,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 78 "NERA_source.instr"
     0.675);
-#line 10607 "./NERA_source.c"
+#line 10738 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
@@ -10618,28 +10749,28 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component slit2. */
   /* Setting parameters for component slit2. */
   SIG_MESSAGE("slit2 (Init:SetPar)");
-#line 43 "NERA_source.instr"
-  mccslit2_xmin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit2_xmax = 0.01;
-#line 43 "NERA_source.instr"
-  mccslit2_ymin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit2_ymax = 0.01;
-#line 43 "NERA_source.instr"
+#line 46 "NERA_source.instr"
+  mccslit2_xmin = 0;
+#line 46 "NERA_source.instr"
+  mccslit2_xmax = 0;
+#line 46 "NERA_source.instr"
+  mccslit2_ymin = 0;
+#line 46 "NERA_source.instr"
+  mccslit2_ymax = 0;
+#line 46 "NERA_source.instr"
   mccslit2_radius = 0;
 #line 81 "NERA_source.instr"
   mccslit2_xwidth = 0.22;
 #line 82 "NERA_source.instr"
   mccslit2_yheight = 0.42;
-#line 10635 "./NERA_source.c"
+#line 10766 "./NERA_source.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10642 "./NERA_source.c"
+#line 10773 "./NERA_source.c"
   rot_mul(mctr1, mcrotaslit1, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
@@ -10650,7 +10781,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 83 "NERA_source.instr"
     0.38);
-#line 10653 "./NERA_source.c"
+#line 10784 "./NERA_source.c"
   rot_transpose(mcrotaslit1, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaslit1, mctc2);
@@ -10664,28 +10795,28 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component slit3. */
   /* Setting parameters for component slit3. */
   SIG_MESSAGE("slit3 (Init:SetPar)");
-#line 43 "NERA_source.instr"
-  mccslit3_xmin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit3_xmax = 0.01;
-#line 43 "NERA_source.instr"
-  mccslit3_ymin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit3_ymax = 0.01;
-#line 43 "NERA_source.instr"
+#line 46 "NERA_source.instr"
+  mccslit3_xmin = 0;
+#line 46 "NERA_source.instr"
+  mccslit3_xmax = 0;
+#line 46 "NERA_source.instr"
+  mccslit3_ymin = 0;
+#line 46 "NERA_source.instr"
+  mccslit3_ymax = 0;
+#line 46 "NERA_source.instr"
   mccslit3_radius = 0;
 #line 86 "NERA_source.instr"
   mccslit3_xwidth = 0.3;
 #line 87 "NERA_source.instr"
   mccslit3_yheight = 0.42;
-#line 10681 "./NERA_source.c"
+#line 10812 "./NERA_source.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10688 "./NERA_source.c"
+#line 10819 "./NERA_source.c"
   rot_mul(mctr1, mcrotaslit2, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
@@ -10696,7 +10827,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 88 "NERA_source.instr"
     0.635);
-#line 10699 "./NERA_source.c"
+#line 10830 "./NERA_source.c"
   rot_transpose(mcrotaslit2, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaslit2, mctc2);
@@ -10710,28 +10841,28 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component slit4. */
   /* Setting parameters for component slit4. */
   SIG_MESSAGE("slit4 (Init:SetPar)");
-#line 43 "NERA_source.instr"
-  mccslit4_xmin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit4_xmax = 0.01;
-#line 43 "NERA_source.instr"
-  mccslit4_ymin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit4_ymax = 0.01;
-#line 43 "NERA_source.instr"
+#line 46 "NERA_source.instr"
+  mccslit4_xmin = 0;
+#line 46 "NERA_source.instr"
+  mccslit4_xmax = 0;
+#line 46 "NERA_source.instr"
+  mccslit4_ymin = 0;
+#line 46 "NERA_source.instr"
+  mccslit4_ymax = 0;
+#line 46 "NERA_source.instr"
   mccslit4_radius = 0;
 #line 91 "NERA_source.instr"
   mccslit4_xwidth = 0.36;
 #line 92 "NERA_source.instr"
   mccslit4_yheight = 0.42;
-#line 10727 "./NERA_source.c"
+#line 10858 "./NERA_source.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10734 "./NERA_source.c"
+#line 10865 "./NERA_source.c"
   rot_mul(mctr1, mcrotaslit3, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
@@ -10742,7 +10873,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 93 "NERA_source.instr"
     0.36);
-#line 10745 "./NERA_source.c"
+#line 10876 "./NERA_source.c"
   rot_transpose(mcrotaslit3, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaslit3, mctc2);
@@ -10756,28 +10887,28 @@ source_I = source_I*source_pulse_number/4/PI;
     /* Component slit5. */
   /* Setting parameters for component slit5. */
   SIG_MESSAGE("slit5 (Init:SetPar)");
-#line 43 "NERA_source.instr"
-  mccslit5_xmin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit5_xmax = 0.01;
-#line 43 "NERA_source.instr"
-  mccslit5_ymin = -0.01;
-#line 43 "NERA_source.instr"
-  mccslit5_ymax = 0.01;
-#line 43 "NERA_source.instr"
+#line 46 "NERA_source.instr"
+  mccslit5_xmin = 0;
+#line 46 "NERA_source.instr"
+  mccslit5_xmax = 0;
+#line 46 "NERA_source.instr"
+  mccslit5_ymin = 0;
+#line 46 "NERA_source.instr"
+  mccslit5_ymax = 0;
+#line 46 "NERA_source.instr"
   mccslit5_radius = 0;
 #line 96 "NERA_source.instr"
   mccslit5_xwidth = 0.46;
 #line 97 "NERA_source.instr"
   mccslit5_yheight = 0.42;
-#line 10773 "./NERA_source.c"
+#line 10904 "./NERA_source.c"
 
   SIG_MESSAGE("slit5 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10780 "./NERA_source.c"
+#line 10911 "./NERA_source.c"
   rot_mul(mctr1, mcrotaslit4, mcrotaslit5);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaslit5, mctr1, mcrotrslit5);
@@ -10788,7 +10919,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 98 "NERA_source.instr"
     0.44);
-#line 10791 "./NERA_source.c"
+#line 10922 "./NERA_source.c"
   rot_transpose(mcrotaslit4, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit5 = coords_add(mcposaslit4, mctc2);
@@ -10808,7 +10939,7 @@ source_I = source_I*source_pulse_number/4/PI;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 10811 "./NERA_source.c"
+#line 10942 "./NERA_source.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaslit5, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
@@ -10819,7 +10950,7 @@ source_I = source_I*source_pulse_number/4/PI;
     0,
 #line 101 "NERA_source.instr"
     mcipsource_optics_dist);
-#line 10822 "./NERA_source.c"
+#line 10953 "./NERA_source.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -10844,7 +10975,7 @@ source_I = source_I*source_pulse_number/4/PI;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 57 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 57 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 {
 IntermediateCnts=0;
 StartTime=0;
@@ -10856,7 +10987,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 10859 "./NERA_source.c"
+#line 10990 "./NERA_source.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10921,7 +11052,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #define I3 mccSource_I3
 #define zdepth mccSource_zdepth
 #define target_index mccSource_target_index
-#line 206 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 206 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 {
   pTable_xsum=0;
   pTable_ysum=0;
@@ -11193,7 +11324,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
       printf("Source_gen: component %s unactivated", NAME_CURRENT_COMP);
   );
 }
-#line 11196 "./NERA_source.c"
+#line 11327 "./NERA_source.c"
 #undef target_index
 #undef zdepth
 #undef I3
@@ -11277,7 +11408,8 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #define username1 mccsource_time_mon_one_pulse_username1
 #define username2 mccsource_time_mon_one_pulse_username2
 #define username3 mccsource_time_mon_one_pulse_username3
-#line 227 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+#define nowritefile mccsource_time_mon_one_pulse_nowritefile
+#line 229 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -11356,7 +11488,8 @@ MPI_MASTER(
 );
 #endif
 }
-#line 11359 "./NERA_source.c"
+#line 11491 "./NERA_source.c"
+#undef nowritefile
 #undef username3
 #undef username2
 #undef username1
@@ -11420,7 +11553,8 @@ MPI_MASTER(
 #define username1 mccsource_time_mon_many_pulses_username1
 #define username2 mccsource_time_mon_many_pulses_username2
 #define username3 mccsource_time_mon_many_pulses_username3
-#line 227 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+#define nowritefile mccsource_time_mon_many_pulses_nowritefile
+#line 229 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -11499,7 +11633,8 @@ MPI_MASTER(
 );
 #endif
 }
-#line 11502 "./NERA_source.c"
+#line 11636 "./NERA_source.c"
+#undef nowritefile
 #undef username3
 #undef username2
 #undef username1
@@ -11543,15 +11678,27 @@ MPI_MASTER(
 #define radius mccslit1_radius
 #define xwidth mccslit1_xwidth
 #define yheight mccslit1_yheight
-#line 47 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
-  if (yheight > 0) { ymax=yheight/2; ymin=-ymax; }
-  if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
-    { fprintf(stderr,"Slit: %s: Error: give geometry\n", NAME_CURRENT_COMP); exit(-1); }
+if (xwidth > 0)  { 
+  if (!xmin && !xmax) {
+    xmax=xwidth/2;  xmin=-xmax;
+  } else {
+    fprintf(stderr,"Slit: %s: Error: please specify EITHER xmin & xmax or xwidth\n", NAME_CURRENT_COMP); exit(-1);
+  }
+ }
+ if (yheight > 0) { 
+   if (!ymin && !ymax) {
+     ymax=yheight/2; ymin=-ymax; 
+   } else {
+     fprintf(stderr,"Slit: %s: Error: please specify EITHER ymin & ymax or ywidth\n", NAME_CURRENT_COMP); exit(-1);
+   }
+ }
+ if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
+    { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11554 "./NERA_source.c"
+#line 11701 "./NERA_source.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11575,15 +11722,27 @@ if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
 #define radius mccslit2_radius
 #define xwidth mccslit2_xwidth
 #define yheight mccslit2_yheight
-#line 47 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
-  if (yheight > 0) { ymax=yheight/2; ymin=-ymax; }
-  if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
-    { fprintf(stderr,"Slit: %s: Error: give geometry\n", NAME_CURRENT_COMP); exit(-1); }
+if (xwidth > 0)  { 
+  if (!xmin && !xmax) {
+    xmax=xwidth/2;  xmin=-xmax;
+  } else {
+    fprintf(stderr,"Slit: %s: Error: please specify EITHER xmin & xmax or xwidth\n", NAME_CURRENT_COMP); exit(-1);
+  }
+ }
+ if (yheight > 0) { 
+   if (!ymin && !ymax) {
+     ymax=yheight/2; ymin=-ymax; 
+   } else {
+     fprintf(stderr,"Slit: %s: Error: please specify EITHER ymin & ymax or ywidth\n", NAME_CURRENT_COMP); exit(-1);
+   }
+ }
+ if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
+    { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11586 "./NERA_source.c"
+#line 11745 "./NERA_source.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11607,15 +11766,27 @@ if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
 #define radius mccslit3_radius
 #define xwidth mccslit3_xwidth
 #define yheight mccslit3_yheight
-#line 47 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
-  if (yheight > 0) { ymax=yheight/2; ymin=-ymax; }
-  if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
-    { fprintf(stderr,"Slit: %s: Error: give geometry\n", NAME_CURRENT_COMP); exit(-1); }
+if (xwidth > 0)  { 
+  if (!xmin && !xmax) {
+    xmax=xwidth/2;  xmin=-xmax;
+  } else {
+    fprintf(stderr,"Slit: %s: Error: please specify EITHER xmin & xmax or xwidth\n", NAME_CURRENT_COMP); exit(-1);
+  }
+ }
+ if (yheight > 0) { 
+   if (!ymin && !ymax) {
+     ymax=yheight/2; ymin=-ymax; 
+   } else {
+     fprintf(stderr,"Slit: %s: Error: please specify EITHER ymin & ymax or ywidth\n", NAME_CURRENT_COMP); exit(-1);
+   }
+ }
+ if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
+    { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11618 "./NERA_source.c"
+#line 11789 "./NERA_source.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11639,15 +11810,27 @@ if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
 #define radius mccslit4_radius
 #define xwidth mccslit4_xwidth
 #define yheight mccslit4_yheight
-#line 47 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
-  if (yheight > 0) { ymax=yheight/2; ymin=-ymax; }
-  if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
-    { fprintf(stderr,"Slit: %s: Error: give geometry\n", NAME_CURRENT_COMP); exit(-1); }
+if (xwidth > 0)  { 
+  if (!xmin && !xmax) {
+    xmax=xwidth/2;  xmin=-xmax;
+  } else {
+    fprintf(stderr,"Slit: %s: Error: please specify EITHER xmin & xmax or xwidth\n", NAME_CURRENT_COMP); exit(-1);
+  }
+ }
+ if (yheight > 0) { 
+   if (!ymin && !ymax) {
+     ymax=yheight/2; ymin=-ymax; 
+   } else {
+     fprintf(stderr,"Slit: %s: Error: please specify EITHER ymin & ymax or ywidth\n", NAME_CURRENT_COMP); exit(-1);
+   }
+ }
+ if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
+    { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11650 "./NERA_source.c"
+#line 11833 "./NERA_source.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11671,15 +11854,27 @@ if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
 #define radius mccslit5_radius
 #define xwidth mccslit5_xwidth
 #define yheight mccslit5_yheight
-#line 47 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-if (xwidth > 0)  { xmax=xwidth/2;  xmin=-xmax; }
-  if (yheight > 0) { ymax=yheight/2; ymin=-ymax; }
-  if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
-    { fprintf(stderr,"Slit: %s: Error: give geometry\n", NAME_CURRENT_COMP); exit(-1); }
+if (xwidth > 0)  { 
+  if (!xmin && !xmax) {
+    xmax=xwidth/2;  xmin=-xmax;
+  } else {
+    fprintf(stderr,"Slit: %s: Error: please specify EITHER xmin & xmax or xwidth\n", NAME_CURRENT_COMP); exit(-1);
+  }
+ }
+ if (yheight > 0) { 
+   if (!ymin && !ymax) {
+     ymax=yheight/2; ymin=-ymax; 
+   } else {
+     fprintf(stderr,"Slit: %s: Error: please specify EITHER ymin & ymax or ywidth\n", NAME_CURRENT_COMP); exit(-1);
+   }
+ }
+ if (xmin == 0 && xmax == 0 && ymin == 0 && ymax == 0 && radius == 0)
+    { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 11682 "./NERA_source.c"
+#line 11877 "./NERA_source.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -11803,7 +11998,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 70 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 70 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 {
   double ncount;
   ncount = mcget_run_num();
@@ -11847,7 +12042,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 11850 "./NERA_source.c"
+#line 12045 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -12004,7 +12199,7 @@ MCNUM T3 = mccSource_T3;
 MCNUM I3 = mccSource_I3;
 MCNUM zdepth = mccSource_zdepth;
 int target_index = mccSource_target_index;
-#line 479 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 479 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 {
   double dx=0,dy=0,xf,yf,rf,pdir,chi,v,r, lambda;
   double Maxwell;
@@ -12095,13 +12290,13 @@ int target_index = mccSource_target_index;
     SCATTER;
   }
 }
-#line 12098 "./NERA_source.c"
+#line 12293 "./NERA_source.c"
 /* 'Source=Source_gen()' component instance extend code */
     SIG_MESSAGE("Source (Trace:Extend)");
 #line 57 "NERA_source.instr"
 T = floor(rand01()*source_pulse_number_help);
 t = rand01()*pulse_length*1e-6 + T*1/source_freq;
-#line 12104 "./NERA_source.c"
+#line 12299 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -12251,7 +12446,8 @@ char* geometry = mccsource_time_mon_one_pulse_geometry;
 char* username1 = mccsource_time_mon_one_pulse_username1;
 char* username2 = mccsource_time_mon_one_pulse_username2;
 char* username3 = mccsource_time_mon_one_pulse_username3;
-#line 307 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
+#line 309 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -12397,7 +12593,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
     if (pp==0.0)
     { ABSORB;
     }
-    else
+    else if(pp==1)
     {
       SCATTER;
     }
@@ -12420,7 +12616,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 12423 "./NERA_source.c"
+#line 12619 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12560,7 +12756,8 @@ char* geometry = mccsource_time_mon_many_pulses_geometry;
 char* username1 = mccsource_time_mon_many_pulses_username1;
 char* username2 = mccsource_time_mon_many_pulses_username2;
 char* username3 = mccsource_time_mon_many_pulses_username3;
-#line 307 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
+#line 309 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -12706,7 +12903,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
     if (pp==0.0)
     { ABSORB;
     }
-    else
+    else if(pp==1)
     {
       SCATTER;
     }
@@ -12729,7 +12926,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 12732 "./NERA_source.c"
+#line 12929 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -12849,7 +13046,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 56 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -12858,7 +13055,7 @@ MCNUM yheight = mccslit1_yheight;
     else
         SCATTER;
 }
-#line 12861 "./NERA_source.c"
+#line 13058 "./NERA_source.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -12971,7 +13168,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 56 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -12980,7 +13177,7 @@ MCNUM yheight = mccslit2_yheight;
     else
         SCATTER;
 }
-#line 12983 "./NERA_source.c"
+#line 13180 "./NERA_source.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13093,7 +13290,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 56 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -13102,7 +13299,7 @@ MCNUM yheight = mccslit3_yheight;
     else
         SCATTER;
 }
-#line 13105 "./NERA_source.c"
+#line 13302 "./NERA_source.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13215,7 +13412,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 56 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -13224,7 +13421,7 @@ MCNUM yheight = mccslit4_yheight;
     else
         SCATTER;
 }
-#line 13227 "./NERA_source.c"
+#line 13424 "./NERA_source.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13337,7 +13534,7 @@ MCNUM ymax = mccslit5_ymax;
 MCNUM radius = mccslit5_radius;
 MCNUM xwidth = mccslit5_xwidth;
 MCNUM yheight = mccslit5_yheight;
-#line 56 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -13346,7 +13543,7 @@ MCNUM yheight = mccslit5_yheight;
     else
         SCATTER;
 }
-#line 13349 "./NERA_source.c"
+#line 13546 "./NERA_source.c"
 }   /* End of slit5=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -13541,7 +13738,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 115 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 115 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 {
   MPI_MASTER(fprintf(stdout, "\nSave [%s]\n", mcinstrument_name););
   if (profile && strlen(profile) && strcmp(profile,"NULL") && strcmp(profile,"0")) {
@@ -13558,7 +13755,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 13561 "./NERA_source.c"
+#line 13758 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -13601,12 +13798,13 @@ char* geometry = mccsource_time_mon_one_pulse_geometry;
 char* username1 = mccsource_time_mon_one_pulse_username1;
 char* username2 = mccsource_time_mon_one_pulse_username2;
 char* username3 = mccsource_time_mon_one_pulse_username3;
-#line 477 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
+#line 479 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 13609 "./NERA_source.c"
+#line 13807 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -13652,12 +13850,13 @@ char* geometry = mccsource_time_mon_many_pulses_geometry;
 char* username1 = mccsource_time_mon_many_pulses_username1;
 char* username2 = mccsource_time_mon_many_pulses_username2;
 char* username3 = mccsource_time_mon_many_pulses_username3;
-#line 477 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
+#line 479 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   detector = Monitor_nD_Save(&DEFS, &Vars);
 }
-#line 13660 "./NERA_source.c"
+#line 13859 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -13691,7 +13890,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 133 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 133 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 {
   time_t NowTime;
   time(&NowTime);
@@ -13704,7 +13903,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 13707 "./NERA_source.c"
+#line 13906 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -13770,13 +13969,13 @@ MCNUM T3 = mccSource_T3;
 MCNUM I3 = mccSource_I3;
 MCNUM zdepth = mccSource_zdepth;
 int target_index = mccSource_target_index;
-#line 571 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 571 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 {
   Table_Free(&pTable);
   Table_Free(&pTable_x);
   Table_Free(&pTable_y);
 }
-#line 13778 "./NERA_source.c"
+#line 13977 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -13835,12 +14034,15 @@ char* geometry = mccsource_time_mon_one_pulse_geometry;
 char* username1 = mccsource_time_mon_one_pulse_username1;
 char* username2 = mccsource_time_mon_one_pulse_username2;
 char* username3 = mccsource_time_mon_one_pulse_username3;
-#line 483 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
+#line 485 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   /* free pointers */
-  Monitor_nD_Finally(&DEFS, &Vars);
+  if (!nowritefile) {
+    Monitor_nD_Finally(&DEFS, &Vars);
+  }
 }
-#line 13841 "./NERA_source.c"
+#line 14043 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -13889,12 +14091,15 @@ char* geometry = mccsource_time_mon_many_pulses_geometry;
 char* username1 = mccsource_time_mon_many_pulses_username1;
 char* username2 = mccsource_time_mon_many_pulses_username2;
 char* username3 = mccsource_time_mon_many_pulses_username3;
-#line 483 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
+#line 485 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   /* free pointers */
-  Monitor_nD_Finally(&DEFS, &Vars);
+  if (!nowritefile) {
+    Monitor_nD_Finally(&DEFS, &Vars);
+  }
 }
-#line 13894 "./NERA_source.c"
+#line 14099 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -13937,6 +14142,8 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
 #define rectangle mcdis_rectangle
 #define box mcdis_box
 #define circle mcdis_circle
+#define cylinder mcdis_cylinder
+#define sphere mcdis_sphere
 void mcdisplay(void) {
   printf("MCDISPLAY: start\n");
   /* Components MCDISPLAY code. */
@@ -13956,11 +14163,11 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 147 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
+#line 147 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
 {
-  magnify("");
+  
 }
-#line 13953 "./NERA_source.c"
+#line 14160 "./NERA_source.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -14024,7 +14231,7 @@ MCNUM T3 = mccSource_T3;
 MCNUM I3 = mccSource_I3;
 MCNUM zdepth = mccSource_zdepth;
 int target_index = mccSource_target_index;
-#line 578 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_gen.comp"
+#line 578 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_gen.comp"
 {
   double xmin;
   double xmax;
@@ -14033,7 +14240,7 @@ int target_index = mccSource_target_index;
 
   if (radius)
   {
-    magnify("xy");
+    
     circle("xy",0,0,0,radius);
     if (zdepth) {
       circle("xy",0,0,-zdepth/2,radius);
@@ -14045,7 +14252,7 @@ int target_index = mccSource_target_index;
     xmin = -xwidth/2; xmax = xwidth/2;
     ymin = -yheight/2; ymax = yheight/2;
 
-    magnify("xy");
+    
     multiline(5, (double)xmin, (double)ymin, 0.0,
              (double)xmax, (double)ymin, 0.0,
              (double)xmax, (double)ymax, 0.0,
@@ -14073,7 +14280,7 @@ int target_index = mccSource_target_index;
     dashed_line(0,0,0, -focus_xw/2, focus_yh/2,dist, 4);
   }
 }
-#line 14066 "./NERA_source.c"
+#line 14273 "./NERA_source.c"
 }   /* End of Source=Source_gen() SETTING parameter declarations. */
 #undef pTable_dymax
 #undef pTable_dymin
@@ -14130,7 +14337,8 @@ char* geometry = mccsource_time_mon_one_pulse_geometry;
 char* username1 = mccsource_time_mon_one_pulse_username1;
 char* username2 = mccsource_time_mon_one_pulse_username2;
 char* username3 = mccsource_time_mon_one_pulse_username3;
-#line 489 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_one_pulse_nowritefile;
+#line 493 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -14139,7 +14347,7 @@ char* username3 = mccsource_time_mon_one_pulse_username3;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 14132 "./NERA_source.c"
+#line 14340 "./NERA_source.c"
 }   /* End of source_time_mon_one_pulse=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -14186,7 +14394,8 @@ char* geometry = mccsource_time_mon_many_pulses_geometry;
 char* username1 = mccsource_time_mon_many_pulses_username1;
 char* username2 = mccsource_time_mon_many_pulses_username2;
 char* username3 = mccsource_time_mon_many_pulses_username3;
-#line 489 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+int nowritefile = mccsource_time_mon_many_pulses_nowritefile;
+#line 493 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -14195,7 +14404,7 @@ char* username3 = mccsource_time_mon_many_pulses_username3;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 14188 "./NERA_source.c"
+#line 14397 "./NERA_source.c"
 }   /* End of source_time_mon_many_pulses=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -14222,9 +14431,9 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 66 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-  magnify("xy");
+  
   if (radius == 0) {
     double xw, yh;
     xw = (xmax - xmin)/2.0;
@@ -14245,7 +14454,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 14238 "./NERA_source.c"
+#line 14447 "./NERA_source.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14265,9 +14474,9 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 66 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-  magnify("xy");
+  
   if (radius == 0) {
     double xw, yh;
     xw = (xmax - xmin)/2.0;
@@ -14288,7 +14497,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 14281 "./NERA_source.c"
+#line 14490 "./NERA_source.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14308,9 +14517,9 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 66 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-  magnify("xy");
+  
   if (radius == 0) {
     double xw, yh;
     xw = (xmax - xmin)/2.0;
@@ -14331,7 +14540,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 14324 "./NERA_source.c"
+#line 14533 "./NERA_source.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14351,9 +14560,9 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 66 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-  magnify("xy");
+  
   if (radius == 0) {
     double xw, yh;
     xw = (xmax - xmin)/2.0;
@@ -14374,7 +14583,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 14367 "./NERA_source.c"
+#line 14576 "./NERA_source.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14394,9 +14603,9 @@ MCNUM ymax = mccslit5_ymax;
 MCNUM radius = mccslit5_radius;
 MCNUM xwidth = mccslit5_xwidth;
 MCNUM yheight = mccslit5_yheight;
-#line 66 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
+#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
 {
-  magnify("xy");
+  
   if (radius == 0) {
     double xw, yh;
     xw = (xmax - xmin)/2.0;
@@ -14417,7 +14626,7 @@ MCNUM yheight = mccslit5_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 14410 "./NERA_source.c"
+#line 14619 "./NERA_source.c"
 }   /* End of slit5=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14429,15 +14638,15 @@ MCNUM yheight = mccslit5_yheight;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 10
-#line 40 "/usr/share/mcstas/2.4.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
+#line 40 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
-  magnify("");
+  
   line(0,0,0,0.2,0,0);
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 14430 "./NERA_source.c"
+#line 14639 "./NERA_source.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -14451,4 +14660,6 @@ MCNUM yheight = mccslit5_yheight;
 #undef rectangle
 #undef box
 #undef circle
+#undef cylinder
+#undef sphere
 /* end of generated C code ./NERA_source.c */

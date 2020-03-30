@@ -1,0 +1,70 @@
+McStas simulation description file for NERA_source.
+Date:    Fri Feb  7 15:43:55 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: NERA_source
+  File: /Users/peterkonik/JOB/git_repos/NERA/NERA_source_20200207_154355/mccode
+  Source: NERA_source.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) source_pulse_number(double) source_optics_dist(double) guide_width(double) guide_height(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /Users/peterkonik/JOB/git_repos/NERA/NERA_source_20200207_154355
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_source.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1581089412
+  Directory: /Users/peterkonik/JOB/git_repos/NERA/NERA_source_20200207_154355
+  Param: source_lambda_min=0.1
+  Param: source_lambda_max=20
+  Param: source_pulse_number=2
+  Param: source_optics_dist=5.61
+  Param: guide_width=0.05
+  Param: guide_height=0.16
+end simulation
+
+begin data
+  Date: Fri Feb  7 15:43:56 2020 (1581079436)
+  type: array_1d(100)
+  Source: NERA_source (NERA_source.instr)
+  component: source_time_mon_one_pulse
+  position: 0 0 0.0001
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_one_pulse_1581079435.t
+  statistics: X0=0.000169365; dX=9.7803e-05;
+  signal: Min=0; Max=1.79915e+12; Mean=1.21886e+12;
+  values: 1.21886e+14 5.97222e+11 499913
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 0.00045
+  variables: t I I_err N
+end data
+
+begin data
+  Date: Fri Feb  7 15:43:56 2020 (1581079436)
+  type: array_1d(100)
+  Source: NERA_source (NERA_source.instr)
+  component: source_time_mon_many_pulses
+  position: 0 0 0.00011
+  title: TOF [s] monitor
+  Ncount: 1000000
+  filename: source_time_mon_many_pulses_1581079435.t
+  statistics: X0=0.105071; dX=0.1;
+  signal: Min=0; Max=1.22058e+14; Mean=2.43944e+12;
+  values: 2.43944e+14 8.45822e+11 1e+06
+  xvar: t
+  yvar: (I,I_err)
+  xlabel: TOF [s]
+  ylabel: Intensity [n/s/bin]
+  xlimits: 0 1
+  variables: t I I_err N
+end data
