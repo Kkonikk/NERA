@@ -1,0 +1,62 @@
+McStas simulation description file for generic_curved.
+Date:    Thu Apr  2 06:02:23 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: generic_curved
+  File: ./sim/mccode
+  Source: ./generic_curved.instr
+  Parameters:  R_curv(double) l_bender(double) l_straight(double) n_chan(double) sample_width(double) sample_height(double) m_out(double) m_in(double) m_str_side(double) m_top(double) guide_start_width(double) guide_start_height(double) source_lambda_min(double) source_lambda_max(double) cold_regime(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: ./sim
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: ./generic_curved.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1585844176
+  Directory: ./sim
+  Nodes: 6
+  Param: R_curv=10890
+  Param: l_bender=66
+  Param: l_straight=-6
+  Param: n_chan=2
+  Param: sample_width=0.05
+  Param: sample_height=0.2
+  Param: m_out=6
+  Param: m_in=6
+  Param: m_str_side=6
+  Param: m_top=6
+  Param: guide_start_width=0.05
+  Param: guide_start_height=0.2
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=0.6
+  Param: cold_regime=0
+end simulation
+
+begin data
+  Date: Thu Apr  2 06:02:23 2020 (1585796543)
+  type: array_2d(100, 100)
+  Source: generic_curved (./generic_curved.instr)
+  component: Sample
+  position: 0.16206 0 61.8297
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 999996
+  filename: Sample_1585796543.x_y
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=0; Max=0; Mean=0;
+  values: 0 0 0
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.025 0.025 -0.1 0.1
+  variables: I I_err N
+end data

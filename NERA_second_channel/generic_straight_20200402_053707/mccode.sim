@@ -1,0 +1,56 @@
+McStas simulation description file for generic_straight.
+Date:    Thu Apr  2 05:37:07 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: generic_straight
+  File: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/generic_straight_20200402_053707/mccode
+  Source: ./generic_straight.instr
+  Parameters:  guide_length(double) m_str_side(double) m_top(double) sample_height(double) sample_width(double) guide_start_width(double) guide_start_height(double) source_lambda_min(double) source_lambda_max(double) cold_regime(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/generic_straight_20200402_053707
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: ./generic_straight.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1585838863
+  Directory: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/generic_straight_20200402_053707
+  Param: guide_length=80
+  Param: m_str_side=6
+  Param: m_top=6
+  Param: sample_height=0.01
+  Param: sample_width=0.01
+  Param: guide_start_width=0.03
+  Param: guide_start_height=0.03
+  Param: source_lambda_min=4
+  Param: source_lambda_max=5
+  Param: cold_regime=1
+end simulation
+
+begin data
+  Date: Thu Apr  2 05:37:16 2020 (1585795036)
+  type: array_2d(100, 100)
+  Source: generic_straight (./generic_straight.instr)
+  component: Sample
+  position: 0 0 81.83
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 1000000
+  filename: Sample_1585795027.x_y
+  statistics: X0=1.10557e-05; dX=0.00289414; Y0=-2.50105e-05; dY=0.00289114;
+  signal: Min=1.15886e-34; Max=707167; Mean=92384.9;
+  values: 9.23849e+08 9.98368e+06 108292
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.005 0.005 -0.005 0.005
+  variables: I I_err N
+end data
