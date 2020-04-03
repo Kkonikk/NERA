@@ -1,22 +1,22 @@
 function generic_bender_scan(L,N,width)
 Lb_min = 1; Lb_step = 5; Lb_max = 66;
 n_chan_min = 1; n_chan_step = 1; n_chan_max = N;
-model = mccode('./generic_curved.instr','ncount=1e6;mpi=6');
+model = mccode('./NERA_guide_3x3_sample_curved.instr','ncount=1e6;mpi=6');
 
 name = 'Curved guide transmission';
 parameters.sample_width=width;
 parameters.sample_height=0.2;
 parameters.guide_start_width=width;
 parameters.guide_start_height=0.2;
-parameters.source_lambda_min=0.5;
-parameters.source_lambda_max=0.6;
+parameters.source_lambda_min=2.5;
+parameters.source_lambda_max=2.6;
 parameters.cold_regime=0;
 parameters.m_out=6;
 parameters.m_in=6;
 parameters.m_str_side=6;
 parameters.m_top=6;
 
-model_str = mccode('./generic_straight.instr','ncount=1e6;mpi=6');
+model_str = mccode('./NERA_guide_3x3_sample_straight.instr','ncount=1e6;mpi=6');
 parameters_str.guide_length = L;
 parameters_str.m_str_side=6;
 parameters_str.m_top=6;
@@ -24,8 +24,8 @@ parameters_str.sample_width=width;
 parameters_str.sample_height=0.2;
 parameters_str.guide_start_width=width;
 parameters_str.guide_start_height=0.2;
-parameters_str.source_lambda_min=0.5;
-parameters_str.source_lambda_max=0.6;
+parameters_str.source_lambda_min=2.5;
+parameters_str.source_lambda_max=2.6;
 parameters_str.cold_regime=0;
 results_str = iData(model_str,parameters_str);
 %sum_L_str = sum(results_str, 0);

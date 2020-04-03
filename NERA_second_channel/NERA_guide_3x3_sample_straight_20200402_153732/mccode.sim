@@ -1,0 +1,57 @@
+McStas simulation description file for Nera.
+Date:    Thu Apr  2 15:37:32 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_straight_20200402_153732/mccode
+  Source: NERA_guide_3x3_sample_straight.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_start_width(double) guide_start_height(double) guide_length(double) sample_width(double) sample_height(double) m_out(double) m_in(double) m_str_side(double) m_top(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_straight_20200402_153732
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_guide_3x3_sample_straight.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1585879646
+  Directory: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_straight_20200402_153732
+  Param: source_lambda_min=0.1
+  Param: source_lambda_max=20
+  Param: guide_start_width=0.03
+  Param: guide_start_height=0.03
+  Param: guide_length=10
+  Param: sample_width=0.01
+  Param: sample_height=0.01
+  Param: m_out=6
+  Param: m_in=6
+  Param: m_str_side=6
+  Param: m_top=6
+end simulation
+
+begin data
+  Date: Thu Apr  2 15:37:34 2020 (1585831054)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide_3x3_sample_straight.instr)
+  component: Sample
+  position: 0 -0.10125 12.61
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 1000000
+  filename: Sample_1585831052.x_y
+  statistics: X0=1.21722e-05; dX=0.00287477; Y0=-3.95417e-06; dY=0.00289429;
+  signal: Min=0; Max=2.17312e+11; Mean=6.85392e+10;
+  values: 6.85392e+14 3.00625e+12 75827
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.005 0.005 -0.005 0.005
+  variables: I I_err N
+end data
