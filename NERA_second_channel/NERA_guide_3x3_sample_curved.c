@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: ./NERA_guide_3x3_sample_curved.instr (Nera)
- * Date:       Fri Apr  3 10:35:57 2020
+ * Date:       Mon Jun 29 23:45:00 2020
  * File:       ./NERA_guide_3x3_sample_curved.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample_curved.c 
  * CFLAGS=

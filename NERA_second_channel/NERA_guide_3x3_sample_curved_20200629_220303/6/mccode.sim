@@ -1,0 +1,61 @@
+McStas simulation description file for Nera.
+Date:    Mon Jun 29 22:03:56 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Nera
+  File: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_curved_20200629_220303/6/mccode
+  Source: NERA_guide_3x3_sample_curved.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_start_width(double) guide_start_height(double) R_curv(double) l_bender(double) l_straight(double) n_chan(double) sample_width(double) sample_height(double) m_out(double) m_in(double) m_str_side(double) m_top(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_curved_20200629_220303/6
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: NERA_guide_3x3_sample_curved.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1593463902
+  Directory: /Users/peterkonik/JOB/git_repos/NERA/NERA_second_channel/NERA_guide_3x3_sample_curved_20200629_220303/6
+  Nodes: 6
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=0.6
+  Param: guide_start_width=0.1
+  Param: guide_start_height=0.03
+  Param: R_curv=8000
+  Param: l_bender=66
+  Param: l_straight=32.8
+  Param: n_chan=1
+  Param: sample_width=0.01
+  Param: sample_height=0.01
+  Param: m_out=6
+  Param: m_in=6
+  Param: m_str_side=6
+  Param: m_top=6
+end simulation
+
+begin data
+  Date: Mon Jun 29 22:03:57 2020 (1593457437)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide_3x3_sample_curved.instr)
+  component: Sample
+  position: 0.269608 -0.10125 101.419
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 9999996
+  filename: Sample_1593457436.x_y
+  statistics: X0=-0.000147419; dX=0.00287671; Y0=2.23261e-05; dY=0.00286211;
+  signal: Min=0; Max=6.63272e+07; Mean=2.49524e+06;
+  values: 2.49524e+10 6.32007e+08 5616
+  xvar: x 
+  yvar: y 
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.005 0.005 -0.005 0.005
+  variables: I I_err N
+end data

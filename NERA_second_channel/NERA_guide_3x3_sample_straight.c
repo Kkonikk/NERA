@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: ./NERA_guide_3x3_sample_straight.instr (Nera)
- * Date:       Fri Apr  3 10:36:40 2020
+ * Date:       Mon Jun 29 23:45:37 2020
  * File:       ./NERA_guide_3x3_sample_straight.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample_straight.c 
  * CFLAGS=

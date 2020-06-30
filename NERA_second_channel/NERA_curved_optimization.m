@@ -1,16 +1,14 @@
-N=3;
+N=5;
 L=80;
-k_los=1.2;
-L_los=L/k_los;
 
 n_chan_min = 1; n_chan_step = 1; n_chan_max = N;
-Lb_min = 1; Lb_step = 1; Lb_max = 66;
+Lb_min = 1; Lb_step = 5; Lb_max = 66;
 
 name = 'Curved guide transmission';
 
 
-for j=1:2
-    width(j)=(j+20)/100;
+for j=1:25
+    width(j)=j/100;
     
 
 model = mccode('./NERA_guide_3x3_sample_curved.instr','ncount=1e6;mpi=6');
@@ -45,8 +43,8 @@ for n_chan = n_chan_min:n_chan_step:n_chan_max
     i=1;
     for Lb=Lb_min:Lb_step:Lb_max
         Ls = L - Lb;
-        %R = Lb*Lb/8/width(j);
-        R = L_los^2/4/width(j)*(L_los^2-4*Ls^2+4*L_los*Ls)/(L_los+2*Ls)^2;
+        R = Lb*Lb/8/width(j);
+        %R = L_los^2/4/width(j)*(L_los^2-4*Ls^2+4*L_los*Ls)/(L_los+2*Ls)^2;
         parameters.n_chan=n_chan;
         parameters.l_bender = Lb;
         parameters.l_straight = Ls;
@@ -62,13 +60,13 @@ for n_chan = n_chan_min:n_chan_step:n_chan_max
 end
 trans(j) = max(max(sum_Lb));
 
-title(name)
+title([name num2str(width(j))])
 grid on
 xlabel('Lb, m')
 ylabel('transmission')
 legend
 legend('Location','south')
-print(gcf,[name 'bend_scan'],'-dpng','-r300')
+print(gcf,[name num2str(width(j)) 'bend_scan'],'-dpng','-r300')
 %matlab2tikz([name 'm_scan.tex'], 'width', '0.85\textwidth');
 saveas(gcf,[name num2str(width(j)) 'bend_scan.fig']);
 

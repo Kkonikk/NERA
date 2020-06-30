@@ -1,0 +1,23 @@
+# Instrument-source: 'NERA_guide_3x3_sample_curved.instr'
+# Date: Mon Jun 29 22 05 2020
+# Ncount: 10000000
+# Numpoints: 2
+# Param: R_curv = 2000
+# type: multiarray_1d(2)
+# title: Scan of R_curv
+# xlabel: 'R_curv'
+# ylabel: 'Intensity'
+# xvars: R_curv
+# yvars: (Sample_I,Sample_ERR)
+# xlimits: 10000 2000
+# filename: mccode.dat
+# variables: R_curv Sample_I Sample_ERR
+2000 9.0447E+9 2.44429E+8
+3000 1.46559E+10 3.89379E+8
+4000 1.69849E+10 4.57454E+8
+5000 1.79382E+10 4.91071E+8
+6000 1.93653E+10 5.34951E+8
+7000 2.08393E+10 5.75236E+8
+8000 1.96737E+10 5.65385E+8
+9000 2.1824E+10 5.95676E+8
+10000 2.13881E+10 5.95745E+8

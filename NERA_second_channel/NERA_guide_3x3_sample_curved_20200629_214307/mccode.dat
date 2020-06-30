@@ -1,0 +1,28 @@
+# Instrument-source: 'NERA_guide_3x3_sample_curved.instr'
+# Date: Mon Jun 29 21 43 2020
+# Ncount: 1000000
+# Numpoints: 2
+# Param: l_bender = 1
+# type: multiarray_1d(2)
+# title: Scan of l_bender
+# xlabel: 'l_bender'
+# ylabel: 'Intensity'
+# xvars: l_bender
+# yvars: (Sample_I,Sample_ERR)
+# xlimits: 1 14
+# filename: mccode.dat
+# variables: l_bender Sample_I Sample_ERR
+1 7.12448E+11 6.42141E+9
+2 7.09498E+11 6.3974E+9
+3 6.98735E+11 6.37086E+9
+4 6.73931E+11 6.2472E+9
+5 6.60682E+11 6.16558E+9
+6 6.59283E+11 6.17015E+9
+7 6.35272E+11 6.06092E+9
+8 6.39841E+11 6.10871E+9
+9 6.24997E+11 6.02498E+9
+10 6.24946E+11 6.04102E+9
+11 6.09364E+11 5.93827E+9
+12 5.98146E+11 5.88306E+9
+13 5.8144E+11 5.7805E+9
+14 5.75555E+11 5.74496E+9
