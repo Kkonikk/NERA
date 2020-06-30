@@ -4,7 +4,7 @@ name_h = '26_11_parab_h';
 name_lam = '26_11_parab_lambda';
 %parabola
 
-%vertical plane 
+%vertical plane
 %PV14,l=15,h=0.14,louth=0.99
 %PV19,l=20,h=0.19,louth=0.85
 
