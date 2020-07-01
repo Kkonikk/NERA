@@ -12,9 +12,9 @@ model.sample_size=0.03;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
 
-model.guide_width = 0.17;
+model.guide_width = 0.21;
 model.guide_height = 0.4;
-model.focusing_length = 12;
+model.focusing_length = 'free'; model.focusing_length = [10 20 30];
 
 left_focus_min = 0.1;
 left_focus_max = 600;
@@ -59,4 +59,4 @@ end
 
         
 [parameters, fval, status, output]=fmax(model,[], ...
-'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=200', nan);
+'optimizer=fminpso; OutputFcn=fminplot;TolFun =5%;TolX=5%;MaxFunEvals=300', nan);
