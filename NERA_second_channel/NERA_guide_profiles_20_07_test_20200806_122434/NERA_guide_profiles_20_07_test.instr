@@ -25,7 +25,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera (m = 2, source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
+DEFINE INSTRUMENT Nera (mside = 2, mtop = 2, source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
 
 DECLARE
 %{
@@ -144,8 +144,8 @@ COMPONENT Guide_start_arm = Arm()
 AT (0, source_shift, source_optics_dist) RELATIVE origin
 
 COMPONENT  Main_guide = Guide_gravity(
-    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m, mright = m, 
-mtop = m, mbottom = m, R0=R0, Qc=Qc, alpha=alpha, W=W)
+    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = mside, mright = mside, 
+mtop = mtop, mbottom = mtop, R0=R0, Qc=Qc, alpha=alpha, W=W)
   AT (0, 0, 0.001) RELATIVE Guide_start_arm
 
 COMPONENT Main_guide_arm = Arm()

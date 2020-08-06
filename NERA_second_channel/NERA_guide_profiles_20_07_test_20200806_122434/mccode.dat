@@ -1,0 +1,27 @@
+# Instrument-source: 'NERA_guide_profiles_20_07_test.instr'
+# Date: Thu Aug 06 12 24 2020
+# Ncount: 10000000
+# Numpoints: 13
+# Param: mside = 1
+# type: multiarray_1d(13)
+# title: Scan of mside
+# xlabel: 'mside'
+# ylabel: 'Intensity'
+# xvars: mside
+# yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_y_I,monitor_nd_y_ERR)
+# xlimits: 1 7
+# filename: mccode.dat
+# variables: mside monitor_nd_x_I monitor_nd_x_ERR monitor_nd_y_I monitor_nd_y_ERR
+1 5.99508E+13 4.09407E+11 7.42067E+12 1.43812E+11
+1.5 7.50086E+13 4.55242E+11 9.45871E+12 1.61395E+11
+2 8.90515E+13 4.94864E+11 1.10962E+13 1.74384E+11
+2.5 1.01637E+14 5.27071E+11 1.28934E+13 1.8717E+11
+3 1.09212E+14 5.43636E+11 1.38755E+13 1.94147E+11
+3.5 1.15152E+14 5.55898E+11 1.4251E+13 1.9565E+11
+4 1.1689E+14 5.59374E+11 1.41709E+13 1.94295E+11
+4.5 1.18227E+14 5.61731E+11 1.47354E+13 1.98263E+11
+5 1.19567E+14 5.64706E+11 1.51189E+13 2.01131E+11
+5.5 1.20045E+14 5.64934E+11 1.48539E+13 1.98587E+11
+6 1.20146E+14 5.64946E+11 1.51286E+13 2.00369E+11
+6.5 1.19999E+14 5.64277E+11 1.51766E+13 2.00796E+11
+7 1.1939E+14 5.62922E+11 1.48055E+13 1.97579E+11

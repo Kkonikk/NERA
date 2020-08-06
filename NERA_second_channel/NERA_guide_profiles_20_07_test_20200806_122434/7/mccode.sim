@@ -1,0 +1,78 @@
+McStas simulation description file for Nera.
+Date:    Thu Aug  6 12:24:58 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20_07_test_20200806_122434/7/mccode
+  Source: NERA_guide_profiles_20_07_test.instr
+  Parameters:  mside(double) mtop(double) source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20_07_test_20200806_122434/7
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: NERA_guide_profiles_20_07_test.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1596717524
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_profiles_20_07_test_20200806_122434/7
+  Nodes: 8
+  Param: mside=4.5
+  Param: mtop=7
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.2059
+  Param: guide_height=0.4
+  Param: focusing_length=18.6794
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0
+  Param: linw=0
+  Param: loutw=0.6466
+  Param: sample_size=0.03
+end simulation
+
+begin data
+  Date: Thu Aug  6 12:25:00 2020 (1596705900)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles_20_07_test.instr)
+  component: monitor_nd_x
+  position: 0 -0.10125 105.001
+  title: x [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_x_1596705898.x
+  statistics: X0=-8.12373e-05; dX=0.0107014;
+  signal: Min=8.1135e+08; Max=1.87634e+12; Mean=1.18227e+12;
+  values: 1.18227e+14 5.61731e+11 71372
+  xvar: x
+  yvar: (I,I_err)
+  xlabel: x [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.025 0.025
+  variables: x I I_err N
+end data
+
+begin data
+  Date: Thu Aug  6 12:25:00 2020 (1596705900)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_profiles_20_07_test.instr)
+  component: monitor_nd_y
+  position: 0 -0.10125 105.003
+  title: y [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_y_1596705898.y
+  statistics: X0=-0.000280677; dX=0.0145961;
+  signal: Min=1.03811e+11; Max=1.9377e+11; Mean=1.47354e+11;
+  values: 1.47354e+13 1.98263e+11 9043
+  xvar: y
+  yvar: (I,I_err)
+  xlabel: y [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.025 0.025
+  variables: y I I_err N
+end data
