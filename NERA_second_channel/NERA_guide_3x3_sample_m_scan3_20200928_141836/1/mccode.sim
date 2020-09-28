@@ -1,0 +1,59 @@
+McStas simulation description file for Nera.
+Date:    Mon Sep 28 14:18:42 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_20200928_141836/1/mccode
+  Source: NERA_guide_3x3_sample_m_scan3.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double) m_hor(double) m_vert(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_20200928_141836/1
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: NERA_guide_3x3_sample_m_scan3.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1601569099
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_20200928_141836/1
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.22
+  Param: guide_height=0.2
+  Param: focusing_length=19.77
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0
+  Param: linw=0
+  Param: loutw=0.57
+  Param: sample_size=0.03
+  Param: m_hor=1.5
+  Param: m_vert=7
+end simulation
+
+begin data
+  Date: Mon Sep 28 14:18:49 2020 (1601291929)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide_3x3_sample_m_scan3.instr)
+  component: monitor_nd_xy
+  position: 0 -0.10125 105.001
+  title:  Intensity Divergence Divergence Monitor (Square) per bin
+  Ncount: 10000000
+  filename: monitor_nd_xy_1601291922.hd_vd
+  statistics: X0=-0.00227819; dX=0.562798; Y0=0.000966271; dY=0.219682;
+  signal: Min=0; Max=3.436e+10; Mean=7.94296e+08;
+  values: 7.94296e+12 1.05427e+11 14269
+  xvar: Hor.
+  yvar: Vert.
+  xlabel: Hor. Divergence [deg]
+  ylabel: Vert. Divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -2 2 -2 2
+  variables: I I_err N
+end data

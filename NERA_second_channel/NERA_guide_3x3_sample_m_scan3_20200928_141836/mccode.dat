@@ -1,0 +1,25 @@
+# Instrument-source: 'NERA_guide_3x3_sample_m_scan3.instr'
+# Date: Mon Sep 28 14 18 2020
+# Ncount: 10000000
+# Numpoints: 11
+# Param: m_hor = 1
+# type: multiarray_1d(11)
+# title: Scan of m_hor
+# xlabel: 'm_hor'
+# ylabel: 'Intensity'
+# xvars: m_hor
+# yvars: (monitor_nd_xy_I,monitor_nd_xy_ERR)
+# xlimits: 1 6
+# filename: mccode.dat
+# variables: m_hor monitor_nd_xy_I monitor_nd_xy_ERR
+1 6.5702E+12 9.65288E+10
+1.5 7.94296E+12 1.05427E+11
+2 9.23725E+12 1.13485E+11
+2.5 1.0265E+13 1.19306E+11
+3 1.11347E+13 1.24129E+11
+3.5 1.13464E+13 1.25014E+11
+4 1.17009E+13 1.26832E+11
+4.5 1.17583E+13 1.271E+11
+5 1.19603E+13 1.27701E+11
+5.5 1.17754E+13 1.2702E+11
+6 1.18819E+13 1.27271E+11

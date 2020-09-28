@@ -1,6 +1,6 @@
 date = datestr(today('datetime'));
-type = "parabolical"; %only elliptical or parabolical
-dimension_plane = "horizontal"; %only vertical or horizontal
+type = "elliptical"; %only elliptical or parabolical
+dimension_plane = "vertical"; %only vertical or horizontal
 name = date + "_" + type + "_" + dimension_plane + "_scan";
 
 
@@ -12,8 +12,8 @@ model.sample_size=0.03;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
 
-model.guide_width = 'free'; model.guide_width = [0.1 0.2 0.23];
-model.guide_height = 0.4;
+model.guide_width = 0.4;
+model.guide_height = 'free'; model.guide_height = [0.1 0.2 0.23];
 model.focusing_length = 'free'; model.focusing_length = [10 20 30];
 
 left_focus_min = 0.1;
