@@ -1,8 +1,8 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: ./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr (Nera)
- * Date:       Sun Oct 11 21:33:53 2020
+ * Instrument: NERA_guide_3x3_sample_m_scan3_2parab_parts.instr (Nera)
+ * Date:       Mon Oct 12 22:35:13 2020
  * File:       ./NERA_guide_3x3_sample_m_scan3_2parab_parts.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample_m_scan3_2parab_parts.c 
  * CFLAGS=
@@ -5340,10 +5340,10 @@ int mctraceenabled = 1;
 #else
 int mctraceenabled = 0;
 #endif
-#define MCSTAS "/usr/share/mcstas/2.6.1/"
+#define MCSTAS "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../"
 int mcdefaultmain = 1;
 char mcinstrument_name[] = "Nera";
-char mcinstrument_source[] = "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr";
+char mcinstrument_source[] = "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr";
 char *mcinstrument_exe=NULL; /* will be set to argv[0] in main */
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 void mcinit(void);
@@ -5353,7 +5353,7 @@ void mcfinally(void);
 void mcdisplay(void);
 
 /* Shared user declarations for all components 'Guide_gravity'. */
-#line 124 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 124 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 /*****************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -7151,12 +7151,12 @@ void TableReflecFunc(double mc_pol_q, t_Table *mc_pol_par, double *mc_pol_r) {
 #line 7151 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
 /* Shared user declarations for all components 'Guide_tapering'. */
-#line 91 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 91 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 
 #line 7156 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
 /* Shared user declarations for all components 'Monitor_nD'. */
-#line 216 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 216 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -10154,7 +10154,7 @@ struct mcinputtable_struct mcinputtable[mcNUMIPAR+1] = {
 #define m2 mcipm2
 #define m3 mcipm3
 #define focus_x mcipfocus_x
-#line 33 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 33 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
 //Source description
 double source_I = 1e16;
 double source_height=0.405, source_width=0.335;
@@ -10462,7 +10462,7 @@ int mccmonitor_nd_y_nowritefile;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 44 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 44 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 #ifndef PROGRESS_BAR
 #define PROGRESS_BAR
 #else
@@ -10506,7 +10506,7 @@ time_t CurrentTime;
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 60 "/usr/share/mcstas/2.6.1/sources/Source_simple.comp"
+#line 60 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 double pmul, srcArea;
 int square;
 double tx,ty,tz;
@@ -10755,7 +10755,7 @@ double tx,ty,tz;
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 334 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 334 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
   Gravity_guide_Vars_type GVars;
   t_Table pTable;
 #line 10761 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
@@ -10869,7 +10869,7 @@ double tx,ty,tz;
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 97 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -11019,7 +11019,7 @@ double rotation_h, rotation_v;
 #define segno mccFocusing_nose_par_16_segno
 #define curvature mccFocusing_nose_par_16_curvature
 #define curvature_v mccFocusing_nose_par_16_curvature_v
-#line 97 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -11147,7 +11147,7 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_x_username2
 #define username3 mccmonitor_nd_x_username3
 #define nowritefile mccmonitor_nd_x_nowritefile
-#line 224 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 224 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
@@ -11217,7 +11217,7 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_y_username2
 #define username3 mccmonitor_nd_y_username3
 #define nowritefile mccmonitor_nd_y_nowritefile
-#line 224 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 224 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
@@ -11322,7 +11322,7 @@ void mcinit(void) {
 #define m2 mcipm2
 #define m3 mcipm3
 #define focus_x mcipfocus_x
-#line 62 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 62 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
 {
 
 lambda0=(source_lambda_min + source_lambda_max)/2;
@@ -11372,13 +11372,13 @@ guide_length_st = total_length-focusing_length;
     /* Component origin. */
   /* Setting parameters for component origin. */
   SIG_MESSAGE("origin (Init:SetPar)");
-#line 39 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 39 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccorigin_profile, "NULL" ? "NULL" : "", 16384); else mccorigin_profile[0]='\0';
-#line 39 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 39 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccorigin_percent = 10;
-#line 39 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 39 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccorigin_flag_save = 0;
-#line 39 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 39 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccorigin_minutes = 0;
 #line 11383 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11390,11 +11390,11 @@ guide_length_st = total_length-focusing_length;
 #line 11390 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
-#line 84 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 84 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 84 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 84 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 84 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 84 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0);
 #line 11399 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   mctc1 = coords_neg(mcposaorigin);
@@ -11407,31 +11407,31 @@ guide_length_st = total_length-focusing_length;
     /* Component Source_simple. */
   /* Setting parameters for component Source_simple. */
   SIG_MESSAGE("Source_simple (Init:SetPar)");
-#line 52 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 52 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_radius = 0.1;
-#line 87 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 87 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_yheight = source_height;
-#line 88 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 88 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_xwidth = source_width;
-#line 89 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 89 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_dist = source_optics_dist;
-#line 90 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 90 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_focus_xw = mcipguide_width;
-#line 91 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 91 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_focus_yh = mcipguide_height;
-#line 54 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 54 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_E0 = 0;
-#line 54 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 54 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_dE = 0;
-#line 92 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 92 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_lambda0 = lambda0;
-#line 93 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 93 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_dlambda = dlambda;
-#line 94 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 94 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_flux = source_I;
-#line 55 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 55 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_gauss = 0;
-#line 55 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 55 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccSource_simple_target_index = + 1;
 #line 11436 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11445,11 +11445,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource_simple, mctr1, mcrotrSource_simple);
   mctc1 = coords_set(
-#line 95 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 95 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 95 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 95 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     source_shift,
-#line 95 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 95 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0);
 #line 11454 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11465,19 +11465,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit01. */
   /* Setting parameters for component slit01. */
   SIG_MESSAGE("slit01 (Init:SetPar)");
-#line 100 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 100 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_xmin = - slit_width;
-#line 100 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 100 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_xmax = 1;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_radius = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_xwidth = 0;
-#line 101 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 101 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit01_yheight = 1;
 #line 11482 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11491,11 +11491,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaSource_simple, mctr1);
   rot_mul(mcrotaslit01, mctr1, mcrotrslit01);
   mctc1 = coords_set(
-#line 102 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 102 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 102 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 102 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 102 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 102 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     slit01_dist);
 #line 11500 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11511,19 +11511,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit02. */
   /* Setting parameters for component slit02. */
   SIG_MESSAGE("slit02 (Init:SetPar)");
-#line 105 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 105 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_xmin = -1;
-#line 105 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 105 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_xmax = slit_width;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_radius = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_xwidth = 0;
-#line 106 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 106 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit02_yheight = 1;
 #line 11528 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11537,11 +11537,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit01, mctr1);
   rot_mul(mcrotaslit02, mctr1, mcrotrslit02);
   mctc1 = coords_set(
-#line 107 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 107 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 107 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 107 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 107 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 107 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     slit02_dist);
 #line 11546 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11557,19 +11557,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit03. */
   /* Setting parameters for component slit03. */
   SIG_MESSAGE("slit03 (Init:SetPar)");
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_xmin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_xmax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_radius = 0;
-#line 110 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 110 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_xwidth = shutter_width1;
-#line 111 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 111 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit03_yheight = 1;
 #line 11574 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11583,11 +11583,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit02, mctr1);
   rot_mul(mcrotaslit03, mctr1, mcrotrslit03);
   mctc1 = coords_set(
-#line 112 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 112 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 112 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 112 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 112 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 112 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     slit03_dist);
 #line 11592 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11603,19 +11603,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit1. */
   /* Setting parameters for component slit1. */
   SIG_MESSAGE("slit1 (Init:SetPar)");
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_xmin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_xmax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_radius = 0;
-#line 117 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 117 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_xwidth = shutter_width1;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit1_yheight = shutter_height;
 #line 11620 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11629,11 +11629,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit03, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
   mctc1 = coords_set(
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     shutter_dist1);
 #line 11638 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11649,19 +11649,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit2. */
   /* Setting parameters for component slit2. */
   SIG_MESSAGE("slit2 (Init:SetPar)");
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_xmin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_xmax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_radius = 0;
-#line 122 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 122 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_xwidth = shutter_width2;
-#line 123 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 123 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit2_yheight = shutter_height;
 #line 11666 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11675,11 +11675,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
   mctc1 = coords_set(
-#line 124 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 124 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 124 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 124 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 124 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 124 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     shutter_dist2);
 #line 11684 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11695,19 +11695,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit3. */
   /* Setting parameters for component slit3. */
   SIG_MESSAGE("slit3 (Init:SetPar)");
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_xmin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_xmax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_radius = 0;
-#line 127 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 127 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_xwidth = shutter_width3;
-#line 128 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 128 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit3_yheight = shutter_height;
 #line 11712 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11721,11 +11721,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
   mctc1 = coords_set(
-#line 129 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 129 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 129 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 129 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 129 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 129 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     shutter_dist3);
 #line 11730 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11741,19 +11741,19 @@ guide_length_st = total_length-focusing_length;
     /* Component slit4. */
   /* Setting parameters for component slit4. */
   SIG_MESSAGE("slit4 (Init:SetPar)");
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_xmin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_xmax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_ymin = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_radius = 0;
-#line 132 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 132 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_xwidth = shutter_width4;
-#line 133 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 133 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccslit4_yheight = shutter_height;
 #line 11758 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11767,11 +11767,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
   mctc1 = coords_set(
-#line 134 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 134 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 134 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 134 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 134 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 134 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     shutter_dist4);
 #line 11776 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11787,19 +11787,19 @@ guide_length_st = total_length-focusing_length;
     /* Component Last_slit. */
   /* Setting parameters for component Last_slit. */
   SIG_MESSAGE("Last_slit (Init:SetPar)");
-#line 137 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 137 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_xmin = -1;
-#line 138 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 138 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_xmax = 1;
-#line 139 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 139 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_ymin = -1;
-#line 139 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 139 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_ymax = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_radius = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_xwidth = 0;
-#line 46 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 46 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccLast_slit_yheight = 0;
 #line 11804 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11813,11 +11813,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaLast_slit, mctr1, mcrotrLast_slit);
   mctc1 = coords_set(
-#line 140 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 140 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 140 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 140 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 140 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 140 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     source_optics_dist);
 #line 11822 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11844,11 +11844,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaLast_slit, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
   mctc1 = coords_set(
-#line 145 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 145 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 145 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 145 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     source_shift,
-#line 145 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 145 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     source_optics_dist);
 #line 11853 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaorigin, mctr1);
@@ -11864,73 +11864,73 @@ guide_length_st = total_length-focusing_length;
     /* Component Main_guide. */
   /* Setting parameters for component Main_guide. */
   SIG_MESSAGE("Main_guide (Init:SetPar)");
-#line 148 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 148 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_w1 = mcipguide_width;
-#line 148 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 148 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_h1 = mcipguide_height;
-#line 113 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 113 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_w2 = 0;
-#line 113 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 113 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_h2 = 0;
-#line 148 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 148 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_l = guide_length_st;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_R0 = R0;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_Qc = Qc;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_alpha = alpha;
-#line 114 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 114 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_m = 1.0;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_W = W;
-#line 114 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 114 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_nslit = 1;
-#line 114 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 114 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_d = 0.0005;
-#line 148 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 148 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_mleft = 7;
-#line 148 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 148 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_mright = 7;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_mtop = 7;
-#line 149 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 149 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_mbottom = 7;
-#line 115 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 115 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_nhslit = 1;
-#line 115 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 115 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_G = 0;
-#line 116 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 116 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_aleft = -1;
-#line 116 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 116 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_aright = -1;
-#line 116 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 116 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_atop = -1;
-#line 116 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 116 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_abottom = -1;
-#line 117 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 117 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_wavy = 0;
-#line 117 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 117 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_wavy_z = 0;
-#line 117 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 117 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_wavy_tb = 0;
-#line 117 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 117 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_wavy_lr = 0;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_chamfers = 0;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_chamfers_z = 0;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_chamfers_lr = 0;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_chamfers_tb = 0;
-#line 118 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 118 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_nelements = 1;
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_nu = 0;
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccMain_guide_phase = 0;
-#line 119 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 119 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccMain_guide_reflect, "NULL" ? "NULL" : "", 16384); else mccMain_guide_reflect[0]='\0';
 #line 11935 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -11944,11 +11944,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   rot_mul(mcrotaMain_guide, mctr1, mcrotrMain_guide);
   mctc1 = coords_set(
-#line 150 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 150 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 150 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 150 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 150 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 150 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0.001);
 #line 11953 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaGuide_start_arm, mctr1);
@@ -11975,11 +11975,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaMain_guide, mctr1);
   rot_mul(mcrotaMain_guide_arm, mctr1, mcrotrMain_guide_arm);
   mctc1 = coords_set(
-#line 153 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 153 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 153 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 153 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 153 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 153 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     guide_length_st);
 #line 11984 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaMain_guide, mctr1);
@@ -11995,43 +11995,43 @@ guide_length_st = total_length-focusing_length;
     /* Component Focusing_nose_par. */
   /* Setting parameters for component Focusing_nose_par. */
   SIG_MESSAGE("Focusing_nose_par (Init:SetPar)");
-#line 156 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 156 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("parabolical") strncpy(mccFocusing_nose_par_option, "parabolical" ? "parabolical" : "", 16384); else mccFocusing_nose_par_option[0]='\0';
-#line 157 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 157 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_w1 = mcipguide_width;
-#line 158 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 158 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_h1 = 0.1982;
-#line 159 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 159 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_l = 14.9451;
-#line 162 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 162 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_linw = 0;
-#line 163 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 163 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_loutw = 0;
-#line 160 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 160 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_linh = 0;
-#line 161 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 161 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_louth = 5.6824;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_R0 = R0;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_Qcx = Qc;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_Qcy = Qc;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_alphax = alpha;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_alphay = alpha;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_W = W;
-#line 164 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 164 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_mx = 7;
-#line 165 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 165 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_my = 7;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_segno = 800;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_curvature = 0;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_curvature_v = 0;
 #line 12036 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -12045,11 +12045,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   rot_mul(mcrotaFocusing_nose_par, mctr1, mcrotrFocusing_nose_par);
   mctc1 = coords_set(
-#line 166 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 166 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 166 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 166 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 166 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 166 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0.001);
 #line 12054 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
@@ -12076,11 +12076,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaFocusing_nose_par, mctr1);
   rot_mul(mcrotaarm, mctr1, mcrotrarm);
   mctc1 = coords_set(
-#line 169 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 169 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 169 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 169 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 169 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 169 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     14.9451 + 0.0001);
 #line 12085 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaFocusing_nose_par, mctr1);
@@ -12096,43 +12096,43 @@ guide_length_st = total_length-focusing_length;
     /* Component Focusing_nose_par_16. */
   /* Setting parameters for component Focusing_nose_par_16. */
   SIG_MESSAGE("Focusing_nose_par_16 (Init:SetPar)");
-#line 172 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 172 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("parabolical") strncpy(mccFocusing_nose_par_16_option, "parabolical" ? "parabolical" : "", 16384); else mccFocusing_nose_par_16_option[0]='\0';
-#line 173 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 173 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_w1 = mcipguide_width;
-#line 174 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 174 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_h1 = 0.1040;
-#line 175 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 175 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_l = 5;
-#line 178 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 178 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_linw = 0;
-#line 179 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 179 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_loutw = 0;
-#line 176 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 176 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_linh = 0;
-#line 177 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 177 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_louth = mcipfocus_x;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_R0 = R0;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_Qcx = Qc;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_Qcy = Qc;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_alphax = alpha;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_alphay = alpha;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_W = W;
-#line 180 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 180 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_mx = 7;
-#line 181 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 181 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_my = 7;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_segno = 800;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_curvature = 0;
-#line 83 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 83 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccFocusing_nose_par_16_curvature_v = 0;
 #line 12137 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -12146,11 +12146,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaarm, mctr1);
   rot_mul(mcrotaFocusing_nose_par_16, mctr1, mcrotrFocusing_nose_par_16);
   mctc1 = coords_set(
-#line 182 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 182 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 182 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 182 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 182 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 182 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0.001);
 #line 12155 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaarm, mctr1);
@@ -12177,11 +12177,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaFocusing_nose_par_16, mctr1);
   rot_mul(mcrotaarm_17, mctr1, mcrotrarm_17);
   mctc1 = coords_set(
-#line 185 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 185 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 185 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 185 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 185 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 185 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     5.001);
 #line 12186 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaFocusing_nose_par_16, mctr1);
@@ -12208,11 +12208,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaarm_17, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
   mctc1 = coords_set(
-#line 188 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 188 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 188 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 188 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 188 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 188 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0.001);
 #line 12217 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaarm_17, mctr1);
@@ -12228,47 +12228,47 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_x. */
   /* Setting parameters for component monitor_nd_x. */
   SIG_MESSAGE("monitor_nd_x (Init:SetPar)");
-#line 193 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 193 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_xwidth = mcipsample_size;
-#line 193 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 193 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_yheight = mcipsample_size;
-#line 203 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 203 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_zdepth = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_xmin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_xmax = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_ymin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_ymax = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_zmin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_zmax = 0;
-#line 193 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 193 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_bins = 100;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_min = -1e40;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_max = 1e40;
-#line 193 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 193 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_restore_neutron = 1;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_radius = 0;
-#line 194 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 194 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("dy limits = [-2 2]") strncpy(mccmonitor_nd_x_options, "dy limits = [-2 2]" ? "dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_x_options[0]='\0';
-#line 206 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 206 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_x_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_filename[0]='\0';
-#line 206 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 206 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_x_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_geometry[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username1[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username2[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_x_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username3[0]='\0';
-#line 208 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 208 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_x_nowritefile = 0;
 #line 12273 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -12282,11 +12282,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotaguide_end, mctr1);
   rot_mul(mcrotamonitor_nd_x, mctr1, mcrotrmonitor_nd_x);
   mctc1 = coords_set(
-#line 195 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 195 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 195 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 195 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 195 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 195 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     distance_before_sample);
 #line 12291 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaguide_end, mctr1);
@@ -12302,47 +12302,47 @@ guide_length_st = total_length-focusing_length;
     /* Component monitor_nd_y. */
   /* Setting parameters for component monitor_nd_y. */
   SIG_MESSAGE("monitor_nd_y (Init:SetPar)");
-#line 198 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
-  mccmonitor_nd_y_xwidth = mcipsample_size;
-#line 198 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 198 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+  mccmonitor_nd_y_xwidth = 0.06;
+#line 198 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_yheight = 0.06;
-#line 203 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 203 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_zdepth = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_xmin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_xmax = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_ymin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_ymax = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_zmin = 0;
-#line 204 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 204 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_zmax = 0;
-#line 198 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 198 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_bins = 100;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_min = -1e40;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_max = 1e40;
-#line 198 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 198 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_restore_neutron = 1;
-#line 205 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 205 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_radius = 0;
-#line 199 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 199 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("y") strncpy(mccmonitor_nd_y_options, "y" ? "y" : "", 16384); else mccmonitor_nd_y_options[0]='\0';
-#line 206 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 206 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_y_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_filename[0]='\0';
-#line 206 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 206 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_y_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_geometry[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username1[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username2[0]='\0';
-#line 207 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 207 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   if("NULL") strncpy(mccmonitor_nd_y_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username3[0]='\0';
-#line 208 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 208 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
   mccmonitor_nd_y_nowritefile = 0;
 #line 12347 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
 
@@ -12356,11 +12356,11 @@ guide_length_st = total_length-focusing_length;
   rot_transpose(mcrotamonitor_nd_x, mctr1);
   rot_mul(mcrotamonitor_nd_y, mctr1, mcrotrmonitor_nd_y);
   mctc1 = coords_set(
-#line 200 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 200 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 200 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 200 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     0,
-#line 200 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 200 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
     distance_before_sample + 0.001);
 #line 12365 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.c"
   rot_transpose(mcrotaguide_end, mctr1);
@@ -12387,7 +12387,7 @@ guide_length_st = total_length-focusing_length;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 57 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 57 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
 IntermediateCnts=0;
 StartTime=0;
@@ -12433,7 +12433,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 65 "/usr/share/mcstas/2.6.1/sources/Source_simple.comp"
+#line 65 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
 square = 0;
 /* Determine source area */
@@ -12526,7 +12526,7 @@ if (radius && !yheight && !xwidth ) {
 #define radius mccslit01_radius
 #define xwidth mccslit01_xwidth
 #define yheight mccslit01_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12570,7 +12570,7 @@ if (xwidth > 0)  {
 #define radius mccslit02_radius
 #define xwidth mccslit02_xwidth
 #define yheight mccslit02_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12614,7 +12614,7 @@ if (xwidth > 0)  {
 #define radius mccslit03_radius
 #define xwidth mccslit03_xwidth
 #define yheight mccslit03_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12658,7 +12658,7 @@ if (xwidth > 0)  {
 #define radius mccslit1_radius
 #define xwidth mccslit1_xwidth
 #define yheight mccslit1_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12702,7 +12702,7 @@ if (xwidth > 0)  {
 #define radius mccslit2_radius
 #define xwidth mccslit2_xwidth
 #define yheight mccslit2_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12746,7 +12746,7 @@ if (xwidth > 0)  {
 #define radius mccslit3_radius
 #define xwidth mccslit3_xwidth
 #define yheight mccslit3_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12790,7 +12790,7 @@ if (xwidth > 0)  {
 #define radius mccslit4_radius
 #define xwidth mccslit4_xwidth
 #define yheight mccslit4_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12834,7 +12834,7 @@ if (xwidth > 0)  {
 #define radius mccLast_slit_radius
 #define xwidth mccLast_slit_xwidth
 #define yheight mccLast_slit_yheight
-#line 50 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12910,7 +12910,7 @@ if (xwidth > 0)  {
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 339 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 339 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   double Gx=0, Gy=-GRAVITY, Gz=0;
   Coords mcLocG;
@@ -13069,7 +13069,7 @@ if (xwidth > 0)  {
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 116 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -13534,7 +13534,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define segno mccFocusing_nose_par_16_segno
 #define curvature mccFocusing_nose_par_16_curvature
 #define curvature_v mccFocusing_nose_par_16_curvature_v
-#line 116 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -13972,7 +13972,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define username2 mccmonitor_nd_x_username2
 #define username3 mccmonitor_nd_x_username3
 #define nowritefile mccmonitor_nd_x_nowritefile
-#line 231 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 231 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -14118,7 +14118,7 @@ MPI_MASTER(
 #define username2 mccmonitor_nd_y_username2
 #define username3 mccmonitor_nd_y_username3
 #define nowritefile mccmonitor_nd_y_nowritefile
-#line 231 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 231 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -14340,7 +14340,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 70 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 70 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   double ncount;
   ncount = mcget_run_num();
@@ -14510,7 +14510,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 125 "/usr/share/mcstas/2.6.1/sources/Source_simple.comp"
+#line 125 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
  double chi,E,lambda,v,r, xf, yf, rf, dx, dy, pdir;
 
@@ -14671,7 +14671,7 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -14795,7 +14795,7 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -14919,7 +14919,7 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15043,7 +15043,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15167,7 +15167,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15291,7 +15291,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15415,7 +15415,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15539,7 +15539,7 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 71 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
@@ -15795,7 +15795,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 392 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 392 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   if (l > 0 && nelements > 0) {
     double B, C, dt;
@@ -16233,7 +16233,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 453 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -16694,7 +16694,7 @@ MCNUM my = mccFocusing_nose_par_16_my;
 MCNUM segno = mccFocusing_nose_par_16_segno;
 MCNUM curvature = mccFocusing_nose_par_16_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_16_curvature_v;
-#line 453 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -17228,7 +17228,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 312 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 312 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -17538,7 +17538,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 312 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 312 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -17806,7 +17806,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 115 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 115 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   MPI_MASTER(fprintf(stdout, "\nSave [%s]\n", mcinstrument_name););
   if (profile && strlen(profile) && strcmp(profile,"NULL") && strcmp(profile,"0")) {
@@ -17867,7 +17867,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 482 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 482 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   if (!nowritefile) {
@@ -17921,7 +17921,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 482 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 482 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
   if (!nowritefile) {
@@ -17962,7 +17962,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 133 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 133 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   time_t NowTime;
   time(&NowTime);
@@ -18060,7 +18060,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 562 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 562 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 if (GVars.warnings > 100) {
   fprintf(stderr,"%s: warning: neutron has entered guide, but can not exit !\n", GVars.compcurname);
@@ -18145,7 +18145,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 609 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -18275,7 +18275,7 @@ MCNUM my = mccFocusing_nose_par_16_my;
 MCNUM segno = mccFocusing_nose_par_16_segno;
 MCNUM curvature = mccFocusing_nose_par_16_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_16_curvature_v;
-#line 609 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -18378,7 +18378,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 490 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 490 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
@@ -18433,7 +18433,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 490 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 490 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
@@ -18477,7 +18477,7 @@ int nowritefile = mccmonitor_nd_y_nowritefile;
 #define m2 mcipm2
 #define m3 mcipm3
 #define focus_x mcipfocus_x
-#line 203 "./NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
+#line 203 "NERA_guide_3x3_sample_m_scan3_2parab_parts.instr"
 {
 
 }
@@ -18534,7 +18534,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 147 "/usr/share/mcstas/2.6.1/misc/Progress_bar.comp"
+#line 147 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   
 }
@@ -18571,7 +18571,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 171 "/usr/share/mcstas/2.6.1/sources/Source_simple.comp"
+#line 171 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
   if (square == 1) {
     
@@ -18610,7 +18610,7 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18653,7 +18653,7 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18696,7 +18696,7 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18739,7 +18739,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18782,7 +18782,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18825,7 +18825,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18868,7 +18868,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18911,7 +18911,7 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 83 "/usr/share/mcstas/2.6.1/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -18946,7 +18946,7 @@ MCNUM yheight = mccLast_slit_yheight;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 11
-#line 40 "/usr/share/mcstas/2.6.1/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -19002,7 +19002,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 571 "/usr/share/mcstas/2.6.1/optics/Guide_gravity.comp"
+#line 571 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 
   if (l > 0 && nelements > 0) {
@@ -19079,7 +19079,7 @@ char* reflect = mccMain_guide_reflect;
 #define mccompcurname  Main_guide_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 13
-#line 40 "/usr/share/mcstas/2.6.1/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -19157,7 +19157,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 625 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -19241,7 +19241,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
 #define mccompcurname  arm
 #define mccompcurtype  Arm
 #define mccompcurindex 15
-#line 40 "/usr/share/mcstas/2.6.1/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -19319,7 +19319,7 @@ MCNUM my = mccFocusing_nose_par_16_my;
 MCNUM segno = mccFocusing_nose_par_16_segno;
 MCNUM curvature = mccFocusing_nose_par_16_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_16_curvature_v;
-#line 625 "/usr/share/mcstas/2.6.1/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -19403,7 +19403,7 @@ MCNUM curvature_v = mccFocusing_nose_par_16_curvature_v;
 #define mccompcurname  arm_17
 #define mccompcurtype  Arm
 #define mccompcurindex 17
-#line 40 "/usr/share/mcstas/2.6.1/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -19422,7 +19422,7 @@ MCNUM curvature_v = mccFocusing_nose_par_16_curvature_v;
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
 #define mccompcurindex 18
-#line 40 "/usr/share/mcstas/2.6.1/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -19470,7 +19470,7 @@ char* username1 = mccmonitor_nd_x_username1;
 char* username2 = mccmonitor_nd_x_username2;
 char* username3 = mccmonitor_nd_x_username3;
 int nowritefile = mccmonitor_nd_x_nowritefile;
-#line 496 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 496 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -19527,7 +19527,7 @@ char* username1 = mccmonitor_nd_y_username1;
 char* username2 = mccmonitor_nd_y_username2;
 char* username3 = mccmonitor_nd_y_username3;
 int nowritefile = mccmonitor_nd_y_nowritefile;
-#line 496 "/usr/share/mcstas/2.6.1/monitors/Monitor_nD.comp"
+#line 496 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {

@@ -8,13 +8,13 @@ model = mccode('NERA_guide_3x3_sample.instr','mpi=8;ncount=5e6');
 fix(model, 'all');
 
 
-model.sample_size=0.03;
+model.sample_size=0.01;
 model.source_lambda_min=0.5;
 model.source_lambda_max=1;
 
 model.guide_width = 0.2;
-model.guide_height = 'free'; model.guide_height = [0.16 0.1954 0.24];
-model.focusing_length = 'free'; model.focusing_length = [14 23.8329 27];
+model.guide_height = 'free'; model.guide_height = [0.14 0.1954 0.24];
+model.focusing_length = 'free'; model.focusing_length = [14 23.8329 29];
 
 left_focus_min = 0.1;
 left_focus_max = 600;

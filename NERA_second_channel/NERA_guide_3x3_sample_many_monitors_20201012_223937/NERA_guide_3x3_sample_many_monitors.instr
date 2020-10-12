@@ -25,8 +25,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03,m_hor = 4,
-m_vert = 4,m1 = 6, m2 = 7 , m3 = 7, focus_x = 5.6)
+DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03)
 
 DECLARE
 %{
@@ -54,7 +53,7 @@ double distance_before_sample = 0.35;
 double guide_length_st;
 
 //Reflectivity description
-double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m_foc = 7;
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7, m_foc = 7;
 
 %}
 
@@ -145,59 +144,63 @@ COMPONENT Guide_start_arm = Arm()
 AT (0, source_shift, source_optics_dist) RELATIVE origin
 
 COMPONENT  Main_guide = Guide_gravity(
-    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = 7, mright = 7, 
-mtop = 7, mbottom = 7, R0=R0, Qc=Qc, alpha=alpha, W=W)
+    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m, mright = m, 
+mtop = m, mbottom = m, R0=R0, Qc=Qc, alpha=alpha, W=W)
   AT (0, 0, 0.001) RELATIVE Guide_start_arm
 
 COMPONENT Main_guide_arm = Arm()
 AT (0, 0, guide_length_st) RELATIVE Main_guide
 
+COMPONENT Focusing_nose_ell = Guide_tapering(
+    option="elliptical", 
+    w1=guide_width, 
+    h1=guide_height, 
+    l=focusing_length, 
+    linh = linh, 
+    louth = louth,
+    linw = linw,
+    loutw = loutw,
+    mx=m_foc,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 1)
+AT (0, 0, 0.001) RELATIVE Main_guide_arm
+
 COMPONENT Focusing_nose_par = Guide_tapering(
     option="parabolical", 
     w1=guide_width, 
-    h1=0.1982, 
-    l=14.9451, 
+    h1=guide_height, 
+    l=focusing_length, 
     linh = 0, 
-    louth = 5.6824,
+    louth = louth,
     linw = 0,
-    loutw = 0,
-    mx=7,
-    my=7, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+    loutw = loutw,
+    mx=m_foc,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0) WHEN (guide_shape == 0)
 AT (0, 0, 0.001) RELATIVE Main_guide_arm
 
-COMPONENT arm = Arm()
-AT (0, 0, 14.9451 + 0.0001) RELATIVE Focusing_nose_par
-
-COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
-    option="parabolical", 
-    w1=guide_width, 
-    h1=0.1040, 
-    l=5, 
-    linh = 0, 
-    louth = focus_x,
-    linw = 0,
-    loutw = 0,
-    mx=7,
-    my=7, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
-AT (0, 0, 0.001) RELATIVE PREVIOUS
-
-COMPONENT COPY(arm) = Arm()
-AT (0, 0, 5.001) RELATIVE PREVIOUS
-
 COMPONENT guide_end = Arm()
-AT (0, 0, 0.001) RELATIVE PREVIOUS
+AT (0, 0, focusing_length) RELATIVE Main_guide_arm
 
 //Sample
 
-COMPONENT monitor_nd_x = Monitor_nD(
+COMPONENT monitor_nd_xy1 = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="dx limits = [-2 2]")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_xy2 = Monitor_nD(
     xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
     options="dy limits = [-2 2]")
 AT (0, 0, distance_before_sample) RELATIVE guide_end
 
-COMPONENT monitor_nd_y = Monitor_nD(
+COMPONENT monitor_nd_xy3 = Monitor_nD(
+    xwidth=0.06, yheight=0.06, bins=100, restore_neutron=1, 
+    options="x")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_xy4 = Monitor_nD(
     xwidth=0.06, yheight=0.06, bins=100, restore_neutron=1, 
     options="y")
-AT (0, 0, distance_before_sample + 0.001) RELATIVE guide_end
+AT (0, 0, distance_before_sample) RELATIVE guide_end
 
 FINALLY
 %{

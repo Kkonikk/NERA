@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_guide_3x3_sample_many_monitors.instr (Nera)
- * Date:       Sun Oct 11 22:56:47 2020
+ * Date:       Mon Oct 12 22:39:37 2020
  * File:       ./NERA_guide_3x3_sample_many_monitors.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample_many_monitors.c 
  * CFLAGS=
