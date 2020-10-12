@@ -1,0 +1,78 @@
+McStas simulation description file for Nera.
+Date:    Sun Oct 11 19:46:56 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194650/1/mccode
+  Source: NERA_guide_3x3_sample_tttt.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double) m_x(double) m_y(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194650/1
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: NERA_guide_3x3_sample_tttt.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1602506140
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194650/1
+  Nodes: 8
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.2107
+  Param: guide_height=0.2
+  Param: focusing_length=16.9254
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0
+  Param: linw=0
+  Param: loutw=0.6146
+  Param: sample_size=0.03
+  Param: m_x=1.5
+  Param: m_y=6
+end simulation
+
+begin data
+  Date: Sun Oct 11 19:46:57 2020 (1602434817)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_tttt.instr)
+  component: monitor_nd_xy
+  position: 0 -0.10125 105.001
+  title: Hor. Divergence [deg] monitor
+  Ncount: 10000000
+  filename: monitor_nd_xy_1602434816.hd
+  statistics: X0=-0.01092; dX=0.576646;
+  signal: Min=0; Max=3.37685e+11; Mean=7.5549e+10;
+  values: 7.5549e+12 1.00872e+11 13116
+  xvar: hd
+  yvar: (I,I_err)
+  xlabel: Hor. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: hd I I_err N
+end data
+
+begin data
+  Date: Sun Oct 11 19:46:57 2020 (1602434817)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_tttt.instr)
+  component: monitor_nd_xy2
+  position: 0 -0.10125 105.002
+  title: x [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_xy2_1602434816.x
+  statistics: X0=-0.000233046; dX=0.00990677;
+  signal: Min=0; Max=2.77275e+11; Mean=8.83331e+10;
+  values: 8.83331e+12 1.09593e+11 15867
+  xvar: x
+  yvar: (I,I_err)
+  xlabel: x [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.04 0.04
+  variables: x I I_err N
+end data

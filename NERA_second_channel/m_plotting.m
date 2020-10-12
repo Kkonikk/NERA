@@ -14,7 +14,7 @@ for dim = 1:6
         j = j + 1;
 
     end
-end
+end-
 m_v = 1:0.5:6;
 clear fig
 fig = figure;

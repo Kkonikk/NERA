@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_guide_3x3_sample_m_scan3.instr (Nera)
- * Date:       Mon Sep 28 14:17:13 2020
+ * Date:       Sat Oct 10 18:27:10 2020
  * File:       ./NERA_guide_3x3_sample_m_scan3.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample_m_scan3.c 
  * CFLAGS=
@@ -10190,17 +10190,17 @@ double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m_foc = 7;
 
 /* neutron state table at each component input (local coords) */
 /* [x, y, z, vx, vy, vz, t, sx, sy, sz, p] */
-MCNUM mccomp_storein[11*19];
+MCNUM mccomp_storein[11*20];
 /* Components position table (absolute and relative coords) */
-Coords mccomp_posa[19];
-Coords mccomp_posr[19];
+Coords mccomp_posa[20];
+Coords mccomp_posr[20];
 /* Counter for each comp to check for inactive ones */
-MCNUM  mcNCounter[19];
-MCNUM  mcPCounter[19];
-MCNUM  mcP2Counter[19];
-#define mcNUMCOMP 18 /* number of components */
+MCNUM  mcNCounter[20];
+MCNUM  mcPCounter[20];
+MCNUM  mcP2Counter[20];
+#define mcNUMCOMP 19 /* number of components */
 /* Counter for PROP ABSORB */
-MCNUM  mcAbsorbProp[19];
+MCNUM  mcAbsorbProp[20];
 /* Flag true when previous component acted on the neutron (SCATTER) */
 MCNUM mcScattered=0;
 /* Flag true when neutron should be restored (RESTORE) */
@@ -10378,32 +10378,59 @@ MCNUM mccFocusing_nose_par_segno;
 MCNUM mccFocusing_nose_par_curvature;
 MCNUM mccFocusing_nose_par_curvature_v;
 
-/* Definition parameters for component 'monitor_nd_xy' [17]. */
-#define mccmonitor_nd_xy_user1 FLT_MAX
-#define mccmonitor_nd_xy_user2 FLT_MAX
-#define mccmonitor_nd_xy_user3 FLT_MAX
-/* Setting parameters for component 'monitor_nd_xy' [17]. */
-MCNUM mccmonitor_nd_xy_xwidth;
-MCNUM mccmonitor_nd_xy_yheight;
-MCNUM mccmonitor_nd_xy_zdepth;
-MCNUM mccmonitor_nd_xy_xmin;
-MCNUM mccmonitor_nd_xy_xmax;
-MCNUM mccmonitor_nd_xy_ymin;
-MCNUM mccmonitor_nd_xy_ymax;
-MCNUM mccmonitor_nd_xy_zmin;
-MCNUM mccmonitor_nd_xy_zmax;
-MCNUM mccmonitor_nd_xy_bins;
-MCNUM mccmonitor_nd_xy_min;
-MCNUM mccmonitor_nd_xy_max;
-MCNUM mccmonitor_nd_xy_restore_neutron;
-MCNUM mccmonitor_nd_xy_radius;
-char mccmonitor_nd_xy_options[16384];
-char mccmonitor_nd_xy_filename[16384];
-char mccmonitor_nd_xy_geometry[16384];
-char mccmonitor_nd_xy_username1[16384];
-char mccmonitor_nd_xy_username2[16384];
-char mccmonitor_nd_xy_username3[16384];
-int mccmonitor_nd_xy_nowritefile;
+/* Definition parameters for component 'monitor_nd_x' [17]. */
+#define mccmonitor_nd_x_user1 FLT_MAX
+#define mccmonitor_nd_x_user2 FLT_MAX
+#define mccmonitor_nd_x_user3 FLT_MAX
+/* Setting parameters for component 'monitor_nd_x' [17]. */
+MCNUM mccmonitor_nd_x_xwidth;
+MCNUM mccmonitor_nd_x_yheight;
+MCNUM mccmonitor_nd_x_zdepth;
+MCNUM mccmonitor_nd_x_xmin;
+MCNUM mccmonitor_nd_x_xmax;
+MCNUM mccmonitor_nd_x_ymin;
+MCNUM mccmonitor_nd_x_ymax;
+MCNUM mccmonitor_nd_x_zmin;
+MCNUM mccmonitor_nd_x_zmax;
+MCNUM mccmonitor_nd_x_bins;
+MCNUM mccmonitor_nd_x_min;
+MCNUM mccmonitor_nd_x_max;
+MCNUM mccmonitor_nd_x_restore_neutron;
+MCNUM mccmonitor_nd_x_radius;
+char mccmonitor_nd_x_options[16384];
+char mccmonitor_nd_x_filename[16384];
+char mccmonitor_nd_x_geometry[16384];
+char mccmonitor_nd_x_username1[16384];
+char mccmonitor_nd_x_username2[16384];
+char mccmonitor_nd_x_username3[16384];
+int mccmonitor_nd_x_nowritefile;
+
+/* Definition parameters for component 'monitor_nd_y' [18]. */
+#define mccmonitor_nd_y_user1 FLT_MAX
+#define mccmonitor_nd_y_user2 FLT_MAX
+#define mccmonitor_nd_y_user3 FLT_MAX
+/* Setting parameters for component 'monitor_nd_y' [18]. */
+MCNUM mccmonitor_nd_y_xwidth;
+MCNUM mccmonitor_nd_y_yheight;
+MCNUM mccmonitor_nd_y_zdepth;
+MCNUM mccmonitor_nd_y_xmin;
+MCNUM mccmonitor_nd_y_xmax;
+MCNUM mccmonitor_nd_y_ymin;
+MCNUM mccmonitor_nd_y_ymax;
+MCNUM mccmonitor_nd_y_zmin;
+MCNUM mccmonitor_nd_y_zmax;
+MCNUM mccmonitor_nd_y_bins;
+MCNUM mccmonitor_nd_y_min;
+MCNUM mccmonitor_nd_y_max;
+MCNUM mccmonitor_nd_y_restore_neutron;
+MCNUM mccmonitor_nd_y_radius;
+char mccmonitor_nd_y_options[16384];
+char mccmonitor_nd_y_filename[16384];
+char mccmonitor_nd_y_geometry[16384];
+char mccmonitor_nd_y_username1[16384];
+char mccmonitor_nd_y_username2[16384];
+char mccmonitor_nd_y_username3[16384];
+int mccmonitor_nd_y_nowritefile;
 
 /* User component declarations. */
 
@@ -10430,7 +10457,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 10433 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 10460 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10467,7 +10494,7 @@ time_t CurrentTime;
 double pmul, srcArea;
 int square;
 double tx,ty,tz;
-#line 10470 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 10497 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -10715,7 +10742,7 @@ double tx,ty,tz;
 #line 334 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
   Gravity_guide_Vars_type GVars;
   t_Table pTable;
-#line 10718 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 10745 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -10843,7 +10870,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10846 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 10873 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -10985,7 +11012,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10988 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11015 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -11056,44 +11083,114 @@ double rotation_h, rotation_v;
 #undef mccompcurtype
 #undef mccompcurindex
 
-/* User declarations for component 'monitor_nd_xy' [17]. */
-#define mccompcurname  monitor_nd_xy
+/* User declarations for component 'monitor_nd_x' [17]. */
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-#define xwidth mccmonitor_nd_xy_xwidth
-#define yheight mccmonitor_nd_xy_yheight
-#define zdepth mccmonitor_nd_xy_zdepth
-#define xmin mccmonitor_nd_xy_xmin
-#define xmax mccmonitor_nd_xy_xmax
-#define ymin mccmonitor_nd_xy_ymin
-#define ymax mccmonitor_nd_xy_ymax
-#define zmin mccmonitor_nd_xy_zmin
-#define zmax mccmonitor_nd_xy_zmax
-#define bins mccmonitor_nd_xy_bins
-#define min mccmonitor_nd_xy_min
-#define max mccmonitor_nd_xy_max
-#define restore_neutron mccmonitor_nd_xy_restore_neutron
-#define radius mccmonitor_nd_xy_radius
-#define options mccmonitor_nd_xy_options
-#define filename mccmonitor_nd_xy_filename
-#define geometry mccmonitor_nd_xy_geometry
-#define username1 mccmonitor_nd_xy_username1
-#define username2 mccmonitor_nd_xy_username2
-#define username3 mccmonitor_nd_xy_username3
-#define nowritefile mccmonitor_nd_xy_nowritefile
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+#define xwidth mccmonitor_nd_x_xwidth
+#define yheight mccmonitor_nd_x_yheight
+#define zdepth mccmonitor_nd_x_zdepth
+#define xmin mccmonitor_nd_x_xmin
+#define xmax mccmonitor_nd_x_xmax
+#define ymin mccmonitor_nd_x_ymin
+#define ymax mccmonitor_nd_x_ymax
+#define zmin mccmonitor_nd_x_zmin
+#define zmax mccmonitor_nd_x_zmax
+#define bins mccmonitor_nd_x_bins
+#define min mccmonitor_nd_x_min
+#define max mccmonitor_nd_x_max
+#define restore_neutron mccmonitor_nd_x_restore_neutron
+#define radius mccmonitor_nd_x_radius
+#define options mccmonitor_nd_x_options
+#define filename mccmonitor_nd_x_filename
+#define geometry mccmonitor_nd_x_geometry
+#define username1 mccmonitor_nd_x_username1
+#define username2 mccmonitor_nd_x_username2
+#define username3 mccmonitor_nd_x_username3
+#define nowritefile mccmonitor_nd_x_nowritefile
 #line 224 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11096 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11123 "./NERA_guide_3x3_sample_m_scan3.c"
+#undef nowritefile
+#undef username3
+#undef username2
+#undef username1
+#undef geometry
+#undef filename
+#undef options
+#undef radius
+#undef restore_neutron
+#undef max
+#undef min
+#undef bins
+#undef zmax
+#undef zmin
+#undef ymax
+#undef ymin
+#undef xmax
+#undef xmin
+#undef zdepth
+#undef yheight
+#undef xwidth
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+/* User declarations for component 'monitor_nd_y' [18]. */
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+#define xwidth mccmonitor_nd_y_xwidth
+#define yheight mccmonitor_nd_y_yheight
+#define zdepth mccmonitor_nd_y_zdepth
+#define xmin mccmonitor_nd_y_xmin
+#define xmax mccmonitor_nd_y_xmax
+#define ymin mccmonitor_nd_y_ymin
+#define ymax mccmonitor_nd_y_ymax
+#define zmin mccmonitor_nd_y_zmin
+#define zmax mccmonitor_nd_y_zmax
+#define bins mccmonitor_nd_y_bins
+#define min mccmonitor_nd_y_min
+#define max mccmonitor_nd_y_max
+#define restore_neutron mccmonitor_nd_y_restore_neutron
+#define radius mccmonitor_nd_y_radius
+#define options mccmonitor_nd_y_options
+#define filename mccmonitor_nd_y_filename
+#define geometry mccmonitor_nd_y_geometry
+#define username1 mccmonitor_nd_y_username1
+#define username2 mccmonitor_nd_y_username2
+#define username3 mccmonitor_nd_y_username3
+#define nowritefile mccmonitor_nd_y_nowritefile
+#line 224 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+  MonitornD_Defines_type DEFS;
+  MonitornD_Variables_type Vars;
+  MCDETECTOR detector;
+  off_struct offdata;
+#line 11193 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11158,8 +11255,10 @@ Coords mcposaFocusing_nose_par, mcposrFocusing_nose_par;
 Rotation mcrotaFocusing_nose_par, mcrotrFocusing_nose_par;
 Coords mcposaguide_end, mcposrguide_end;
 Rotation mcrotaguide_end, mcrotrguide_end;
-Coords mcposamonitor_nd_xy, mcposrmonitor_nd_xy;
-Rotation mcrotamonitor_nd_xy, mcrotrmonitor_nd_xy;
+Coords mcposamonitor_nd_x, mcposrmonitor_nd_x;
+Rotation mcrotamonitor_nd_x, mcrotrmonitor_nd_x;
+Coords mcposamonitor_nd_y, mcposrmonitor_nd_y;
+Rotation mcrotamonitor_nd_y, mcrotrmonitor_nd_y;
 
 MCNUM mcnx, mcny, mcnz, mcnvx, mcnvy, mcnvz, mcnt, mcnsx, mcnsy, mcnsz, mcnp;
 
@@ -11198,7 +11297,7 @@ total_length = total_length - source_optics_dist - distance_before_sample;
 guide_length_st = total_length-focusing_length;
 
 }
-#line 11201 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11300 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef m_vert
 #undef m_hor
 #undef sample_size
@@ -11237,14 +11336,14 @@ guide_length_st = total_length-focusing_length;
   mccorigin_flag_save = 0;
 #line 39 "NERA_guide_3x3_sample_m_scan3.instr"
   mccorigin_minutes = 0;
-#line 11240 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11339 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11247 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11346 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
 #line 83 "NERA_guide_3x3_sample_m_scan3.instr"
@@ -11253,7 +11352,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 83 "NERA_guide_3x3_sample_m_scan3.instr"
     0);
-#line 11256 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11355 "./NERA_guide_3x3_sample_m_scan3.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -11290,14 +11389,14 @@ guide_length_st = total_length-focusing_length;
   mccSource_simple_gauss = 0;
 #line 55 "NERA_guide_3x3_sample_m_scan3.instr"
   mccSource_simple_target_index = + 1;
-#line 11293 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11392 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("Source_simple (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11300 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11399 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource_simple);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource_simple, mctr1, mcrotrSource_simple);
@@ -11308,7 +11407,7 @@ guide_length_st = total_length-focusing_length;
     source_shift,
 #line 94 "NERA_guide_3x3_sample_m_scan3.instr"
     0);
-#line 11311 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11410 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource_simple = coords_add(mcposaorigin, mctc2);
@@ -11336,14 +11435,14 @@ guide_length_st = total_length-focusing_length;
   mccslit01_xwidth = 0;
 #line 100 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit01_yheight = 1;
-#line 11339 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11438 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit01 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11346 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11445 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit01);
   rot_transpose(mcrotaSource_simple, mctr1);
   rot_mul(mcrotaslit01, mctr1, mcrotrslit01);
@@ -11354,7 +11453,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 101 "NERA_guide_3x3_sample_m_scan3.instr"
     slit01_dist);
-#line 11357 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11456 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit01 = coords_add(mcposaorigin, mctc2);
@@ -11382,14 +11481,14 @@ guide_length_st = total_length-focusing_length;
   mccslit02_xwidth = 0;
 #line 105 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit02_yheight = 1;
-#line 11385 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11484 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit02 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11392 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11491 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit02);
   rot_transpose(mcrotaslit01, mctr1);
   rot_mul(mcrotaslit02, mctr1, mcrotrslit02);
@@ -11400,7 +11499,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 106 "NERA_guide_3x3_sample_m_scan3.instr"
     slit02_dist);
-#line 11403 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11502 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit02 = coords_add(mcposaorigin, mctc2);
@@ -11428,14 +11527,14 @@ guide_length_st = total_length-focusing_length;
   mccslit03_xwidth = shutter_width1;
 #line 110 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit03_yheight = 1;
-#line 11431 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11530 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit03 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11438 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11537 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit03);
   rot_transpose(mcrotaslit02, mctr1);
   rot_mul(mcrotaslit03, mctr1, mcrotrslit03);
@@ -11446,7 +11545,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 111 "NERA_guide_3x3_sample_m_scan3.instr"
     slit03_dist);
-#line 11449 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11548 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit03 = coords_add(mcposaorigin, mctc2);
@@ -11474,14 +11573,14 @@ guide_length_st = total_length-focusing_length;
   mccslit1_xwidth = shutter_width1;
 #line 117 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit1_yheight = shutter_height;
-#line 11477 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11576 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11484 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11583 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
   rot_transpose(mcrotaslit03, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
@@ -11492,7 +11591,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 118 "NERA_guide_3x3_sample_m_scan3.instr"
     shutter_dist1);
-#line 11495 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11594 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
@@ -11520,14 +11619,14 @@ guide_length_st = total_length-focusing_length;
   mccslit2_xwidth = shutter_width2;
 #line 122 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit2_yheight = shutter_height;
-#line 11523 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11622 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11530 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11629 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
@@ -11538,7 +11637,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 123 "NERA_guide_3x3_sample_m_scan3.instr"
     shutter_dist2);
-#line 11541 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11640 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaorigin, mctc2);
@@ -11566,14 +11665,14 @@ guide_length_st = total_length-focusing_length;
   mccslit3_xwidth = shutter_width3;
 #line 127 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit3_yheight = shutter_height;
-#line 11569 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11668 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11576 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11675 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
@@ -11584,7 +11683,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 128 "NERA_guide_3x3_sample_m_scan3.instr"
     shutter_dist3);
-#line 11587 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11686 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaorigin, mctc2);
@@ -11612,14 +11711,14 @@ guide_length_st = total_length-focusing_length;
   mccslit4_xwidth = shutter_width4;
 #line 132 "NERA_guide_3x3_sample_m_scan3.instr"
   mccslit4_yheight = shutter_height;
-#line 11615 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11714 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11622 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11721 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
@@ -11630,7 +11729,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 133 "NERA_guide_3x3_sample_m_scan3.instr"
     shutter_dist4);
-#line 11633 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11732 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaorigin, mctc2);
@@ -11658,14 +11757,14 @@ guide_length_st = total_length-focusing_length;
   mccLast_slit_xwidth = 0;
 #line 46 "NERA_guide_3x3_sample_m_scan3.instr"
   mccLast_slit_yheight = 0;
-#line 11661 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11760 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("Last_slit (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11668 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11767 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaLast_slit);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaLast_slit, mctr1, mcrotrLast_slit);
@@ -11676,7 +11775,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 139 "NERA_guide_3x3_sample_m_scan3.instr"
     source_optics_dist);
-#line 11679 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11778 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaLast_slit = coords_add(mcposaorigin, mctc2);
@@ -11696,7 +11795,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11699 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11798 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaLast_slit, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
@@ -11707,7 +11806,7 @@ guide_length_st = total_length-focusing_length;
     source_shift,
 #line 144 "NERA_guide_3x3_sample_m_scan3.instr"
     source_optics_dist);
-#line 11710 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11809 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -11789,14 +11888,14 @@ guide_length_st = total_length-focusing_length;
   mccMain_guide_phase = 0;
 #line 119 "NERA_guide_3x3_sample_m_scan3.instr"
   if("NULL") strncpy(mccMain_guide_reflect, "NULL" ? "NULL" : "", 16384); else mccMain_guide_reflect[0]='\0';
-#line 11792 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11891 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("Main_guide (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11799 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11898 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaMain_guide);
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   rot_mul(mcrotaMain_guide, mctr1, mcrotrMain_guide);
@@ -11807,7 +11906,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 149 "NERA_guide_3x3_sample_m_scan3.instr"
     0.001);
-#line 11810 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11909 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide = coords_add(mcposaGuide_start_arm, mctc2);
@@ -11827,7 +11926,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11830 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11929 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaMain_guide, mcrotaMain_guide_arm);
   rot_transpose(mcrotaMain_guide, mctr1);
   rot_mul(mcrotaMain_guide_arm, mctr1, mcrotrMain_guide_arm);
@@ -11838,7 +11937,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 152 "NERA_guide_3x3_sample_m_scan3.instr"
     guide_length_st);
-#line 11841 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11940 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaMain_guide, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide_arm = coords_add(mcposaMain_guide, mctc2);
@@ -11890,14 +11989,14 @@ guide_length_st = total_length-focusing_length;
   mccFocusing_nose_ell_curvature = 0;
 #line 83 "NERA_guide_3x3_sample_m_scan3.instr"
   mccFocusing_nose_ell_curvature_v = 0;
-#line 11893 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11992 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("Focusing_nose_ell (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11900 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 11999 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_ell);
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   rot_mul(mcrotaFocusing_nose_ell, mctr1, mcrotrFocusing_nose_ell);
@@ -11908,7 +12007,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 165 "NERA_guide_3x3_sample_m_scan3.instr"
     0.001);
-#line 11911 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12010 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_ell = coords_add(mcposaMain_guide_arm, mctc2);
@@ -11960,14 +12059,14 @@ guide_length_st = total_length-focusing_length;
   mccFocusing_nose_par_curvature = 0;
 #line 83 "NERA_guide_3x3_sample_m_scan3.instr"
   mccFocusing_nose_par_curvature_v = 0;
-#line 11963 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12062 "./NERA_guide_3x3_sample_m_scan3.c"
 
   SIG_MESSAGE("Focusing_nose_par (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11970 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12069 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_par);
   rot_transpose(mcrotaFocusing_nose_ell, mctr1);
   rot_mul(mcrotaFocusing_nose_par, mctr1, mcrotrFocusing_nose_par);
@@ -11978,7 +12077,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 178 "NERA_guide_3x3_sample_m_scan3.instr"
     0.001);
-#line 11981 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12080 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_par = coords_add(mcposaMain_guide_arm, mctc2);
@@ -11998,7 +12097,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12001 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12100 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaguide_end);
   rot_transpose(mcrotaFocusing_nose_par, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
@@ -12009,7 +12108,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 181 "NERA_guide_3x3_sample_m_scan3.instr"
     mcipfocusing_length);
-#line 12012 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12111 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaguide_end = coords_add(mcposaMain_guide_arm, mctc2);
@@ -12020,62 +12119,62 @@ guide_length_st = total_length-focusing_length;
   mccomp_posr[16] = mcposrguide_end;
   mcNCounter[16]  = mcPCounter[16] = mcP2Counter[16] = 0;
   mcAbsorbProp[16]= 0;
-    /* Component monitor_nd_xy. */
-  /* Setting parameters for component monitor_nd_xy. */
-  SIG_MESSAGE("monitor_nd_xy (Init:SetPar)");
+    /* Component monitor_nd_x. */
+  /* Setting parameters for component monitor_nd_x. */
+  SIG_MESSAGE("monitor_nd_x (Init:SetPar)");
 #line 186 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_xwidth = mcipsample_size;
+  mccmonitor_nd_x_xwidth = mcipsample_size;
 #line 186 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_yheight = mcipsample_size;
+  mccmonitor_nd_x_yheight = mcipsample_size;
 #line 203 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_zdepth = 0;
+  mccmonitor_nd_x_zdepth = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_xmin = 0;
+  mccmonitor_nd_x_xmin = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_xmax = 0;
+  mccmonitor_nd_x_xmax = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_ymin = 0;
+  mccmonitor_nd_x_ymin = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_ymax = 0;
+  mccmonitor_nd_x_ymax = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_zmin = 0;
+  mccmonitor_nd_x_zmin = 0;
 #line 204 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_zmax = 0;
+  mccmonitor_nd_x_zmax = 0;
 #line 186 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_bins = 100;
+  mccmonitor_nd_x_bins = 100;
 #line 205 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_min = -1e40;
+  mccmonitor_nd_x_min = -1e40;
 #line 205 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_max = 1e40;
+  mccmonitor_nd_x_max = 1e40;
 #line 186 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_restore_neutron = 1;
+  mccmonitor_nd_x_restore_neutron = 1;
 #line 205 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_radius = 0;
+  mccmonitor_nd_x_radius = 0;
 #line 187 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("dx limits = [-2 2] dy limits = [-2 2]") strncpy(mccmonitor_nd_xy_options, "dx limits = [-2 2] dy limits = [-2 2]" ? "dx limits = [-2 2] dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_xy_options[0]='\0';
+  if("dx limits = [-2 2]") strncpy(mccmonitor_nd_x_options, "dx limits = [-2 2]" ? "dx limits = [-2 2]" : "", 16384); else mccmonitor_nd_x_options[0]='\0';
 #line 206 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_filename[0]='\0';
+  if("NULL") strncpy(mccmonitor_nd_x_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_filename[0]='\0';
 #line 206 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_geometry[0]='\0';
+  if("NULL") strncpy(mccmonitor_nd_x_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_geometry[0]='\0';
 #line 207 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username1[0]='\0';
+  if("NULL") strncpy(mccmonitor_nd_x_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username1[0]='\0';
 #line 207 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username2[0]='\0';
+  if("NULL") strncpy(mccmonitor_nd_x_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username2[0]='\0';
 #line 207 "NERA_guide_3x3_sample_m_scan3.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username3[0]='\0';
+  if("NULL") strncpy(mccmonitor_nd_x_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_x_username3[0]='\0';
 #line 208 "NERA_guide_3x3_sample_m_scan3.instr"
-  mccmonitor_nd_xy_nowritefile = 0;
-#line 12068 "./NERA_guide_3x3_sample_m_scan3.c"
+  mccmonitor_nd_x_nowritefile = 0;
+#line 12167 "./NERA_guide_3x3_sample_m_scan3.c"
 
-  SIG_MESSAGE("monitor_nd_xy (Init:Place/Rotate)");
+  SIG_MESSAGE("monitor_nd_x (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12075 "./NERA_guide_3x3_sample_m_scan3.c"
-  rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_xy);
+#line 12174 "./NERA_guide_3x3_sample_m_scan3.c"
+  rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_x);
   rot_transpose(mcrotaguide_end, mctr1);
-  rot_mul(mcrotamonitor_nd_xy, mctr1, mcrotrmonitor_nd_xy);
+  rot_mul(mcrotamonitor_nd_x, mctr1, mcrotrmonitor_nd_x);
   mctc1 = coords_set(
 #line 188 "NERA_guide_3x3_sample_m_scan3.instr"
     0,
@@ -12083,17 +12182,91 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 188 "NERA_guide_3x3_sample_m_scan3.instr"
     distance_before_sample);
-#line 12086 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12185 "./NERA_guide_3x3_sample_m_scan3.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
-  mcposamonitor_nd_xy = coords_add(mcposaguide_end, mctc2);
-  mctc1 = coords_sub(mcposaguide_end, mcposamonitor_nd_xy);
-  mcposrmonitor_nd_xy = rot_apply(mcrotamonitor_nd_xy, mctc1);
-  mcDEBUG_COMPONENT("monitor_nd_xy", mcposamonitor_nd_xy, mcrotamonitor_nd_xy)
-  mccomp_posa[17] = mcposamonitor_nd_xy;
-  mccomp_posr[17] = mcposrmonitor_nd_xy;
+  mcposamonitor_nd_x = coords_add(mcposaguide_end, mctc2);
+  mctc1 = coords_sub(mcposaguide_end, mcposamonitor_nd_x);
+  mcposrmonitor_nd_x = rot_apply(mcrotamonitor_nd_x, mctc1);
+  mcDEBUG_COMPONENT("monitor_nd_x", mcposamonitor_nd_x, mcrotamonitor_nd_x)
+  mccomp_posa[17] = mcposamonitor_nd_x;
+  mccomp_posr[17] = mcposrmonitor_nd_x;
   mcNCounter[17]  = mcPCounter[17] = mcP2Counter[17] = 0;
   mcAbsorbProp[17]= 0;
+    /* Component monitor_nd_y. */
+  /* Setting parameters for component monitor_nd_y. */
+  SIG_MESSAGE("monitor_nd_y (Init:SetPar)");
+#line 191 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_xwidth = mcipsample_size;
+#line 191 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_yheight = mcipsample_size;
+#line 203 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_zdepth = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_xmin = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_xmax = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_ymin = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_ymax = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_zmin = 0;
+#line 204 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_zmax = 0;
+#line 191 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_bins = 100;
+#line 205 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_min = -1e40;
+#line 205 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_max = 1e40;
+#line 191 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_restore_neutron = 1;
+#line 205 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_radius = 0;
+#line 192 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("dy limits = [-2 2]") strncpy(mccmonitor_nd_y_options, "dy limits = [-2 2]" ? "dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_y_options[0]='\0';
+#line 206 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("NULL") strncpy(mccmonitor_nd_y_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_filename[0]='\0';
+#line 206 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("NULL") strncpy(mccmonitor_nd_y_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_geometry[0]='\0';
+#line 207 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("NULL") strncpy(mccmonitor_nd_y_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username1[0]='\0';
+#line 207 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("NULL") strncpy(mccmonitor_nd_y_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username2[0]='\0';
+#line 207 "NERA_guide_3x3_sample_m_scan3.instr"
+  if("NULL") strncpy(mccmonitor_nd_y_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_y_username3[0]='\0';
+#line 208 "NERA_guide_3x3_sample_m_scan3.instr"
+  mccmonitor_nd_y_nowritefile = 0;
+#line 12241 "./NERA_guide_3x3_sample_m_scan3.c"
+
+  SIG_MESSAGE("monitor_nd_y (Init:Place/Rotate)");
+  rot_set_rotation(mctr1,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD,
+    (0.0)*DEG2RAD);
+#line 12248 "./NERA_guide_3x3_sample_m_scan3.c"
+  rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_y);
+  rot_transpose(mcrotamonitor_nd_x, mctr1);
+  rot_mul(mcrotamonitor_nd_y, mctr1, mcrotrmonitor_nd_y);
+  mctc1 = coords_set(
+#line 193 "NERA_guide_3x3_sample_m_scan3.instr"
+    0,
+#line 193 "NERA_guide_3x3_sample_m_scan3.instr"
+    0,
+#line 193 "NERA_guide_3x3_sample_m_scan3.instr"
+    distance_before_sample + 0.001);
+#line 12259 "./NERA_guide_3x3_sample_m_scan3.c"
+  rot_transpose(mcrotaguide_end, mctr1);
+  mctc2 = rot_apply(mctr1, mctc1);
+  mcposamonitor_nd_y = coords_add(mcposaguide_end, mctc2);
+  mctc1 = coords_sub(mcposamonitor_nd_x, mcposamonitor_nd_y);
+  mcposrmonitor_nd_y = rot_apply(mcrotamonitor_nd_y, mctc1);
+  mcDEBUG_COMPONENT("monitor_nd_y", mcposamonitor_nd_y, mcrotamonitor_nd_y)
+  mccomp_posa[18] = mcposamonitor_nd_y;
+  mccomp_posr[18] = mcposrmonitor_nd_y;
+  mcNCounter[18]  = mcPCounter[18] = mcP2Counter[18] = 0;
+  mcAbsorbProp[18]= 0;
   /* Component initializations. */
   /* Initializations for component origin. */
   SIG_MESSAGE("origin (Init)");
@@ -12120,7 +12293,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 12123 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12296 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -12214,7 +12387,7 @@ if (radius && !yheight && !xwidth ) {
       exit(-1);
   }
 }
-#line 12217 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12390 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -12267,7 +12440,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12270 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12443 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12311,7 +12484,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12314 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12487 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12355,7 +12528,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12358 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12531 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12399,7 +12572,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12402 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12575 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12443,7 +12616,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12446 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12619 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12487,7 +12660,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12490 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12663 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12531,7 +12704,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12534 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12707 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12575,7 +12748,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12578 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12751 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12683,7 +12856,7 @@ if (xwidth > 0)  {
   } else printf("Guide_gravity: %s: unactivated (l=0 or nelements=0)\n", NAME_CURRENT_COMP);
 
 }
-#line 12686 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 12859 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -13126,7 +13299,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 13129 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 13302 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -13588,7 +13761,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 13591 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 13764 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -13654,39 +13827,39 @@ w1c = (double*)malloc(sizeof(double)*segno);
   /* Initializations for component guide_end. */
   SIG_MESSAGE("guide_end (Init)");
 
-  /* Initializations for component monitor_nd_xy. */
-  SIG_MESSAGE("monitor_nd_xy (Init)");
-#define mccompcurname  monitor_nd_xy
+  /* Initializations for component monitor_nd_x. */
+  SIG_MESSAGE("monitor_nd_x (Init)");
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-#define xwidth mccmonitor_nd_xy_xwidth
-#define yheight mccmonitor_nd_xy_yheight
-#define zdepth mccmonitor_nd_xy_zdepth
-#define xmin mccmonitor_nd_xy_xmin
-#define xmax mccmonitor_nd_xy_xmax
-#define ymin mccmonitor_nd_xy_ymin
-#define ymax mccmonitor_nd_xy_ymax
-#define zmin mccmonitor_nd_xy_zmin
-#define zmax mccmonitor_nd_xy_zmax
-#define bins mccmonitor_nd_xy_bins
-#define min mccmonitor_nd_xy_min
-#define max mccmonitor_nd_xy_max
-#define restore_neutron mccmonitor_nd_xy_restore_neutron
-#define radius mccmonitor_nd_xy_radius
-#define options mccmonitor_nd_xy_options
-#define filename mccmonitor_nd_xy_filename
-#define geometry mccmonitor_nd_xy_geometry
-#define username1 mccmonitor_nd_xy_username1
-#define username2 mccmonitor_nd_xy_username2
-#define username3 mccmonitor_nd_xy_username3
-#define nowritefile mccmonitor_nd_xy_nowritefile
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+#define xwidth mccmonitor_nd_x_xwidth
+#define yheight mccmonitor_nd_x_yheight
+#define zdepth mccmonitor_nd_x_zdepth
+#define xmin mccmonitor_nd_x_xmin
+#define xmax mccmonitor_nd_x_xmax
+#define ymin mccmonitor_nd_x_ymin
+#define ymax mccmonitor_nd_x_ymax
+#define zmin mccmonitor_nd_x_zmin
+#define zmax mccmonitor_nd_x_zmax
+#define bins mccmonitor_nd_x_bins
+#define min mccmonitor_nd_x_min
+#define max mccmonitor_nd_x_max
+#define restore_neutron mccmonitor_nd_x_restore_neutron
+#define radius mccmonitor_nd_x_radius
+#define options mccmonitor_nd_x_options
+#define filename mccmonitor_nd_x_filename
+#define geometry mccmonitor_nd_x_geometry
+#define username1 mccmonitor_nd_x_username1
+#define username2 mccmonitor_nd_x_username2
+#define username3 mccmonitor_nd_x_username3
+#define nowritefile mccmonitor_nd_x_nowritefile
 #line 231 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
@@ -13767,7 +13940,153 @@ MPI_MASTER(
 );
 #endif
 }
-#line 13770 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 13943 "./NERA_guide_3x3_sample_m_scan3.c"
+#undef nowritefile
+#undef username3
+#undef username2
+#undef username1
+#undef geometry
+#undef filename
+#undef options
+#undef radius
+#undef restore_neutron
+#undef max
+#undef min
+#undef bins
+#undef zmax
+#undef zmin
+#undef ymax
+#undef ymin
+#undef xmax
+#undef xmin
+#undef zdepth
+#undef yheight
+#undef xwidth
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* Initializations for component monitor_nd_y. */
+  SIG_MESSAGE("monitor_nd_y (Init)");
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+#define xwidth mccmonitor_nd_y_xwidth
+#define yheight mccmonitor_nd_y_yheight
+#define zdepth mccmonitor_nd_y_zdepth
+#define xmin mccmonitor_nd_y_xmin
+#define xmax mccmonitor_nd_y_xmax
+#define ymin mccmonitor_nd_y_ymin
+#define ymax mccmonitor_nd_y_ymax
+#define zmin mccmonitor_nd_y_zmin
+#define zmax mccmonitor_nd_y_zmax
+#define bins mccmonitor_nd_y_bins
+#define min mccmonitor_nd_y_min
+#define max mccmonitor_nd_y_max
+#define restore_neutron mccmonitor_nd_y_restore_neutron
+#define radius mccmonitor_nd_y_radius
+#define options mccmonitor_nd_y_options
+#define filename mccmonitor_nd_y_filename
+#define geometry mccmonitor_nd_y_geometry
+#define username1 mccmonitor_nd_y_username1
+#define username2 mccmonitor_nd_y_username2
+#define username3 mccmonitor_nd_y_username3
+#define nowritefile mccmonitor_nd_y_nowritefile
+#line 231 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  char tmp[CHAR_BUF_LENGTH];
+  strcpy(Vars.compcurname, NAME_CURRENT_COMP);
+  if (options != NULL)
+    strncpy(Vars.option, options, CHAR_BUF_LENGTH);
+  else {
+    strcpy(Vars.option, "x y");
+    printf("Monitor_nD: %s has no option specified. Setting to PSD ('x y') monitor.\n", NAME_CURRENT_COMP);
+  }
+  Vars.compcurpos = POS_A_CURRENT_COMP;
+
+  if (strstr(Vars.option, "source"))
+    strcat(Vars.option, " list, x y z vx vy vz t sx sy sz ");
+
+  if (bins) { sprintf(tmp, " all bins=%ld ", (long)bins); strcat(Vars.option, tmp); }
+  if (min > -FLT_MAX && max < FLT_MAX) { sprintf(tmp, " all limits=[%g %g]", min, max); strcat(Vars.option, tmp); }
+  else if (min > -FLT_MAX) { sprintf(tmp, " all min=%g", min); strcat(Vars.option, tmp); }
+  else if (max <  FLT_MAX) { sprintf(tmp, " all max=%g", max); strcat(Vars.option, tmp); }
+
+  strncpy(Vars.UserName1,
+    username1 && strlen(username1) && strcmp(username1, "0") && strcmp(username1, "NULL") ?
+    username1 : "", 128);
+  strncpy(Vars.UserName2,
+    username2 && strlen(username2) && strcmp(username2, "0") && strcmp(username2, "NULL") ?
+    username2 : "", 128);
+  strncpy(Vars.UserName3,
+    username3 && strlen(username3) && strcmp(username3, "0") && strcmp(username3, "NULL") ?
+    username3 : "", 128);
+  if (radius) {
+    xwidth = zdepth = 2*radius;
+    if (yheight && !strstr(Vars.option, "cylinder") && !strstr(Vars.option, "banana") && !strstr(Vars.option, "sphere"))
+      strcat(Vars.option, " banana");
+    else if (!yheight && !strstr(Vars.option ,"sphere")) {
+      strcat(Vars.option, " sphere");
+      yheight=2*radius;
+    }
+  }
+  int offflag=0;
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) {
+    if (!off_init(  geometry, xwidth, yheight, zdepth, 1, &offdata )) {
+      printf("Monitor_nD: %s could not initiate the OFF geometry %s. \n"
+             "            Defaulting to normal Monitor dimensions.\n",
+             NAME_CURRENT_COMP, geometry);
+      strcpy(geometry, "");
+    } else {
+      offflag=1;
+    }
+  }
+
+  if (!radius && !xwidth && !yheight && !zdepth && !xmin && !xmax && !ymin && !ymax &&
+    !strstr(Vars.option, "previous") && (!geometry || !strlen(geometry)))
+    exit(printf("Monitor_nD: %s has no dimension specified. Aborting (radius, xwidth, yheight, zdepth, previous, geometry).\n", NAME_CURRENT_COMP));
+
+  Monitor_nD_Init(&DEFS, &Vars, xwidth, yheight, zdepth, xmin,xmax,ymin,ymax,zmin,zmax,offflag);
+
+  if (Vars.Flag_OFF) {
+    offdata.mantidflag=Vars.Flag_mantid;
+    offdata.mantidoffset=Vars.Coord_Min[Vars.Coord_Number-1];
+  }
+
+
+  if (filename && strlen(filename) && strcmp(filename,"NULL") && strcmp(filename,"0"))
+    strncpy(Vars.Mon_File, filename, 128);
+
+  /* check if user given filename with ext will be used more than once */
+  if ( ((Vars.Flag_Multiple && Vars.Coord_Number > 1) || Vars.Flag_List) && strchr(Vars.Mon_File,'.') )
+  { char *XY; XY = strrchr(Vars.Mon_File,'.'); *XY='_'; }
+
+  if (restore_neutron) Vars.Flag_parallel=1;
+  detector.m = 0;
+
+#ifdef USE_MPI
+MPI_MASTER(
+  if (strstr(Vars.option, "auto") && mpi_node_count > 1)
+    printf("Monitor_nD: %s is using automatic limits option 'auto' together with MPI.\n"
+           "WARNING     this may create incorrect distributions (but integrated flux will be right).\n", NAME_CURRENT_COMP);
+);
+#endif
+}
+#line 14089 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -13953,7 +14272,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 13956 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14275 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -14124,7 +14443,7 @@ int target_index = mccSource_simple_target_index;
  vy=v*dy/rf;
  vx=v*dx/rf;
 }
-#line 14127 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14446 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -14251,7 +14570,7 @@ MCNUM yheight = mccslit01_yheight;
     else
         SCATTER;
 }
-#line 14254 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14573 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14375,7 +14694,7 @@ MCNUM yheight = mccslit02_yheight;
     else
         SCATTER;
 }
-#line 14378 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14697 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14499,7 +14818,7 @@ MCNUM yheight = mccslit03_yheight;
     else
         SCATTER;
 }
-#line 14502 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14821 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14623,7 +14942,7 @@ MCNUM yheight = mccslit1_yheight;
     else
         SCATTER;
 }
-#line 14626 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 14945 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14747,7 +15066,7 @@ MCNUM yheight = mccslit2_yheight;
     else
         SCATTER;
 }
-#line 14750 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 15069 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14871,7 +15190,7 @@ MCNUM yheight = mccslit3_yheight;
     else
         SCATTER;
 }
-#line 14874 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 15193 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14995,7 +15314,7 @@ MCNUM yheight = mccslit4_yheight;
     else
         SCATTER;
 }
-#line 14998 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 15317 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15119,7 +15438,7 @@ MCNUM yheight = mccLast_slit_yheight;
     else
         SCATTER;
 }
-#line 15122 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 15441 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15533,7 +15852,7 @@ char* reflect = mccMain_guide_reflect;
 
   } /* if l */
 }
-#line 15536 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 15855 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -15960,7 +16279,7 @@ if (( mcipguide_shape == 1 ))
   } /* loop on segments */
 
 }
-#line 15962 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 16281 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16321,7 +16640,7 @@ if (( mcipguide_shape == 0 ))
   } /* loop on segments */
 
 }
-#line 16322 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 16641 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16508,8 +16827,8 @@ mcnlsy,
 mcnlsz,
 mcnlp)
 
-  /* TRACE Component monitor_nd_xy [17] */
-  mccoordschange(mcposrmonitor_nd_xy, mcrotrmonitor_nd_xy,
+  /* TRACE Component monitor_nd_x [17] */
+  mccoordschange(mcposrmonitor_nd_x, mcrotrmonitor_nd_x,
     &mcnlx,
     &mcnly,
     &mcnlz,
@@ -16519,10 +16838,10 @@ mcnlp)
     &mcnlsx,
     &mcnlsy,
     &mcnlsz);
-  /* define label inside component monitor_nd_xy (without coords transformations) */
-  mcJumpTrace_monitor_nd_xy:
-  SIG_MESSAGE("monitor_nd_xy (Trace)");
-  mcDEBUG_COMP("monitor_nd_xy")
+  /* define label inside component monitor_nd_x (without coords transformations) */
+  mcJumpTrace_monitor_nd_x:
+  SIG_MESSAGE("monitor_nd_x (Trace)");
+  mcDEBUG_COMP("monitor_nd_x")
   mcDEBUG_STATE(
     mcnlx,
     mcnly,
@@ -16547,7 +16866,7 @@ mcnlp)
 #define sz mcnlsz
 #define p mcnlp
 
-#define mcabsorbComp mcabsorbCompmonitor_nd_xy
+#define mcabsorbComp mcabsorbCompmonitor_nd_x
   STORE_NEUTRON(17,
     mcnlx,
     mcnly,
@@ -16565,38 +16884,38 @@ mcnlp)
   mcNCounter[17]++;
   mcPCounter[17] += p;
   mcP2Counter[17] += p*p;
-#define mccompcurname  monitor_nd_xy
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-{   /* Declarations of monitor_nd_xy=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccmonitor_nd_xy_xwidth;
-MCNUM yheight = mccmonitor_nd_xy_yheight;
-MCNUM zdepth = mccmonitor_nd_xy_zdepth;
-MCNUM xmin = mccmonitor_nd_xy_xmin;
-MCNUM xmax = mccmonitor_nd_xy_xmax;
-MCNUM ymin = mccmonitor_nd_xy_ymin;
-MCNUM ymax = mccmonitor_nd_xy_ymax;
-MCNUM zmin = mccmonitor_nd_xy_zmin;
-MCNUM zmax = mccmonitor_nd_xy_zmax;
-MCNUM bins = mccmonitor_nd_xy_bins;
-MCNUM min = mccmonitor_nd_xy_min;
-MCNUM max = mccmonitor_nd_xy_max;
-MCNUM restore_neutron = mccmonitor_nd_xy_restore_neutron;
-MCNUM radius = mccmonitor_nd_xy_radius;
-char* options = mccmonitor_nd_xy_options;
-char* filename = mccmonitor_nd_xy_filename;
-char* geometry = mccmonitor_nd_xy_geometry;
-char* username1 = mccmonitor_nd_xy_username1;
-char* username2 = mccmonitor_nd_xy_username2;
-char* username3 = mccmonitor_nd_xy_username3;
-int nowritefile = mccmonitor_nd_xy_nowritefile;
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+{   /* Declarations of monitor_nd_x=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_x_xwidth;
+MCNUM yheight = mccmonitor_nd_x_yheight;
+MCNUM zdepth = mccmonitor_nd_x_zdepth;
+MCNUM xmin = mccmonitor_nd_x_xmin;
+MCNUM xmax = mccmonitor_nd_x_xmax;
+MCNUM ymin = mccmonitor_nd_x_ymin;
+MCNUM ymax = mccmonitor_nd_x_ymax;
+MCNUM zmin = mccmonitor_nd_x_zmin;
+MCNUM zmax = mccmonitor_nd_x_zmax;
+MCNUM bins = mccmonitor_nd_x_bins;
+MCNUM min = mccmonitor_nd_x_min;
+MCNUM max = mccmonitor_nd_x_max;
+MCNUM restore_neutron = mccmonitor_nd_x_restore_neutron;
+MCNUM radius = mccmonitor_nd_x_radius;
+char* options = mccmonitor_nd_x_options;
+char* filename = mccmonitor_nd_x_filename;
+char* geometry = mccmonitor_nd_x_geometry;
+char* username1 = mccmonitor_nd_x_username1;
+char* username2 = mccmonitor_nd_x_username2;
+char* username3 = mccmonitor_nd_x_username3;
+int nowritefile = mccmonitor_nd_x_nowritefile;
 #line 312 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
@@ -16766,8 +17085,8 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 16767 "./NERA_guide_3x3_sample_m_scan3.c"
-}   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
+#line 17086 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -16779,9 +17098,319 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef mccompcurtype
 #undef mccompcurindex
   /* Label for restoring  neutron */
-  mcabsorbCompmonitor_nd_xy:
+  mcabsorbCompmonitor_nd_x:
   if (RESTORE) /* restore if needed */
   { RESTORE_NEUTRON(17,
+      mcnlx,
+      mcnly,
+      mcnlz,
+      mcnlvx,
+      mcnlvy,
+      mcnlvz,
+      mcnlt,
+      mcnlsx,
+      mcnlsy,
+      mcnlsz,
+      mcnlp); }
+#undef mcabsorbComp
+#undef p
+#undef sz
+#undef sy
+#undef sx
+#undef t
+#undef vz
+#undef vy
+#undef vx
+#undef z
+#undef y
+#undef x
+  mcDEBUG_STATE(
+mcnlx,
+mcnly,
+mcnlz,
+mcnlvx,
+mcnlvy,
+mcnlvz,
+mcnlt,
+mcnlsx,
+mcnlsy,
+mcnlsz,
+mcnlp)
+
+  /* TRACE Component monitor_nd_y [18] */
+  mccoordschange(mcposrmonitor_nd_y, mcrotrmonitor_nd_y,
+    &mcnlx,
+    &mcnly,
+    &mcnlz,
+    &mcnlvx,
+    &mcnlvy,
+    &mcnlvz,
+    &mcnlsx,
+    &mcnlsy,
+    &mcnlsz);
+  /* define label inside component monitor_nd_y (without coords transformations) */
+  mcJumpTrace_monitor_nd_y:
+  SIG_MESSAGE("monitor_nd_y (Trace)");
+  mcDEBUG_COMP("monitor_nd_y")
+  mcDEBUG_STATE(
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp)
+#define x mcnlx
+#define y mcnly
+#define z mcnlz
+#define vx mcnlvx
+#define vy mcnlvy
+#define vz mcnlvz
+#define t mcnlt
+#define sx mcnlsx
+#define sy mcnlsy
+#define sz mcnlsz
+#define p mcnlp
+
+#define mcabsorbComp mcabsorbCompmonitor_nd_y
+  STORE_NEUTRON(18,
+    mcnlx,
+    mcnly,
+    mcnlz,
+    mcnlvx,
+    mcnlvy,
+    mcnlvz,
+    mcnlt,
+    mcnlsx,
+    mcnlsy,
+    mcnlsz,
+    mcnlp);
+  mcScattered=0;
+  mcRestore=0;
+  mcNCounter[18]++;
+  mcPCounter[18] += p;
+  mcP2Counter[18] += p*p;
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+{   /* Declarations of monitor_nd_y=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_y_xwidth;
+MCNUM yheight = mccmonitor_nd_y_yheight;
+MCNUM zdepth = mccmonitor_nd_y_zdepth;
+MCNUM xmin = mccmonitor_nd_y_xmin;
+MCNUM xmax = mccmonitor_nd_y_xmax;
+MCNUM ymin = mccmonitor_nd_y_ymin;
+MCNUM ymax = mccmonitor_nd_y_ymax;
+MCNUM zmin = mccmonitor_nd_y_zmin;
+MCNUM zmax = mccmonitor_nd_y_zmax;
+MCNUM bins = mccmonitor_nd_y_bins;
+MCNUM min = mccmonitor_nd_y_min;
+MCNUM max = mccmonitor_nd_y_max;
+MCNUM restore_neutron = mccmonitor_nd_y_restore_neutron;
+MCNUM radius = mccmonitor_nd_y_radius;
+char* options = mccmonitor_nd_y_options;
+char* filename = mccmonitor_nd_y_filename;
+char* geometry = mccmonitor_nd_y_geometry;
+char* username1 = mccmonitor_nd_y_username1;
+char* username2 = mccmonitor_nd_y_username2;
+char* username3 = mccmonitor_nd_y_username3;
+int nowritefile = mccmonitor_nd_y_nowritefile;
+#line 312 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  double  XY=0;
+  double  t0 = 0;
+  double  t1 = 0;
+  double  pp;
+  int     intersect   = 0;
+  char    Flag_Restore = 0;
+
+  if (user1 != FLT_MAX) Vars.UserVariable1 = user1;
+  if (user2 != FLT_MAX) Vars.UserVariable2 = user2;
+  if (user3 != FLT_MAX) Vars.UserVariable3 = user3;
+
+  /* this is done automatically
+    STORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+  */
+
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+  {
+    /* determine intersections with object */
+    intersect = off_intersect_all(&t0, &t1, NULL, NULL,
+       x,y,z, vx, vy, vz, &offdata );
+    if (Vars.Flag_mantid) {
+      if(intersect) {
+        Vars.OFF_polyidx=(offdata.intersects[offdata.nextintersect]).index;
+      } else {
+        Vars.OFF_polyidx=-1;
+      }
+    }
+  }
+  else if ( (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
+            || (abs(Vars.Flag_Shape) == DEFS.SHAPE_DISK) ) /* square xy or disk xy */
+  {
+    // propagate to xy plane and find intersection
+    // make sure the event is recoverable afterwards
+    t0 = t;
+    ALLOW_BACKPROP;
+    PROP_Z0;
+    if ( (t>=t0) && (z==0.0) ) // forward propagation to xy plane was successful
+    {
+      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SQUARE)
+      {
+        // square xy
+        intersect = (x>=Vars.mxmin && x<=Vars.mxmax && y>=Vars.mymin && y<=Vars.mymax);
+      }
+      else
+      {
+        // disk xy
+        intersect = (SQR(x) + SQR(y)) <= SQR(Vars.Sphere_Radius);
+      }
+    }
+    else
+    {
+      intersect=0;
+    }
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) /* sphere */
+  {
+    intersect = sphere_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius);
+  /*      intersect = (intersect && t0 > 0); */
+  }
+  else if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)) /* cylinder */
+  {
+    intersect = cylinder_intersect(&t0, &t1, x, y, z, vx, vy, vz, Vars.Sphere_Radius, Vars.Cylinder_Height);
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) /* box */
+  {
+    intersect = box_intersect(&t0, &t1, x, y, z, vx, vy, vz,
+                              fabs(Vars.mxmax-Vars.mxmin), fabs(Vars.mymax-Vars.mymin), fabs(Vars.mzmax-Vars.mzmin));
+  }
+  else if (abs(Vars.Flag_Shape) == DEFS.SHAPE_PREVIOUS) /* previous comp */
+  { intersect = 1; }
+
+  if (intersect)
+  {
+    if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND)
+     || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA)
+     || (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) )
+    {
+      /* check if we have to remove the top/bottom with BANANA shape */
+      if ((abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA) && (intersect != 1)) {
+        double y0,y1;
+        /* propagate to intersection point as temporary variable to check top/bottom */
+        y0 = y+t0*vy;
+        y1 = y+t1*vy;
+        if (fabs(y0) >= Vars.Cylinder_Height/2*0.99) t0 = t1;
+        if (fabs(y1) >= Vars.Cylinder_Height/2*0.99) t1 = t0;
+      }
+      if (t0 < 0 && t1 > 0)
+        t0 = t;  /* neutron was already inside ! */
+      if (t1 < 0 && t0 > 0) /* neutron exit before entering !! */
+        t1 = t;
+      /* t0 is now time of incoming intersection with the detection area */
+      if ((Vars.Flag_Shape < 0) && (t1 > 0))
+        PROP_DT(t1); /* t1 outgoing beam */
+      else
+        PROP_DT(t0); /* t0 incoming beam */
+      /* Final test if we are on lid / bottom of banana/sphere */
+      if (abs(Vars.Flag_Shape) == DEFS.SHAPE_BANANA || abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) {
+        if (fabs(y) >= Vars.Cylinder_Height/2*0.99) {
+          intersect=0;
+          Flag_Restore=1;
+        }
+      }
+    }
+  }
+
+  if (intersect)
+  {
+    /* Now get the data to monitor: current or keep from PreMonitor */
+    if (Vars.Flag_UsePreMonitor != 1)
+    {
+      Vars.cp  = p;
+      Vars.cx  = x;
+      Vars.cvx = vx;
+      Vars.csx = sx;
+      Vars.cy  = y;
+      Vars.cvy = vy;
+      Vars.csy = sy;
+      Vars.cz  = z;
+      Vars.cvz = vz;
+      Vars.csz = sz;
+      Vars.ct  = t;
+    }
+
+    if ((Vars.He3_pressure > 0) && (t1 != t0) && ((abs(Vars.Flag_Shape) == DEFS.SHAPE_SPHERE) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_CYLIND) || (abs(Vars.Flag_Shape) == DEFS.SHAPE_BOX)))
+    {
+      XY = exp(-7.417*Vars.He3_pressure*fabs(t1-t0)*2*PI*K2V);
+      /* will monitor the absorbed part */
+      Vars.cp *= 1-XY;
+      /* and modify the neutron weight after monitor, only remains 1-p_detect */
+      p *= XY;
+    }
+
+    if (Vars.Flag_capture)
+    {
+      XY = sqrt(Vars.cvx*Vars.cvx+Vars.cvy*Vars.cvy+Vars.cvz*Vars.cvz);
+      XY *= V2K;
+      if (XY != 0) XY = 2*PI/XY; /* lambda. lambda(2200 m/2) = 1.7985 Angs  */
+      Vars.cp *= XY/1.7985;
+    }
+
+    pp = Monitor_nD_Trace(&DEFS, &Vars);
+    if (pp==0.0)
+    { ABSORB;
+    }
+    else if(pp==1)
+    {
+      SCATTER;
+    }
+
+    if (Vars.Flag_parallel) /* back to neutron state before detection */
+      Flag_Restore = 1;
+  } /* end if intersection */
+  else {
+    if (Vars.Flag_Absorb && !Vars.Flag_parallel)
+    {
+      // restore neutron ray before absorbing for correct mcdisplay
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+      ABSORB;
+    }
+    else Flag_Restore = 1;  /* no intersection, back to previous state */
+  }
+
+  if (Flag_Restore)
+  {
+    RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
+  }
+}
+#line 17396 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+  /* Label for restoring  neutron */
+  mcabsorbCompmonitor_nd_y:
+  if (RESTORE) /* restore if needed */
+  { RESTORE_NEUTRON(18,
       mcnlx,
       mcnly,
       mcnlz,
@@ -16882,7 +17511,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 16883 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 17512 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -16892,40 +17521,40 @@ MCNUM minutes = mccorigin_minutes;
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* User SAVE code for component 'monitor_nd_xy'. */
-  SIG_MESSAGE("monitor_nd_xy (Save)");
-#define mccompcurname  monitor_nd_xy
+  /* User SAVE code for component 'monitor_nd_x'. */
+  SIG_MESSAGE("monitor_nd_x (Save)");
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-{   /* Declarations of monitor_nd_xy=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccmonitor_nd_xy_xwidth;
-MCNUM yheight = mccmonitor_nd_xy_yheight;
-MCNUM zdepth = mccmonitor_nd_xy_zdepth;
-MCNUM xmin = mccmonitor_nd_xy_xmin;
-MCNUM xmax = mccmonitor_nd_xy_xmax;
-MCNUM ymin = mccmonitor_nd_xy_ymin;
-MCNUM ymax = mccmonitor_nd_xy_ymax;
-MCNUM zmin = mccmonitor_nd_xy_zmin;
-MCNUM zmax = mccmonitor_nd_xy_zmax;
-MCNUM bins = mccmonitor_nd_xy_bins;
-MCNUM min = mccmonitor_nd_xy_min;
-MCNUM max = mccmonitor_nd_xy_max;
-MCNUM restore_neutron = mccmonitor_nd_xy_restore_neutron;
-MCNUM radius = mccmonitor_nd_xy_radius;
-char* options = mccmonitor_nd_xy_options;
-char* filename = mccmonitor_nd_xy_filename;
-char* geometry = mccmonitor_nd_xy_geometry;
-char* username1 = mccmonitor_nd_xy_username1;
-char* username2 = mccmonitor_nd_xy_username2;
-char* username3 = mccmonitor_nd_xy_username3;
-int nowritefile = mccmonitor_nd_xy_nowritefile;
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+{   /* Declarations of monitor_nd_x=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_x_xwidth;
+MCNUM yheight = mccmonitor_nd_x_yheight;
+MCNUM zdepth = mccmonitor_nd_x_zdepth;
+MCNUM xmin = mccmonitor_nd_x_xmin;
+MCNUM xmax = mccmonitor_nd_x_xmax;
+MCNUM ymin = mccmonitor_nd_x_ymin;
+MCNUM ymax = mccmonitor_nd_x_ymax;
+MCNUM zmin = mccmonitor_nd_x_zmin;
+MCNUM zmax = mccmonitor_nd_x_zmax;
+MCNUM bins = mccmonitor_nd_x_bins;
+MCNUM min = mccmonitor_nd_x_min;
+MCNUM max = mccmonitor_nd_x_max;
+MCNUM restore_neutron = mccmonitor_nd_x_restore_neutron;
+MCNUM radius = mccmonitor_nd_x_radius;
+char* options = mccmonitor_nd_x_options;
+char* filename = mccmonitor_nd_x_filename;
+char* geometry = mccmonitor_nd_x_geometry;
+char* username1 = mccmonitor_nd_x_username1;
+char* username2 = mccmonitor_nd_x_username2;
+char* username3 = mccmonitor_nd_x_username3;
+int nowritefile = mccmonitor_nd_x_nowritefile;
 #line 482 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
@@ -16933,8 +17562,62 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     detector = Monitor_nD_Save(&DEFS, &Vars);
   }
 }
-#line 16934 "./NERA_guide_3x3_sample_m_scan3.c"
-}   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
+#line 17563 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* User SAVE code for component 'monitor_nd_y'. */
+  SIG_MESSAGE("monitor_nd_y (Save)");
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+{   /* Declarations of monitor_nd_y=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_y_xwidth;
+MCNUM yheight = mccmonitor_nd_y_yheight;
+MCNUM zdepth = mccmonitor_nd_y_zdepth;
+MCNUM xmin = mccmonitor_nd_y_xmin;
+MCNUM xmax = mccmonitor_nd_y_xmax;
+MCNUM ymin = mccmonitor_nd_y_ymin;
+MCNUM ymax = mccmonitor_nd_y_ymax;
+MCNUM zmin = mccmonitor_nd_y_zmin;
+MCNUM zmax = mccmonitor_nd_y_zmax;
+MCNUM bins = mccmonitor_nd_y_bins;
+MCNUM min = mccmonitor_nd_y_min;
+MCNUM max = mccmonitor_nd_y_max;
+MCNUM restore_neutron = mccmonitor_nd_y_restore_neutron;
+MCNUM radius = mccmonitor_nd_y_radius;
+char* options = mccmonitor_nd_y_options;
+char* filename = mccmonitor_nd_y_filename;
+char* geometry = mccmonitor_nd_y_geometry;
+char* username1 = mccmonitor_nd_y_username1;
+char* username2 = mccmonitor_nd_y_username2;
+char* username3 = mccmonitor_nd_y_username3;
+int nowritefile = mccmonitor_nd_y_nowritefile;
+#line 482 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  /* save results, but do not free pointers */
+  if (!nowritefile) {
+    detector = Monitor_nD_Save(&DEFS, &Vars);
+  }
+}
+#line 17617 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -16980,7 +17663,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 16981 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 17664 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -17072,7 +17755,7 @@ if (GVars.warnings > 100) {
   fprintf(stderr,"%s: warning: This message has been repeated %g times\n", GVars.compcurname, GVars.warnings);
 }
 }
-#line 17062 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 17745 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -17165,7 +17848,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 17153 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 17836 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -17292,7 +17975,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 17279 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 17962 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -17343,47 +18026,47 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
     if (!mcNCounter[16]) fprintf(stderr, "Warning: No neutron could reach Component[16] guide_end\n");
     if (mcAbsorbProp[16]) fprintf(stderr, "Warning: %g events were removed in Component[16] guide_end=Arm()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[16]);
-  /* User FINALLY code for component 'monitor_nd_xy'. */
-  SIG_MESSAGE("monitor_nd_xy (Finally)");
-#define mccompcurname  monitor_nd_xy
+  /* User FINALLY code for component 'monitor_nd_x'. */
+  SIG_MESSAGE("monitor_nd_x (Finally)");
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-{   /* Declarations of monitor_nd_xy=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccmonitor_nd_xy_xwidth;
-MCNUM yheight = mccmonitor_nd_xy_yheight;
-MCNUM zdepth = mccmonitor_nd_xy_zdepth;
-MCNUM xmin = mccmonitor_nd_xy_xmin;
-MCNUM xmax = mccmonitor_nd_xy_xmax;
-MCNUM ymin = mccmonitor_nd_xy_ymin;
-MCNUM ymax = mccmonitor_nd_xy_ymax;
-MCNUM zmin = mccmonitor_nd_xy_zmin;
-MCNUM zmax = mccmonitor_nd_xy_zmax;
-MCNUM bins = mccmonitor_nd_xy_bins;
-MCNUM min = mccmonitor_nd_xy_min;
-MCNUM max = mccmonitor_nd_xy_max;
-MCNUM restore_neutron = mccmonitor_nd_xy_restore_neutron;
-MCNUM radius = mccmonitor_nd_xy_radius;
-char* options = mccmonitor_nd_xy_options;
-char* filename = mccmonitor_nd_xy_filename;
-char* geometry = mccmonitor_nd_xy_geometry;
-char* username1 = mccmonitor_nd_xy_username1;
-char* username2 = mccmonitor_nd_xy_username2;
-char* username3 = mccmonitor_nd_xy_username3;
-int nowritefile = mccmonitor_nd_xy_nowritefile;
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+{   /* Declarations of monitor_nd_x=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_x_xwidth;
+MCNUM yheight = mccmonitor_nd_x_yheight;
+MCNUM zdepth = mccmonitor_nd_x_zdepth;
+MCNUM xmin = mccmonitor_nd_x_xmin;
+MCNUM xmax = mccmonitor_nd_x_xmax;
+MCNUM ymin = mccmonitor_nd_x_ymin;
+MCNUM ymax = mccmonitor_nd_x_ymax;
+MCNUM zmin = mccmonitor_nd_x_zmin;
+MCNUM zmax = mccmonitor_nd_x_zmax;
+MCNUM bins = mccmonitor_nd_x_bins;
+MCNUM min = mccmonitor_nd_x_min;
+MCNUM max = mccmonitor_nd_x_max;
+MCNUM restore_neutron = mccmonitor_nd_x_restore_neutron;
+MCNUM radius = mccmonitor_nd_x_radius;
+char* options = mccmonitor_nd_x_options;
+char* filename = mccmonitor_nd_x_filename;
+char* geometry = mccmonitor_nd_x_geometry;
+char* username1 = mccmonitor_nd_x_username1;
+char* username2 = mccmonitor_nd_x_username2;
+char* username3 = mccmonitor_nd_x_username3;
+int nowritefile = mccmonitor_nd_x_nowritefile;
 #line 490 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
   Monitor_nD_Finally(&DEFS, &Vars);
 }
-#line 17367 "./NERA_guide_3x3_sample_m_scan3.c"
-}   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
+#line 18050 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars
@@ -17395,9 +18078,64 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #undef mccompcurtype
 #undef mccompcurindex
 
-    if (!mcNCounter[17]) fprintf(stderr, "Warning: No neutron could reach Component[17] monitor_nd_xy\n");
-    if (mcAbsorbProp[17]) fprintf(stderr, "Warning: %g events were removed in Component[17] monitor_nd_xy=Monitor_nD()\n"
+    if (!mcNCounter[17]) fprintf(stderr, "Warning: No neutron could reach Component[17] monitor_nd_x\n");
+    if (mcAbsorbProp[17]) fprintf(stderr, "Warning: %g events were removed in Component[17] monitor_nd_x=Monitor_nD()\n"
 "         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[17]);
+  /* User FINALLY code for component 'monitor_nd_y'. */
+  SIG_MESSAGE("monitor_nd_y (Finally)");
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+{   /* Declarations of monitor_nd_y=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_y_xwidth;
+MCNUM yheight = mccmonitor_nd_y_yheight;
+MCNUM zdepth = mccmonitor_nd_y_zdepth;
+MCNUM xmin = mccmonitor_nd_y_xmin;
+MCNUM xmax = mccmonitor_nd_y_xmax;
+MCNUM ymin = mccmonitor_nd_y_ymin;
+MCNUM ymax = mccmonitor_nd_y_ymax;
+MCNUM zmin = mccmonitor_nd_y_zmin;
+MCNUM zmax = mccmonitor_nd_y_zmax;
+MCNUM bins = mccmonitor_nd_y_bins;
+MCNUM min = mccmonitor_nd_y_min;
+MCNUM max = mccmonitor_nd_y_max;
+MCNUM restore_neutron = mccmonitor_nd_y_restore_neutron;
+MCNUM radius = mccmonitor_nd_y_radius;
+char* options = mccmonitor_nd_y_options;
+char* filename = mccmonitor_nd_y_filename;
+char* geometry = mccmonitor_nd_y_geometry;
+char* username1 = mccmonitor_nd_y_username1;
+char* username2 = mccmonitor_nd_y_username2;
+char* username3 = mccmonitor_nd_y_username3;
+int nowritefile = mccmonitor_nd_y_nowritefile;
+#line 490 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  /* free pointers */
+  Monitor_nD_Finally(&DEFS, &Vars);
+}
+#line 18104 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+    if (!mcNCounter[18]) fprintf(stderr, "Warning: No neutron could reach Component[18] monitor_nd_y\n");
+    if (mcAbsorbProp[18]) fprintf(stderr, "Warning: %g events were removed in Component[18] monitor_nd_y=Monitor_nD()\n"
+"         (negative time, miss next components, rounding errors, Nan, Inf).\n", mcAbsorbProp[18]);
   /* User FINALLY code from instrument definition. */
   SIG_MESSAGE("Nera (Finally)");
 #define mccompcurname  Nera
@@ -17417,11 +18155,11 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 #define sample_size mcipsample_size
 #define m_hor mcipm_hor
 #define m_vert mcipm_vert
-#line 191 "NERA_guide_3x3_sample_m_scan3.instr"
+#line 196 "NERA_guide_3x3_sample_m_scan3.instr"
 {
 
 }
-#line 17405 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18142 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef m_vert
 #undef m_hor
 #undef sample_size
@@ -17474,7 +18212,7 @@ MCNUM minutes = mccorigin_minutes;
 {
   
 }
-#line 17458 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18195 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -17523,7 +18261,7 @@ int target_index = mccSource_simple_target_index;
     dashed_line(0,0,0, -focus_xw/2+tx, focus_yh/2+ty,tz, 4);
   }
 }
-#line 17507 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18244 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -17569,7 +18307,7 @@ MCNUM yheight = mccslit01_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17553 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18290 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17612,7 +18350,7 @@ MCNUM yheight = mccslit02_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17596 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18333 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17655,7 +18393,7 @@ MCNUM yheight = mccslit03_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17639 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18376 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17698,7 +18436,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17682 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18419 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17741,7 +18479,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17725 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18462 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17784,7 +18522,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17768 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18505 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17827,7 +18565,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17811 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18548 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17870,7 +18608,7 @@ MCNUM yheight = mccLast_slit_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17854 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18591 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17890,7 +18628,7 @@ MCNUM yheight = mccLast_slit_yheight;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 17874 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18611 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -18001,7 +18739,7 @@ char* reflect = mccMain_guide_reflect;
   }
 
 }
-#line 17985 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18722 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -18023,7 +18761,7 @@ char* reflect = mccMain_guide_reflect;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 18007 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18744 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -18126,7 +18864,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   }
 
 }
-#line 18110 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18847 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -18269,7 +19007,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   }
 
 }
-#line 18253 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 18990 "./NERA_guide_3x3_sample_m_scan3.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -18328,46 +19066,46 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 18312 "./NERA_guide_3x3_sample_m_scan3.c"
+#line 19049 "./NERA_guide_3x3_sample_m_scan3.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
 
-  /* MCDISPLAY code for component 'monitor_nd_xy'. */
-  SIG_MESSAGE("monitor_nd_xy (McDisplay)");
-  printf("MCDISPLAY: component %s\n", "monitor_nd_xy");
-#define mccompcurname  monitor_nd_xy
+  /* MCDISPLAY code for component 'monitor_nd_x'. */
+  SIG_MESSAGE("monitor_nd_x (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "monitor_nd_x");
+#define mccompcurname  monitor_nd_x
 #define mccompcurtype  Monitor_nD
 #define mccompcurindex 17
-#define user1 mccmonitor_nd_xy_user1
-#define user2 mccmonitor_nd_xy_user2
-#define user3 mccmonitor_nd_xy_user3
-#define DEFS mccmonitor_nd_xy_DEFS
-#define Vars mccmonitor_nd_xy_Vars
-#define detector mccmonitor_nd_xy_detector
-#define offdata mccmonitor_nd_xy_offdata
-{   /* Declarations of monitor_nd_xy=Monitor_nD() SETTING parameters. */
-MCNUM xwidth = mccmonitor_nd_xy_xwidth;
-MCNUM yheight = mccmonitor_nd_xy_yheight;
-MCNUM zdepth = mccmonitor_nd_xy_zdepth;
-MCNUM xmin = mccmonitor_nd_xy_xmin;
-MCNUM xmax = mccmonitor_nd_xy_xmax;
-MCNUM ymin = mccmonitor_nd_xy_ymin;
-MCNUM ymax = mccmonitor_nd_xy_ymax;
-MCNUM zmin = mccmonitor_nd_xy_zmin;
-MCNUM zmax = mccmonitor_nd_xy_zmax;
-MCNUM bins = mccmonitor_nd_xy_bins;
-MCNUM min = mccmonitor_nd_xy_min;
-MCNUM max = mccmonitor_nd_xy_max;
-MCNUM restore_neutron = mccmonitor_nd_xy_restore_neutron;
-MCNUM radius = mccmonitor_nd_xy_radius;
-char* options = mccmonitor_nd_xy_options;
-char* filename = mccmonitor_nd_xy_filename;
-char* geometry = mccmonitor_nd_xy_geometry;
-char* username1 = mccmonitor_nd_xy_username1;
-char* username2 = mccmonitor_nd_xy_username2;
-char* username3 = mccmonitor_nd_xy_username3;
-int nowritefile = mccmonitor_nd_xy_nowritefile;
+#define user1 mccmonitor_nd_x_user1
+#define user2 mccmonitor_nd_x_user2
+#define user3 mccmonitor_nd_x_user3
+#define DEFS mccmonitor_nd_x_DEFS
+#define Vars mccmonitor_nd_x_Vars
+#define detector mccmonitor_nd_x_detector
+#define offdata mccmonitor_nd_x_offdata
+{   /* Declarations of monitor_nd_x=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_x_xwidth;
+MCNUM yheight = mccmonitor_nd_x_yheight;
+MCNUM zdepth = mccmonitor_nd_x_zdepth;
+MCNUM xmin = mccmonitor_nd_x_xmin;
+MCNUM xmax = mccmonitor_nd_x_xmax;
+MCNUM ymin = mccmonitor_nd_x_ymin;
+MCNUM ymax = mccmonitor_nd_x_ymax;
+MCNUM zmin = mccmonitor_nd_x_zmin;
+MCNUM zmax = mccmonitor_nd_x_zmax;
+MCNUM bins = mccmonitor_nd_x_bins;
+MCNUM min = mccmonitor_nd_x_min;
+MCNUM max = mccmonitor_nd_x_max;
+MCNUM restore_neutron = mccmonitor_nd_x_restore_neutron;
+MCNUM radius = mccmonitor_nd_x_radius;
+char* options = mccmonitor_nd_x_options;
+char* filename = mccmonitor_nd_x_filename;
+char* geometry = mccmonitor_nd_x_geometry;
+char* username1 = mccmonitor_nd_x_username1;
+char* username2 = mccmonitor_nd_x_username2;
+char* username3 = mccmonitor_nd_x_username3;
+int nowritefile = mccmonitor_nd_x_nowritefile;
 #line 496 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
@@ -18377,8 +19115,65 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 18361 "./NERA_guide_3x3_sample_m_scan3.c"
-}   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
+#line 19098 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_x=Monitor_nD() SETTING parameter declarations. */
+#undef offdata
+#undef detector
+#undef Vars
+#undef DEFS
+#undef user3
+#undef user2
+#undef user1
+#undef mccompcurname
+#undef mccompcurtype
+#undef mccompcurindex
+
+  /* MCDISPLAY code for component 'monitor_nd_y'. */
+  SIG_MESSAGE("monitor_nd_y (McDisplay)");
+  printf("MCDISPLAY: component %s\n", "monitor_nd_y");
+#define mccompcurname  monitor_nd_y
+#define mccompcurtype  Monitor_nD
+#define mccompcurindex 18
+#define user1 mccmonitor_nd_y_user1
+#define user2 mccmonitor_nd_y_user2
+#define user3 mccmonitor_nd_y_user3
+#define DEFS mccmonitor_nd_y_DEFS
+#define Vars mccmonitor_nd_y_Vars
+#define detector mccmonitor_nd_y_detector
+#define offdata mccmonitor_nd_y_offdata
+{   /* Declarations of monitor_nd_y=Monitor_nD() SETTING parameters. */
+MCNUM xwidth = mccmonitor_nd_y_xwidth;
+MCNUM yheight = mccmonitor_nd_y_yheight;
+MCNUM zdepth = mccmonitor_nd_y_zdepth;
+MCNUM xmin = mccmonitor_nd_y_xmin;
+MCNUM xmax = mccmonitor_nd_y_xmax;
+MCNUM ymin = mccmonitor_nd_y_ymin;
+MCNUM ymax = mccmonitor_nd_y_ymax;
+MCNUM zmin = mccmonitor_nd_y_zmin;
+MCNUM zmax = mccmonitor_nd_y_zmax;
+MCNUM bins = mccmonitor_nd_y_bins;
+MCNUM min = mccmonitor_nd_y_min;
+MCNUM max = mccmonitor_nd_y_max;
+MCNUM restore_neutron = mccmonitor_nd_y_restore_neutron;
+MCNUM radius = mccmonitor_nd_y_radius;
+char* options = mccmonitor_nd_y_options;
+char* filename = mccmonitor_nd_y_filename;
+char* geometry = mccmonitor_nd_y_geometry;
+char* username1 = mccmonitor_nd_y_username1;
+char* username2 = mccmonitor_nd_y_username2;
+char* username3 = mccmonitor_nd_y_username3;
+int nowritefile = mccmonitor_nd_y_nowritefile;
+#line 496 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
+{
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+  {
+    off_display(offdata);
+  } else {
+    Monitor_nD_McDisplay(&DEFS, &Vars);
+  }
+}
+#line 19155 "./NERA_guide_3x3_sample_m_scan3.c"
+}   /* End of monitor_nd_y=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
 #undef Vars

@@ -2,14 +2,14 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: NERA_guide_3x3_sample.instr (Nera)
- * Date:       Fri Nov 29 17:40:20 2019
+ * Date:       Sun Oct 11 19:37:53 2020
  * File:       ./NERA_guide_3x3_sample.c
  * Compile:    cc -o Nera.out ./NERA_guide_3x3_sample.c 
  * CFLAGS=
  */
 
 
-#define MCCODE_STRING "McStas 2.5 - Dec. 12, 2018"
+#define MCCODE_STRING "McStas 2.6.1 - May. 04, 2020"
 #define FLAVOR "mcstas"
 #define FLAVOR_UPPER "MCSTAS"
 #define MC_USE_DEFAULT_MAIN
@@ -29,7 +29,7 @@
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: McStas 2.5
+* Release: McStas 2.6.1
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -57,6 +57,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -103,19 +104,23 @@
 #endif /* !WIN32 */
 #endif /* MC_PATHSEP_C */
 
-
+#ifndef WIN32
+#ifndef _POSIX_SOURCE
+#define _POSIX_SOURCE 1
+#endif
+#endif
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#define MCCODE_STRING "McStas 2.5 - Dec. 12, 2018"
+#define MCCODE_STRING "McStas 2.6.1 - May. 04, 2020"
 #endif
 
 #ifndef MCCODE_DATE
-#define MCCODE_DATE "Dec. 12, 2018"
+#define MCCODE_DATE "May. 04, 2020"
 #endif
 
 #ifndef MCCODE_VERSION
-#define MCCODE_VERSION "2.5"
+#define MCCODE_VERSION "2.6.1"
 #endif
 
 #ifndef MCCODE_NAME
@@ -281,7 +286,19 @@ unsigned long long mcget_run_num(void);           /* wrapper to get mcrun_num=0:
 # ifdef M_PI
 #  define PI M_PI
 # else
+/* When using c99 in the CFLAGS, some of these consts
+   are lost... Perhaps we should in fact include everything from
+   https://www.gnu.org/software/libc/manual/html_node/Mathematical-Constants.html
+*/
 #  define PI 3.14159265358979323846
+#  define M_PI PI
+#  define M_PI_2 M_PI/2.0
+#  define M_PI_4 M_PI/4.0
+#  define M_1_PI 1.0/M_PI
+#  define M_2_PI 2*M_1_PI
+#  define M_2_SQRTPI 2/sqrt(M_PI)
+#  define M_SQRT2 sqrt(2)
+#  define M_SQRT1_2 sqrt(1/2)
 # endif
 #endif
 
@@ -445,15 +462,15 @@ void mcdisplay(void);
 /* simple vector algebra ==================================================== */
 #define vec_prod(x, y, z, x1, y1, z1, x2, y2, z2) \
 	vec_prod_func(&x, &y, &z, x1, y1, z1, x2, y2, z2)
-mcstatic inline void vec_prod_func(double *x, double *y, double *z,
+mcstatic void vec_prod_func(double *x, double *y, double *z,
 		double x1, double y1, double z1, double x2, double y2, double z2);
 
-mcstatic inline double scalar_prod(
+mcstatic double scalar_prod(
 		double x1, double y1, double z1, double x2, double y2, double z2);
 
 #define NORM(x,y,z) \
 	norm_func(&x, &y, &z)
-mcstatic inline void norm_func(double *x, double *y, double *z) {
+mcstatic void norm_func(double *x, double *y, double *z) {
 	double temp = (*x * *x) + (*y * *y) + (*z * *z);
 	if (temp != 0) {
 		temp = sqrt(temp);
@@ -464,7 +481,7 @@ mcstatic inline void norm_func(double *x, double *y, double *z) {
 }
 #define normal_vec(nx, ny, nz, x, y, z) \
     normal_vec_func(&(nx), &(ny), &(nz), x, y, z)
-mcstatic inline void normal_vec_func(double *nx, double *ny, double *nz,
+mcstatic void normal_vec_func(double *nx, double *ny, double *nz,
     double x, double y, double z);
 
 /**
@@ -523,7 +540,7 @@ double coords_sp(Coords a, Coords b);
 Coords coords_xp(Coords b, Coords c);
 double coords_len(Coords a);
 void   coords_print(Coords a);
-mcstatic inline void coords_norm(Coords* c);
+mcstatic void coords_norm(Coords* c);
 
 void rot_set_rotation(Rotation t, double phx, double phy, double phz);
 int  rot_test_identity(Rotation t);
@@ -692,7 +709,7 @@ NXhandle nxhandle;
 #endif /* MCCODE_R_H */
 /* End of file "mccode-r.h". */
 
-#line 695 "./NERA_guide_3x3_sample.c"
+#line 712 "./NERA_guide_3x3_sample.c"
 
 #line 1 "mcstas-r.h"
 /*******************************************************************************
@@ -925,7 +942,7 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 #endif /* MCSTAS_R_H */
 /* End of file "mcstas-r.h". */
 
-#line 928 "./NERA_guide_3x3_sample.c"
+#line 945 "./NERA_guide_3x3_sample.c"
 
 #line 1 "mccode-r.c"
 /*******************************************************************************
@@ -979,6 +996,7 @@ void mcsetstate(double x, double y, double z, double vx, double vy, double vz,
 #include <sys/stat.h>
 
 #ifdef _WIN32 
+#include <direct.h>
 # define  mkdir( D, M )   _mkdir( D ) 
 #endif 
 
@@ -1651,7 +1669,7 @@ MCDETECTOR mcdetector_import(
     }
   }
 
-  m=abs(m); n=abs(n); p=abs(p); /* make sure dimensions are positive */
+  m=labs(m); n=labs(n); p=labs(p); /* make sure dimensions are positive */
   detector.istransposed = istransposed;
 
   /* determine detector rank (dimensionality) */
@@ -1835,10 +1853,10 @@ static void mcinfo_out(char *pre, FILE *f)
 } /* mcinfo_out */
 
 /*******************************************************************************
-* mcruninfo_out: output simulation tags/info (both in SIM and data files)
-* Used in: mcsiminfo_init (ascii case), mcdetector_out_xD_ascii
+* mcruninfo_out_backend: output simulation tags/info (both in SIM and data files)
+* Used in: mcsiminfo_init (ascii case), mcdetector_out_xD_ascii, mcinfo(stdout)
 *******************************************************************************/
-static void mcruninfo_out(char *pre, FILE *f)
+static void mcruninfo_out_backend(char *pre, FILE *f, int info)
 {
   int i;
   char Parameters[CHAR_BUF_LENGTH];
@@ -1864,18 +1882,30 @@ static void mcruninfo_out(char *pre, FILE *f)
 
   /* output parameter string ================================================ */
   for(i = 0; i < mcnumipar; i++) {
-      if (mcinputtable[i].par){
-	/* Parameters with a default value */
+      if (!info){
+          (*mcinputtypes[mcinputtable[i].type].printer)(Parameters, mcinputtable[i].par);
+          fprintf(f, "%sParam: %s=%s\n", pre, mcinputtable[i].name, Parameters);
+      }else{
+        /*if an info run, some variables might not have values. Flag these by "NULL"*/
 	if(mcinputtable[i].val && strlen(mcinputtable[i].val)){
-	  (*mcinputtypes[mcinputtable[i].type].printer)(Parameters, mcinputtable[i].par);
-	  fprintf(f, "%sParam: %s=%s\n", pre, mcinputtable[i].name, Parameters);
-        /* ... and those without */
-	}else{
-	  fprintf(f, "%sParam: %s=NULL\n", pre, mcinputtable[i].name);
+            /* ... those with defautl values*/
+            (*mcinputtypes[mcinputtable[i].type].printer)(Parameters, mcinputtable[i].par);
+            fprintf(f, "%sParam: %s=%s\n", pre, mcinputtable[i].name, Parameters);
+        }else{
+            /* ... and those without */
+            fprintf(f, "%sParam: %s=NULL\n", pre, mcinputtable[i].name);
 	}
-      } 
+      }
   }
-} /* mcruninfo_out */
+} /* mcruninfo_out_backend */
+
+/************************
+* wrapper function to mcruninfo_out_backend
+*  Regular runs use this whereas the single call from mcinfo is directly to the backend
+*************************/
+static void mcruninfo_out(char *pre, FILE *f){
+    mcruninfo_out_backend(pre,f,0);
+}
 
 /*******************************************************************************
 * mcsiminfo_out:    wrapper to fprintf(mcsiminfo_file)
@@ -2050,8 +2080,8 @@ MCDETECTOR mcdetector_out_2D_ascii(MCDETECTOR detector)
       
         mcruninfo_out( "# ", outfile);
         mcdatainfo_out("# ", outfile,   detector);
-        fprintf(outfile, "# Data [%s/%s] %s:\n", detector.component, detector.filename, detector.zvar);
       }
+      fprintf(outfile, "# Data [%s/%s] %s:\n", detector.component, detector.filename, detector.zvar);
       mcdetector_out_array_ascii(detector.m, detector.n*detector.p, detector.p1, 
         outfile, detector.istransposed);
       if (detector.p2) {
@@ -2892,15 +2922,15 @@ MCDETECTOR mcdetector_out_2D(char *t, char *xl, char *yl,
   char yvar[CHAR_BUF_LENGTH];
   
   /* create short axes labels */
-  if (xl && strlen(xl)) { strncpy(xvar, xl, CHAR_BUF_LENGTH); xvar[2]='\0'; }
+  if (xl && strlen(xl)) { strncpy(xvar, xl, CHAR_BUF_LENGTH); xvar[strcspn(xvar,"\n\r ")]='\0'; }
   else strcpy(xvar, "x");
-  if (yl && strlen(yl)) { strncpy(yvar, yl, CHAR_BUF_LENGTH); yvar[2]='\0'; }
+  if (yl && strlen(yl)) { strncpy(yvar, yl, CHAR_BUF_LENGTH); yvar[strcspn(yvar,"\n\r ")]='\0'; }
   else strcpy(yvar, "y");
 
   MCDETECTOR detector;
 
   /* import and perform basic detector analysis (and handle MPI_Reduce) */
-  if (abs(m) == 1) {/* n>1 on Y, m==1 on X: 1D, no X axis*/
+  if (labs(m) == 1) {/* n>1 on Y, m==1 on X: 1D, no X axis*/
     detector = mcdetector_import(mcformat,
       c, (t ? t : MCCODE_STRING " 1D data"),
       n, 1, 1,
@@ -2908,7 +2938,7 @@ MCDETECTOR mcdetector_out_2D(char *t, char *xl, char *yl,
       yvar, "(I,Ierr)", "I",
       y1, y2, x1, x2, 0, 0, f,
       p0, p1, p2, posa); /* write Detector: line */
-  } else if (abs(n)==1) {/* m>1 on X, n==1 on Y: 1D, no Y axis*/
+  } else if (labs(n)==1) {/* m>1 on X, n==1 on Y: 1D, no Y axis*/
     detector = mcdetector_import(mcformat,
       c, (t ? t : MCCODE_STRING " 1D data"),
       m, 1, 1,
@@ -2956,7 +2986,7 @@ MCDETECTOR mcdetector_out_list(char *t, char *xl, char *yl,
   mcformat = format_new;
 
   detector = mcdetector_out_2D(t, xl, yl,
-                  1,abs(m),1,abs(n),
+                  1,labs(m),1,labs(n),
                   m,n,
                   NULL, p1, NULL, f,
                   c, posa);
@@ -3015,7 +3045,7 @@ mcinfo(void)
   mcinfo_out("  ", stdout);
   fprintf(stdout, "end instrument\n");
   fprintf(stdout, "begin simulation: %s\n", mcdirname ? mcdirname : ".");
-  mcruninfo_out("  ", stdout);
+  mcruninfo_out_backend("  ", stdout,1);
   fprintf(stdout, "end simulation\n");
   exit(0); /* includes MPI_Finalize in MPI mode */
 } /* mcinfo */
@@ -3389,7 +3419,7 @@ void coords_print(Coords a) {
   return;
 }
 
-mcstatic inline void coords_norm(Coords* c) {
+mcstatic void coords_norm(Coords* c) {
 	double temp = coords_sp(*c,*c);
 
 	// Skip if we will end dividing by zero
@@ -3553,7 +3583,7 @@ void rot_print(Rotation rot) {
 /**
  * Vector product: used by vec_prod (mccode-r.h). Use coords_xp for Coords.
  */
-mcstatic inline void vec_prod_func(double *x, double *y, double *z,
+mcstatic void vec_prod_func(double *x, double *y, double *z,
 		double x1, double y1, double z1,
 		double x2, double y2, double z2) {
     *x = (y1)*(z2) - (y2)*(z1);
@@ -3564,7 +3594,7 @@ mcstatic inline void vec_prod_func(double *x, double *y, double *z,
 /**
  * Scalar product: use coords_sp for Coords.
  */
-mcstatic inline double scalar_prod(
+mcstatic double scalar_prod(
 		double x1, double y1, double z1,
 		double x2, double y2, double z2) {
 	return ((x1 * x2) + (y1 * y2) + (z1 * z2));
@@ -3614,7 +3644,7 @@ mccoordschange_polarisation(Rotation t, double *sx, double *sy, double *sz)
 /* SECTION: vector math  ==================================================== */
 
 /* normal_vec_func: Compute normal vector to (x,y,z). */
-mcstatic inline void normal_vec_func(double *nx, double *ny, double *nz,
+mcstatic void normal_vec_func(double *nx, double *ny, double *nz,
                 double x, double y, double z)
 {
   double ax = fabs(x);
@@ -4944,7 +4974,7 @@ void neutronics_main_(float *inx, float *iny, float *inz, float *invx, float *in
 /* End of file "mccode-r.c". */
 /* End of file "mccode-r.c". */
 
-#line 4947 "./NERA_guide_3x3_sample.c"
+#line 4977 "./NERA_guide_3x3_sample.c"
 
 #line 1 "mcstas-r.c"
 /*******************************************************************************
@@ -5304,13 +5334,13 @@ plane_intersect(double *t, double x, double y, double z,
 #endif /* !MCSTAS_H */
 /* End of file "mcstas-r.c". */
 
-#line 5307 "./NERA_guide_3x3_sample.c"
+#line 5337 "./NERA_guide_3x3_sample.c"
 #ifdef MC_TRACE_ENABLED
 int mctraceenabled = 1;
 #else
 int mctraceenabled = 0;
 #endif
-#define MCSTAS "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/"
+#define MCSTAS "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../"
 int mcdefaultmain = 1;
 char mcinstrument_name[] = "Nera";
 char mcinstrument_source[] = "NERA_guide_3x3_sample.instr";
@@ -5323,7 +5353,7 @@ void mcfinally(void);
 void mcdisplay(void);
 
 /* Shared user declarations for all components 'Guide_gravity'. */
-#line 124 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 124 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 /*****************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -5431,6 +5461,9 @@ void mcdisplay(void);
     char    constantstep;  /* true when 1st column/vector data has constant step */
     char    method[32];    /* interpolation method: nearest, linear */
   } t_Table;
+
+/*maximum number of rows to rebin a table = 1M*/
+enum { mcread_table_rebin_maxsize = 1000000 };
 
 typedef struct t_Read_table_file_item {
     int ref_count;
@@ -5557,9 +5590,7 @@ void * Table_File_List_Handler(t_Read_table_file_actions action, void *item, voi
         case STORE:
             /*find an available slot and store references to table there*/
             tr=&(read_table_file_list[read_table_file_count++]);
-            tr->table_ref=(t_Table *)calloc(1,sizeof(t_Table));
-            /*copy the contents of the table handle*/
-            *(tr->table_ref)= *((t_Table *) item);
+            tr->table_ref = ((t_Table *) item);
             tr->ref_count++;
             return NULL;
         case GC:
@@ -5632,7 +5663,7 @@ int Table_File_List_gc(t_Table *tab){
  * return None. 
 *******************************************************************************/
 void *Table_File_List_store(t_Table *tab){
-    Table_File_List_Handler(STORE,tab,0);
+    return Table_File_List_Handler(STORE,tab,0);
 }
 
 
@@ -5660,7 +5691,7 @@ void *Table_File_List_store(t_Table *tab){
     {
       char dir[1024];
 
-      if (!hfile && mcinstrument_source && strlen(mcinstrument_source)) /* search in instrument source location */
+      if (!hfile && mcinstrument_source[0] != '\0' && strlen(mcinstrument_source)) /* search in instrument source location */
       {
         char *path_pos   = NULL;
         /* extract path: searches for last file separator */
@@ -5675,7 +5706,7 @@ void *Table_File_List_store(t_Table *tab){
           }
         }
       }
-      if (!hfile && mcinstrument_exe && strlen(mcinstrument_exe)) /* search in PWD instrument executable location */
+      if (!hfile && mcinstrument_exe[0] != '\0' && strlen(mcinstrument_exe)) /* search in PWD instrument executable location */
       {
         char *path_pos   = NULL;
         /* extract path: searches for last file separator */
@@ -6028,7 +6059,7 @@ void *Table_File_List_store(t_Table *tab){
                 } else { /* store into data array */
                   if (count_in_array >= malloc_size) {
                     /* realloc data buffer if necessary */
-                    malloc_size = count_in_array+CHAR_BUF_LENGTH;
+                    malloc_size = count_in_array*1.5;
                     Data = (double*) realloc(Data, malloc_size*sizeof(double));
                     if (Data == NULL) {
                       fprintf(stderr, "Error: Can not re-allocate memory %li (Table_Read_Handle).\n",
@@ -6088,7 +6119,7 @@ void *Table_File_List_store(t_Table *tab){
     if (Rows * Columns != count_in_array)
     {
       fprintf(stderr, "Warning: Read_Table :%s %s Data has %li values that should be %li x %li\n",
-        (Table->filename ? Table->filename : ""),
+        (Table->filename[0] != '\0' ? Table->filename : ""),
         (!block_number ? " catenated" : ""),
         count_in_array, Rows, Columns);
       Columns = count_in_array; Rows = 1;
@@ -6129,6 +6160,11 @@ void *Table_File_List_store(t_Table *tab){
       double *New_Table;
 
       Length_Table = ceil(fabs(Table->max_x - Table->min_x)/new_step)+1;
+      /*return early if the rebinned table will become too large*/
+      if (Length_Table > mcread_table_rebin_maxsize){
+        fprintf(stderr,"WARNING: (Table_Rebin): Rebinning table from %s would exceed 1M rows. Skipping.\n", Table->filename); 
+        return(Table->rows*Table->columns);
+      }
       New_Table    = (double*)malloc(Length_Table*Table->columns*sizeof(double));
 
       for (i=0; i < Length_Table; i++)
@@ -6380,7 +6416,7 @@ double Table_Value(t_Table Table, double X, long j)
     if (!Table.block_number) strcpy(buffer, "catenated");
     else sprintf(buffer, "block %li", Table.block_number);
     printf("Table from file '%s' (%s)",
-      Table.filename ? Table.filename : "", buffer);
+      Table.filename[0] != '\0' ? Table.filename : "", buffer);
     if ((Table.data != NULL) && (Table.rows*Table.columns))
     {
       printf(" is %li x %li ", Table.rows, Table.columns);
@@ -7112,15 +7148,15 @@ void TableReflecFunc(double mc_pol_q, t_Table *mc_pol_par, double *mc_pol_r) {
 
 
 #endif
-#line 7115 "./NERA_guide_3x3_sample.c"
+#line 7151 "./NERA_guide_3x3_sample.c"
 
 /* Shared user declarations for all components 'Guide_tapering'. */
-#line 91 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 91 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 
-#line 7120 "./NERA_guide_3x3_sample.c"
+#line 7156 "./NERA_guide_3x3_sample.c"
 
 /* Shared user declarations for all components 'Monitor_nD'. */
-#line 214 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 216 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -7671,7 +7707,7 @@ void Monitor_nD_Init(MonitornD_Defines_type *DEFS,
         if (!strcmp(token, "k") || !strcmp(token, "wavevector"))
           { Set_Vars_Coord_Type = DEFS->COORD_K; strcpy(Set_Vars_Coord_Label,"|k| [Angs-1]"); strcpy(Set_Vars_Coord_Var,"k"); lmin = 0; lmax = 10; }
         if (!strcmp(token, "v"))
-          { Set_Vars_Coord_Type = DEFS->COORD_V; strcpy(Set_Vars_Coord_Label,"Velocity [m/s]"); strcpy(Set_Vars_Coord_Var,"v"); lmin = 0; lmax = 10000; }
+          { Set_Vars_Coord_Type = DEFS->COORD_V; strcpy(Set_Vars_Coord_Label,"Velocity [m/s]"); strcpy(Set_Vars_Coord_Var,"v"); lmin = 0; lmax = 1000000; }
         if (!strcmp(token, "t") || !strcmp(token, "time") || !strcmp(token, "tof"))
           { Set_Vars_Coord_Type = DEFS->COORD_T; strcpy(Set_Vars_Coord_Label,"TOF [s]"); strcpy(Set_Vars_Coord_Var,"t"); lmin = 0; lmax = .1; }
         if ((!strcmp(token, "p") || !strcmp(token, "i") || !strcmp(token, "intensity") || !strcmp(token, "flux")))
@@ -9425,7 +9461,7 @@ FILE *off_getBlocksIndex(char* filename, long* vtxSize, long* polySize )
   }
   if (strlen(line)>5)
   {
-      fprintf(stderr,"Error: First line in %s is too long (=%d). Possibly the line is not terminated by '\\n'.\n" 
+      fprintf(stderr,"Error: First line in %s is too long (=%lu). Possibly the line is not terminated by '\\n'.\n" 
               "       The first line is required to be exactly 'OFF', '3' or 'ply'.\n",filename,strlen(line));
       fclose(f);
       return(NULL);
@@ -9729,7 +9765,7 @@ long off_init(  char *offfile, double xwidth, double yheight, double zdepth,
       continue; 
     }
     if (ret != 3) {
-      fprintf(stderr, "Error: can not read [xyz] coordinates for vertex %li in file %s (interoff/off_init). Read %i values.\n", 
+      fprintf(stderr, "Error: can not read [xyz] coordinates for vertex %ld in file %s (interoff/off_init). Read %ld values.\n", 
         i, offfile, ret);
       exit(2);
     }
@@ -9816,7 +9852,7 @@ long off_init(  char *offfile, double xwidth, double yheight, double zdepth,
       continue; 
     }
     if (ret != 1) {
-      fprintf(stderr, "Error: can not read polygon %i length in file %s (interoff/off_init)\n", 
+      fprintf(stderr, "Error: can not read polygon %ld length in file %s (interoff/off_init)\n", 
         i, offfile);
       exit(3);
     }
@@ -10027,7 +10063,7 @@ void off_display(off_struct data)
     cmz /= nbVertex;
     
     char pixelinfo[1024];    
-    sprintf(pixelinfo, "%u,%u,%u,%i,%g,%g,%g,%g,%g,%g", data.mantidoffset+pixel, data.mantidoffset, data.mantidoffset+data.polySize-1, nbVertex, cmx, cmy, cmz, x1-cmx, y1-cmy, z1-cmz);
+    sprintf(pixelinfo, "%lu,%lu,%lu,%i,%g,%g,%g,%g,%g,%g", data.mantidoffset+pixel, data.mantidoffset, data.mantidoffset+data.polySize-1, nbVertex, cmx, cmy, cmz, x1-cmx, y1-cmy, z1-cmz);
     for (j=2; j<=nbVertex; j++) {
       double x2,y2,z2;
       x2 = data.vtxArray[data.faceArray[i+j]].x;
@@ -10052,7 +10088,7 @@ void off_display(off_struct data)
 
 /* end of interoff-lib.c */
 
-#line 10055 "./NERA_guide_3x3_sample.c"
+#line 10091 "./NERA_guide_3x3_sample.c"
 
 /* Instrument parameters. */
 MCNUM mcipsource_lambda_min;
@@ -10125,9 +10161,9 @@ double distance_before_sample = 0.35;
 double guide_length_st;
 
 //Reflectivity description
-double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7;
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m=7, m_foc = 7;
 
-#line 10130 "./NERA_guide_3x3_sample.c"
+#line 10166 "./NERA_guide_3x3_sample.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -10375,7 +10411,7 @@ int mccmonitor_nd_xy_nowritefile;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 44 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 44 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 #ifndef PROGRESS_BAR
 #define PROGRESS_BAR
 #else
@@ -10386,7 +10422,7 @@ double IntermediateCnts;
 time_t StartTime;
 time_t EndTime;
 time_t CurrentTime;
-#line 10389 "./NERA_guide_3x3_sample.c"
+#line 10425 "./NERA_guide_3x3_sample.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -10419,11 +10455,11 @@ time_t CurrentTime;
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 60 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_simple.comp"
+#line 60 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 double pmul, srcArea;
 int square;
 double tx,ty,tz;
-#line 10426 "./NERA_guide_3x3_sample.c"
+#line 10462 "./NERA_guide_3x3_sample.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -10668,10 +10704,10 @@ double tx,ty,tz;
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 334 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 334 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
   Gravity_guide_Vars_type GVars;
   t_Table pTable;
-#line 10674 "./NERA_guide_3x3_sample.c"
+#line 10710 "./NERA_guide_3x3_sample.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -10782,7 +10818,7 @@ double tx,ty,tz;
 #define segno mccFocusing_nose_ell_segno
 #define curvature mccFocusing_nose_ell_curvature
 #define curvature_v mccFocusing_nose_ell_curvature_v
-#line 97 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -10799,7 +10835,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10802 "./NERA_guide_3x3_sample.c"
+#line 10838 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -10924,7 +10960,7 @@ double rotation_h, rotation_v;
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 97 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 97 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 double *w1c;
 double *w2c;
 double *ww, *hh;
@@ -10941,7 +10977,7 @@ char file_name[1024];
 char *ep;
 FILE *num;
 double rotation_h, rotation_v;
-#line 10944 "./NERA_guide_3x3_sample.c"
+#line 10980 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -11044,12 +11080,12 @@ double rotation_h, rotation_v;
 #define username2 mccmonitor_nd_xy_username2
 #define username3 mccmonitor_nd_xy_username3
 #define nowritefile mccmonitor_nd_xy_nowritefile
-#line 222 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 224 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
   MonitornD_Defines_type DEFS;
   MonitornD_Variables_type Vars;
   MCDETECTOR detector;
   off_struct offdata;
-#line 11052 "./NERA_guide_3x3_sample.c"
+#line 11088 "./NERA_guide_3x3_sample.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -11152,7 +11188,7 @@ total_length = total_length - source_optics_dist - distance_before_sample;
 guide_length_st = total_length-focusing_length;
 
 }
-#line 11155 "./NERA_guide_3x3_sample.c"
+#line 11191 "./NERA_guide_3x3_sample.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -11189,14 +11225,14 @@ guide_length_st = total_length-focusing_length;
   mccorigin_flag_save = 0;
 #line 39 "NERA_guide_3x3_sample.instr"
   mccorigin_minutes = 0;
-#line 11192 "./NERA_guide_3x3_sample.c"
+#line 11228 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("origin (Init:Place/Rotate)");
   rot_set_rotation(mcrotaorigin,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11199 "./NERA_guide_3x3_sample.c"
+#line 11235 "./NERA_guide_3x3_sample.c"
   rot_copy(mcrotrorigin, mcrotaorigin);
   mcposaorigin = coords_set(
 #line 83 "NERA_guide_3x3_sample.instr"
@@ -11205,7 +11241,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 83 "NERA_guide_3x3_sample.instr"
     0);
-#line 11208 "./NERA_guide_3x3_sample.c"
+#line 11244 "./NERA_guide_3x3_sample.c"
   mctc1 = coords_neg(mcposaorigin);
   mcposrorigin = rot_apply(mcrotaorigin, mctc1);
   mcDEBUG_COMPONENT("origin", mcposaorigin, mcrotaorigin)
@@ -11242,14 +11278,14 @@ guide_length_st = total_length-focusing_length;
   mccSource_simple_gauss = 0;
 #line 55 "NERA_guide_3x3_sample.instr"
   mccSource_simple_target_index = + 1;
-#line 11245 "./NERA_guide_3x3_sample.c"
+#line 11281 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Source_simple (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11252 "./NERA_guide_3x3_sample.c"
+#line 11288 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaSource_simple);
   rot_transpose(mcrotaorigin, mctr1);
   rot_mul(mcrotaSource_simple, mctr1, mcrotrSource_simple);
@@ -11260,7 +11296,7 @@ guide_length_st = total_length-focusing_length;
     source_shift,
 #line 94 "NERA_guide_3x3_sample.instr"
     0);
-#line 11263 "./NERA_guide_3x3_sample.c"
+#line 11299 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaSource_simple = coords_add(mcposaorigin, mctc2);
@@ -11288,14 +11324,14 @@ guide_length_st = total_length-focusing_length;
   mccslit01_xwidth = 0;
 #line 100 "NERA_guide_3x3_sample.instr"
   mccslit01_yheight = 1;
-#line 11291 "./NERA_guide_3x3_sample.c"
+#line 11327 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit01 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11298 "./NERA_guide_3x3_sample.c"
+#line 11334 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit01);
   rot_transpose(mcrotaSource_simple, mctr1);
   rot_mul(mcrotaslit01, mctr1, mcrotrslit01);
@@ -11306,7 +11342,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 101 "NERA_guide_3x3_sample.instr"
     slit01_dist);
-#line 11309 "./NERA_guide_3x3_sample.c"
+#line 11345 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit01 = coords_add(mcposaorigin, mctc2);
@@ -11334,14 +11370,14 @@ guide_length_st = total_length-focusing_length;
   mccslit02_xwidth = 0;
 #line 105 "NERA_guide_3x3_sample.instr"
   mccslit02_yheight = 1;
-#line 11337 "./NERA_guide_3x3_sample.c"
+#line 11373 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit02 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11344 "./NERA_guide_3x3_sample.c"
+#line 11380 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit02);
   rot_transpose(mcrotaslit01, mctr1);
   rot_mul(mcrotaslit02, mctr1, mcrotrslit02);
@@ -11352,7 +11388,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 106 "NERA_guide_3x3_sample.instr"
     slit02_dist);
-#line 11355 "./NERA_guide_3x3_sample.c"
+#line 11391 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit02 = coords_add(mcposaorigin, mctc2);
@@ -11380,14 +11416,14 @@ guide_length_st = total_length-focusing_length;
   mccslit03_xwidth = shutter_width1;
 #line 110 "NERA_guide_3x3_sample.instr"
   mccslit03_yheight = 1;
-#line 11383 "./NERA_guide_3x3_sample.c"
+#line 11419 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit03 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11390 "./NERA_guide_3x3_sample.c"
+#line 11426 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit03);
   rot_transpose(mcrotaslit02, mctr1);
   rot_mul(mcrotaslit03, mctr1, mcrotrslit03);
@@ -11398,7 +11434,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 111 "NERA_guide_3x3_sample.instr"
     slit03_dist);
-#line 11401 "./NERA_guide_3x3_sample.c"
+#line 11437 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit03 = coords_add(mcposaorigin, mctc2);
@@ -11426,14 +11462,14 @@ guide_length_st = total_length-focusing_length;
   mccslit1_xwidth = shutter_width1;
 #line 117 "NERA_guide_3x3_sample.instr"
   mccslit1_yheight = shutter_height;
-#line 11429 "./NERA_guide_3x3_sample.c"
+#line 11465 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit1 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11436 "./NERA_guide_3x3_sample.c"
+#line 11472 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit1);
   rot_transpose(mcrotaslit03, mctr1);
   rot_mul(mcrotaslit1, mctr1, mcrotrslit1);
@@ -11444,7 +11480,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 118 "NERA_guide_3x3_sample.instr"
     shutter_dist1);
-#line 11447 "./NERA_guide_3x3_sample.c"
+#line 11483 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit1 = coords_add(mcposaorigin, mctc2);
@@ -11472,14 +11508,14 @@ guide_length_st = total_length-focusing_length;
   mccslit2_xwidth = shutter_width2;
 #line 122 "NERA_guide_3x3_sample.instr"
   mccslit2_yheight = shutter_height;
-#line 11475 "./NERA_guide_3x3_sample.c"
+#line 11511 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit2 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11482 "./NERA_guide_3x3_sample.c"
+#line 11518 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit2);
   rot_transpose(mcrotaslit1, mctr1);
   rot_mul(mcrotaslit2, mctr1, mcrotrslit2);
@@ -11490,7 +11526,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 123 "NERA_guide_3x3_sample.instr"
     shutter_dist2);
-#line 11493 "./NERA_guide_3x3_sample.c"
+#line 11529 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit2 = coords_add(mcposaorigin, mctc2);
@@ -11518,14 +11554,14 @@ guide_length_st = total_length-focusing_length;
   mccslit3_xwidth = shutter_width3;
 #line 127 "NERA_guide_3x3_sample.instr"
   mccslit3_yheight = shutter_height;
-#line 11521 "./NERA_guide_3x3_sample.c"
+#line 11557 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit3 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11528 "./NERA_guide_3x3_sample.c"
+#line 11564 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit3);
   rot_transpose(mcrotaslit2, mctr1);
   rot_mul(mcrotaslit3, mctr1, mcrotrslit3);
@@ -11536,7 +11572,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 128 "NERA_guide_3x3_sample.instr"
     shutter_dist3);
-#line 11539 "./NERA_guide_3x3_sample.c"
+#line 11575 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit3 = coords_add(mcposaorigin, mctc2);
@@ -11564,14 +11600,14 @@ guide_length_st = total_length-focusing_length;
   mccslit4_xwidth = shutter_width4;
 #line 132 "NERA_guide_3x3_sample.instr"
   mccslit4_yheight = shutter_height;
-#line 11567 "./NERA_guide_3x3_sample.c"
+#line 11603 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("slit4 (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11574 "./NERA_guide_3x3_sample.c"
+#line 11610 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaslit4);
   rot_transpose(mcrotaslit3, mctr1);
   rot_mul(mcrotaslit4, mctr1, mcrotrslit4);
@@ -11582,7 +11618,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 133 "NERA_guide_3x3_sample.instr"
     shutter_dist4);
-#line 11585 "./NERA_guide_3x3_sample.c"
+#line 11621 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaslit4 = coords_add(mcposaorigin, mctc2);
@@ -11610,14 +11646,14 @@ guide_length_st = total_length-focusing_length;
   mccLast_slit_xwidth = 0;
 #line 46 "NERA_guide_3x3_sample.instr"
   mccLast_slit_yheight = 0;
-#line 11613 "./NERA_guide_3x3_sample.c"
+#line 11649 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Last_slit (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11620 "./NERA_guide_3x3_sample.c"
+#line 11656 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaLast_slit);
   rot_transpose(mcrotaslit4, mctr1);
   rot_mul(mcrotaLast_slit, mctr1, mcrotrLast_slit);
@@ -11628,7 +11664,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 139 "NERA_guide_3x3_sample.instr"
     source_optics_dist);
-#line 11631 "./NERA_guide_3x3_sample.c"
+#line 11667 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaLast_slit = coords_add(mcposaorigin, mctc2);
@@ -11648,7 +11684,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11651 "./NERA_guide_3x3_sample.c"
+#line 11687 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaorigin, mcrotaGuide_start_arm);
   rot_transpose(mcrotaLast_slit, mctr1);
   rot_mul(mcrotaGuide_start_arm, mctr1, mcrotrGuide_start_arm);
@@ -11659,7 +11695,7 @@ guide_length_st = total_length-focusing_length;
     source_shift,
 #line 144 "NERA_guide_3x3_sample.instr"
     source_optics_dist);
-#line 11662 "./NERA_guide_3x3_sample.c"
+#line 11698 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaorigin, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaGuide_start_arm = coords_add(mcposaorigin, mctc2);
@@ -11741,14 +11777,14 @@ guide_length_st = total_length-focusing_length;
   mccMain_guide_phase = 0;
 #line 119 "NERA_guide_3x3_sample.instr"
   if("NULL") strncpy(mccMain_guide_reflect, "NULL" ? "NULL" : "", 16384); else mccMain_guide_reflect[0]='\0';
-#line 11744 "./NERA_guide_3x3_sample.c"
+#line 11780 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Main_guide (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11751 "./NERA_guide_3x3_sample.c"
+#line 11787 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaGuide_start_arm, mcrotaMain_guide);
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   rot_mul(mcrotaMain_guide, mctr1, mcrotrMain_guide);
@@ -11759,7 +11795,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 149 "NERA_guide_3x3_sample.instr"
     0.001);
-#line 11762 "./NERA_guide_3x3_sample.c"
+#line 11798 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaGuide_start_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide = coords_add(mcposaGuide_start_arm, mctc2);
@@ -11779,7 +11815,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11782 "./NERA_guide_3x3_sample.c"
+#line 11818 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaMain_guide, mcrotaMain_guide_arm);
   rot_transpose(mcrotaMain_guide, mctr1);
   rot_mul(mcrotaMain_guide_arm, mctr1, mcrotrMain_guide_arm);
@@ -11790,7 +11826,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 152 "NERA_guide_3x3_sample.instr"
     guide_length_st);
-#line 11793 "./NERA_guide_3x3_sample.c"
+#line 11829 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaMain_guide_arm = coords_add(mcposaMain_guide, mctc2);
@@ -11833,23 +11869,23 @@ guide_length_st = total_length-focusing_length;
 #line 164 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_ell_W = W;
 #line 163 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_ell_mx = m;
+  mccFocusing_nose_ell_mx = m_foc;
 #line 164 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_ell_my = m;
+  mccFocusing_nose_ell_my = m_foc;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_ell_segno = 800;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_ell_curvature = 0;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_ell_curvature_v = 0;
-#line 11845 "./NERA_guide_3x3_sample.c"
+#line 11881 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Focusing_nose_ell (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11852 "./NERA_guide_3x3_sample.c"
+#line 11888 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_ell);
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   rot_mul(mcrotaFocusing_nose_ell, mctr1, mcrotrFocusing_nose_ell);
@@ -11860,7 +11896,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 165 "NERA_guide_3x3_sample.instr"
     0.001);
-#line 11863 "./NERA_guide_3x3_sample.c"
+#line 11899 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_ell = coords_add(mcposaMain_guide_arm, mctc2);
@@ -11903,23 +11939,23 @@ guide_length_st = total_length-focusing_length;
 #line 177 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_par_W = W;
 #line 176 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_par_mx = m;
+  mccFocusing_nose_par_mx = m_foc;
 #line 177 "NERA_guide_3x3_sample.instr"
-  mccFocusing_nose_par_my = m;
+  mccFocusing_nose_par_my = m_foc;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_par_segno = 800;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_par_curvature = 0;
 #line 83 "NERA_guide_3x3_sample.instr"
   mccFocusing_nose_par_curvature_v = 0;
-#line 11915 "./NERA_guide_3x3_sample.c"
+#line 11951 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("Focusing_nose_par (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11922 "./NERA_guide_3x3_sample.c"
+#line 11958 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaFocusing_nose_par);
   rot_transpose(mcrotaFocusing_nose_ell, mctr1);
   rot_mul(mcrotaFocusing_nose_par, mctr1, mcrotrFocusing_nose_par);
@@ -11930,7 +11966,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 178 "NERA_guide_3x3_sample.instr"
     0.001);
-#line 11933 "./NERA_guide_3x3_sample.c"
+#line 11969 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaFocusing_nose_par = coords_add(mcposaMain_guide_arm, mctc2);
@@ -11950,7 +11986,7 @@ guide_length_st = total_length-focusing_length;
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 11953 "./NERA_guide_3x3_sample.c"
+#line 11989 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaMain_guide_arm, mcrotaguide_end);
   rot_transpose(mcrotaFocusing_nose_par, mctr1);
   rot_mul(mcrotaguide_end, mctr1, mcrotrguide_end);
@@ -11961,7 +11997,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 181 "NERA_guide_3x3_sample.instr"
     mcipfocusing_length);
-#line 11964 "./NERA_guide_3x3_sample.c"
+#line 12000 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaMain_guide_arm, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposaguide_end = coords_add(mcposaMain_guide_arm, mctc2);
@@ -11979,52 +12015,52 @@ guide_length_st = total_length-focusing_length;
   mccmonitor_nd_xy_xwidth = mcipsample_size;
 #line 186 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_yheight = mcipsample_size;
-#line 201 "NERA_guide_3x3_sample.instr"
+#line 203 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_zdepth = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_xmin = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_xmax = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_ymin = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_ymax = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_zmin = 0;
-#line 202 "NERA_guide_3x3_sample.instr"
+#line 204 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_zmax = 0;
 #line 186 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_bins = 100;
-#line 203 "NERA_guide_3x3_sample.instr"
+#line 205 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_min = -1e40;
-#line 203 "NERA_guide_3x3_sample.instr"
+#line 205 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_max = 1e40;
 #line 186 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_restore_neutron = 1;
-#line 203 "NERA_guide_3x3_sample.instr"
+#line 205 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_radius = 0;
 #line 187 "NERA_guide_3x3_sample.instr"
   if("dx limits = [-2 2] dy limits = [-2 2]") strncpy(mccmonitor_nd_xy_options, "dx limits = [-2 2] dy limits = [-2 2]" ? "dx limits = [-2 2] dy limits = [-2 2]" : "", 16384); else mccmonitor_nd_xy_options[0]='\0';
-#line 204 "NERA_guide_3x3_sample.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_filename[0]='\0';
-#line 204 "NERA_guide_3x3_sample.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_geometry[0]='\0';
-#line 205 "NERA_guide_3x3_sample.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username1[0]='\0';
-#line 205 "NERA_guide_3x3_sample.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username2[0]='\0';
-#line 205 "NERA_guide_3x3_sample.instr"
-  if("NULL") strncpy(mccmonitor_nd_xy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username3[0]='\0';
 #line 206 "NERA_guide_3x3_sample.instr"
+  if("NULL") strncpy(mccmonitor_nd_xy_filename, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_filename[0]='\0';
+#line 206 "NERA_guide_3x3_sample.instr"
+  if("NULL") strncpy(mccmonitor_nd_xy_geometry, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_geometry[0]='\0';
+#line 207 "NERA_guide_3x3_sample.instr"
+  if("NULL") strncpy(mccmonitor_nd_xy_username1, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username1[0]='\0';
+#line 207 "NERA_guide_3x3_sample.instr"
+  if("NULL") strncpy(mccmonitor_nd_xy_username2, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username2[0]='\0';
+#line 207 "NERA_guide_3x3_sample.instr"
+  if("NULL") strncpy(mccmonitor_nd_xy_username3, "NULL" ? "NULL" : "", 16384); else mccmonitor_nd_xy_username3[0]='\0';
+#line 208 "NERA_guide_3x3_sample.instr"
   mccmonitor_nd_xy_nowritefile = 0;
-#line 12020 "./NERA_guide_3x3_sample.c"
+#line 12056 "./NERA_guide_3x3_sample.c"
 
   SIG_MESSAGE("monitor_nd_xy (Init:Place/Rotate)");
   rot_set_rotation(mctr1,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD,
     (0.0)*DEG2RAD);
-#line 12027 "./NERA_guide_3x3_sample.c"
+#line 12063 "./NERA_guide_3x3_sample.c"
   rot_mul(mctr1, mcrotaguide_end, mcrotamonitor_nd_xy);
   rot_transpose(mcrotaguide_end, mctr1);
   rot_mul(mcrotamonitor_nd_xy, mctr1, mcrotrmonitor_nd_xy);
@@ -12035,7 +12071,7 @@ guide_length_st = total_length-focusing_length;
     0,
 #line 188 "NERA_guide_3x3_sample.instr"
     distance_before_sample);
-#line 12038 "./NERA_guide_3x3_sample.c"
+#line 12074 "./NERA_guide_3x3_sample.c"
   rot_transpose(mcrotaguide_end, mctr1);
   mctc2 = rot_apply(mctr1, mctc1);
   mcposamonitor_nd_xy = coords_add(mcposaguide_end, mctc2);
@@ -12060,7 +12096,7 @@ guide_length_st = total_length-focusing_length;
 #define percent mccorigin_percent
 #define flag_save mccorigin_flag_save
 #define minutes mccorigin_minutes
-#line 57 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 57 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
 IntermediateCnts=0;
 StartTime=0;
@@ -12072,7 +12108,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
     percent=1e5*100.0/mcget_ncount();
   }
 }
-#line 12075 "./NERA_guide_3x3_sample.c"
+#line 12111 "./NERA_guide_3x3_sample.c"
 #undef minutes
 #undef flag_save
 #undef percent
@@ -12106,7 +12142,7 @@ fprintf(stdout, "[%s] Initialize\n", mcinstrument_name);
 #define flux mccSource_simple_flux
 #define gauss mccSource_simple_gauss
 #define target_index mccSource_simple_target_index
-#line 65 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_simple.comp"
+#line 65 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
 square = 0;
 /* Determine source area */
@@ -12146,27 +12182,27 @@ if (radius && !yheight && !xwidth ) {
   if (srcArea <= 0) {
     printf("Source_simple: %s: Source area is <= 0 !\n ERROR - Exiting\n",
            NAME_CURRENT_COMP);
-    exit(0);
+    exit(-1);
   }
   if (dist <= 0 || focus_xw <= 0 || focus_yh <= 0) {
     printf("Source_simple: %s: Target area unmeaningful! (negative dist / focus_xw / focus_yh)\n ERROR - Exiting\n",
            NAME_CURRENT_COMP);
-    exit(0);
+    exit(-1);
   }
 
   if ((!lambda0 && !E0 && !dE && !dlambda)) {
     printf("Source_simple: %s: You must specify either a wavelength or energy range!\n ERROR - Exiting\n",
            NAME_CURRENT_COMP);
-    exit(0);
+    exit(-1);
   }
   if ((!lambda0 && !dlambda && (E0 <= 0 || dE < 0 || E0-dE <= 0))
     || (!E0 && !dE && (lambda0 <= 0 || dlambda < 0 || lambda0-dlambda <= 0))) {
     printf("Source_simple: %s: Unmeaningful definition of wavelength or energy range!\n ERROR - Exiting\n",
            NAME_CURRENT_COMP);
-      exit(0);
+      exit(-1);
   }
 }
-#line 12169 "./NERA_guide_3x3_sample.c"
+#line 12205 "./NERA_guide_3x3_sample.c"
 #undef target_index
 #undef gauss
 #undef flux
@@ -12199,7 +12235,7 @@ if (radius && !yheight && !xwidth ) {
 #define radius mccslit01_radius
 #define xwidth mccslit01_xwidth
 #define yheight mccslit01_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12219,7 +12255,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12222 "./NERA_guide_3x3_sample.c"
+#line 12258 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12243,7 +12279,7 @@ if (xwidth > 0)  {
 #define radius mccslit02_radius
 #define xwidth mccslit02_xwidth
 #define yheight mccslit02_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12263,7 +12299,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12266 "./NERA_guide_3x3_sample.c"
+#line 12302 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12287,7 +12323,7 @@ if (xwidth > 0)  {
 #define radius mccslit03_radius
 #define xwidth mccslit03_xwidth
 #define yheight mccslit03_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12307,7 +12343,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12310 "./NERA_guide_3x3_sample.c"
+#line 12346 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12331,7 +12367,7 @@ if (xwidth > 0)  {
 #define radius mccslit1_radius
 #define xwidth mccslit1_xwidth
 #define yheight mccslit1_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12351,7 +12387,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12354 "./NERA_guide_3x3_sample.c"
+#line 12390 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12375,7 +12411,7 @@ if (xwidth > 0)  {
 #define radius mccslit2_radius
 #define xwidth mccslit2_xwidth
 #define yheight mccslit2_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12395,7 +12431,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12398 "./NERA_guide_3x3_sample.c"
+#line 12434 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12419,7 +12455,7 @@ if (xwidth > 0)  {
 #define radius mccslit3_radius
 #define xwidth mccslit3_xwidth
 #define yheight mccslit3_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12439,7 +12475,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12442 "./NERA_guide_3x3_sample.c"
+#line 12478 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12463,7 +12499,7 @@ if (xwidth > 0)  {
 #define radius mccslit4_radius
 #define xwidth mccslit4_xwidth
 #define yheight mccslit4_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12483,7 +12519,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12486 "./NERA_guide_3x3_sample.c"
+#line 12522 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12507,7 +12543,7 @@ if (xwidth > 0)  {
 #define radius mccLast_slit_radius
 #define xwidth mccLast_slit_xwidth
 #define yheight mccLast_slit_yheight
-#line 50 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 50 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
 if (xwidth > 0)  { 
   if (!xmin && !xmax) {
@@ -12527,7 +12563,7 @@ if (xwidth > 0)  {
     { fprintf(stderr,"Slit: %s: Warning: Running with CLOSED slit - is this intentional?? \n", NAME_CURRENT_COMP); }
 
 }
-#line 12530 "./NERA_guide_3x3_sample.c"
+#line 12566 "./NERA_guide_3x3_sample.c"
 #undef yheight
 #undef xwidth
 #undef radius
@@ -12583,7 +12619,7 @@ if (xwidth > 0)  {
 #define nu mccMain_guide_nu
 #define phase mccMain_guide_phase
 #define reflect mccMain_guide_reflect
-#line 339 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 339 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   double Gx=0, Gy=-GRAVITY, Gz=0;
   Coords mcLocG;
@@ -12635,7 +12671,7 @@ if (xwidth > 0)  {
   } else printf("Guide_gravity: %s: unactivated (l=0 or nelements=0)\n", NAME_CURRENT_COMP);
 
 }
-#line 12638 "./NERA_guide_3x3_sample.c"
+#line 12674 "./NERA_guide_3x3_sample.c"
 #undef reflect
 #undef phase
 #undef nu
@@ -12742,7 +12778,7 @@ if (xwidth > 0)  {
 #define segno mccFocusing_nose_ell_segno
 #define curvature mccFocusing_nose_ell_curvature
 #define curvature_v mccFocusing_nose_ell_curvature_v
-#line 116 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -13078,7 +13114,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 13081 "./NERA_guide_3x3_sample.c"
+#line 13117 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -13204,7 +13240,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define segno mccFocusing_nose_par_segno
 #define curvature mccFocusing_nose_par_curvature
 #define curvature_v mccFocusing_nose_par_curvature_v
-#line 116 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 116 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
 rotation_h=0;
 rotation_v=0;
@@ -13540,7 +13576,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
   if (curvature && l && segno)   rotation_h = l/curvature/segno;
   if (curvature_v && l && segno) rotation_v = l/curvature_v/segno;
 }
-#line 13543 "./NERA_guide_3x3_sample.c"
+#line 13579 "./NERA_guide_3x3_sample.c"
 #undef curvature_v
 #undef curvature
 #undef segno
@@ -13639,7 +13675,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
 #define username2 mccmonitor_nd_xy_username2
 #define username3 mccmonitor_nd_xy_username3
 #define nowritefile mccmonitor_nd_xy_nowritefile
-#line 229 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 231 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   char tmp[CHAR_BUF_LENGTH];
   strcpy(Vars.compcurname, NAME_CURRENT_COMP);
@@ -13678,7 +13714,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
     }
   }
   int offflag=0;
-  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
+  if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL")) {
     if (!off_init(  geometry, xwidth, yheight, zdepth, 1, &offdata )) {
       printf("Monitor_nD: %s could not initiate the OFF geometry %s. \n"
              "            Defaulting to normal Monitor dimensions.\n",
@@ -13687,6 +13723,7 @@ w1c = (double*)malloc(sizeof(double)*segno);
     } else {
       offflag=1;
     }
+  }
 
   if (!radius && !xwidth && !yheight && !zdepth && !xmin && !xmax && !ymin && !ymax &&
     !strstr(Vars.option, "previous") && (!geometry || !strlen(geometry)))
@@ -13718,7 +13755,7 @@ MPI_MASTER(
 );
 #endif
 }
-#line 13721 "./NERA_guide_3x3_sample.c"
+#line 13758 "./NERA_guide_3x3_sample.c"
 #undef nowritefile
 #undef username3
 #undef username2
@@ -13860,7 +13897,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 70 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 70 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   double ncount;
   ncount = mcget_run_num();
@@ -13904,7 +13941,7 @@ MCNUM minutes = mccorigin_minutes;
     if (flag_save) mcsave(NULL);
   }
 }
-#line 13907 "./NERA_guide_3x3_sample.c"
+#line 13944 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -14030,7 +14067,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 125 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_simple.comp"
+#line 125 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
  double chi,E,lambda,v,r, xf, yf, rf, dx, dy, pdir;
 
@@ -14075,7 +14112,7 @@ int target_index = mccSource_simple_target_index;
  vy=v*dy/rf;
  vx=v*dx/rf;
 }
-#line 14078 "./NERA_guide_3x3_sample.c"
+#line 14115 "./NERA_guide_3x3_sample.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -14191,16 +14228,18 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14203 "./NERA_guide_3x3_sample.c"
+#line 14242 "./NERA_guide_3x3_sample.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14313,16 +14352,18 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14325 "./NERA_guide_3x3_sample.c"
+#line 14366 "./NERA_guide_3x3_sample.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14435,16 +14476,18 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14447 "./NERA_guide_3x3_sample.c"
+#line 14490 "./NERA_guide_3x3_sample.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14557,16 +14600,18 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14569 "./NERA_guide_3x3_sample.c"
+#line 14614 "./NERA_guide_3x3_sample.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14679,16 +14724,18 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14691 "./NERA_guide_3x3_sample.c"
+#line 14738 "./NERA_guide_3x3_sample.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14801,16 +14848,18 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14813 "./NERA_guide_3x3_sample.c"
+#line 14862 "./NERA_guide_3x3_sample.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -14923,16 +14972,18 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 14935 "./NERA_guide_3x3_sample.c"
+#line 14986 "./NERA_guide_3x3_sample.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15045,16 +15096,18 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 71 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 71 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
     PROP_Z0;
     if (((radius == 0) && (x<xmin || x>xmax || y<ymin || y>ymax))
-    || ((radius != 0) && (x*x + y*y > radius*radius)))
+	|| ((radius != 0) && (x*x + y*y > radius*radius))) {
+      RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
       ABSORB;
+    }
     else
         SCATTER;
 }
-#line 15057 "./NERA_guide_3x3_sample.c"
+#line 15110 "./NERA_guide_3x3_sample.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -15299,7 +15352,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 392 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 392 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
   if (l > 0 && nelements > 0) {
     double B, C, dt;
@@ -15468,7 +15521,7 @@ char* reflect = mccMain_guide_reflect;
 
   } /* if l */
 }
-#line 15471 "./NERA_guide_3x3_sample.c"
+#line 15524 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -15740,7 +15793,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
 /* 'Focusing_nose_ell=Guide_tapering()' component instance has conditional execution */
 if (( mcipguide_shape == 1 ))
 
-#line 453 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -15895,7 +15948,7 @@ if (( mcipguide_shape == 1 ))
   } /* loop on segments */
 
 }
-#line 15897 "./NERA_guide_3x3_sample.c"
+#line 15950 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16101,7 +16154,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
 /* 'Focusing_nose_par=Guide_tapering()' component instance has conditional execution */
 if (( mcipguide_shape == 0 ))
 
-#line 453 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 453 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double t1,t2,ts,zr;                           /* Intersection times. */
   double av,ah,bv,bh,cv1,cv2,ch1,ch2,dd;        /* Intermediate values */
@@ -16256,7 +16309,7 @@ if (( mcipguide_shape == 0 ))
   } /* loop on segments */
 
 }
-#line 16257 "./NERA_guide_3x3_sample.c"
+#line 16310 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -16532,7 +16585,7 @@ char* username1 = mccmonitor_nd_xy_username1;
 char* username2 = mccmonitor_nd_xy_username2;
 char* username3 = mccmonitor_nd_xy_username3;
 int nowritefile = mccmonitor_nd_xy_nowritefile;
-#line 309 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 312 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   double  XY=0;
   double  t0 = 0;
@@ -16701,7 +16754,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     RESTORE_NEUTRON(INDEX_CURRENT_COMP, x, y, z, vx, vy, vz, t, sx, sy, sz, p);
   }
 }
-#line 16702 "./NERA_guide_3x3_sample.c"
+#line 16755 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -16800,7 +16853,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 115 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 115 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   MPI_MASTER(fprintf(stdout, "\nSave [%s]\n", mcinstrument_name););
   if (profile && strlen(profile) && strcmp(profile,"NULL") && strcmp(profile,"0")) {
@@ -16817,7 +16870,7 @@ MCNUM minutes = mccorigin_minutes;
 
   }
 }
-#line 16818 "./NERA_guide_3x3_sample.c"
+#line 16871 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -16861,12 +16914,14 @@ char* username1 = mccmonitor_nd_xy_username1;
 char* username2 = mccmonitor_nd_xy_username2;
 char* username3 = mccmonitor_nd_xy_username3;
 int nowritefile = mccmonitor_nd_xy_nowritefile;
-#line 479 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 482 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* save results, but do not free pointers */
-  detector = Monitor_nD_Save(&DEFS, &Vars);
+  if (!nowritefile) {
+    detector = Monitor_nD_Save(&DEFS, &Vars);
+  }
 }
-#line 16867 "./NERA_guide_3x3_sample.c"
+#line 16922 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -16900,7 +16955,7 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 133 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 133 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   time_t NowTime;
   time(&NowTime);
@@ -16913,7 +16968,7 @@ MCNUM minutes = mccorigin_minutes;
     fprintf(stdout, "%g [min] ", difftime(NowTime,StartTime)/60.0);
   fprintf(stdout, "\n");
 }
-#line 16914 "./NERA_guide_3x3_sample.c"
+#line 16969 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -16998,14 +17053,14 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 562 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 562 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 if (GVars.warnings > 100) {
   fprintf(stderr,"%s: warning: neutron has entered guide, but can not exit !\n", GVars.compcurname);
   fprintf(stderr,"%s: warning: This message has been repeated %g times\n", GVars.compcurname, GVars.warnings);
 }
 }
-#line 16995 "./NERA_guide_3x3_sample.c"
+#line 17050 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -17083,7 +17138,7 @@ MCNUM my = mccFocusing_nose_ell_my;
 MCNUM segno = mccFocusing_nose_ell_segno;
 MCNUM curvature = mccFocusing_nose_ell_curvature;
 MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
-#line 609 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -17098,7 +17153,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 17086 "./NERA_guide_3x3_sample.c"
+#line 17141 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -17210,7 +17265,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 609 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 609 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   free(w1c);
   free(w2c);
@@ -17225,7 +17280,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   free(w1_in);
   free(w2_out);
 }
-#line 17212 "./NERA_guide_3x3_sample.c"
+#line 17267 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -17310,14 +17365,12 @@ char* username1 = mccmonitor_nd_xy_username1;
 char* username2 = mccmonitor_nd_xy_username2;
 char* username3 = mccmonitor_nd_xy_username3;
 int nowritefile = mccmonitor_nd_xy_nowritefile;
-#line 485 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 490 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   /* free pointers */
-  if (!nowritefile) {
-    Monitor_nD_Finally(&DEFS, &Vars);
-  }
+  Monitor_nD_Finally(&DEFS, &Vars);
 }
-#line 17302 "./NERA_guide_3x3_sample.c"
+#line 17355 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector
@@ -17354,7 +17407,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
 {
 
 }
-#line 17338 "./NERA_guide_3x3_sample.c"
+#line 17391 "./NERA_guide_3x3_sample.c"
 #undef sample_size
 #undef loutw
 #undef linw
@@ -17401,11 +17454,11 @@ char* profile = mccorigin_profile;
 MCNUM percent = mccorigin_percent;
 MCNUM flag_save = mccorigin_flag_save;
 MCNUM minutes = mccorigin_minutes;
-#line 147 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/misc/Progress_bar.comp"
+#line 147 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../misc/Progress_bar.comp"
 {
   
 }
-#line 17389 "./NERA_guide_3x3_sample.c"
+#line 17442 "./NERA_guide_3x3_sample.c"
 }   /* End of origin=Progress_bar() SETTING parameter declarations. */
 #undef CurrentTime
 #undef EndTime
@@ -17438,7 +17491,7 @@ MCNUM dlambda = mccSource_simple_dlambda;
 MCNUM flux = mccSource_simple_flux;
 MCNUM gauss = mccSource_simple_gauss;
 int target_index = mccSource_simple_target_index;
-#line 171 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/sources/Source_simple.comp"
+#line 171 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../sources/Source_simple.comp"
 {
   if (square == 1) {
     
@@ -17454,7 +17507,7 @@ int target_index = mccSource_simple_target_index;
     dashed_line(0,0,0, -focus_xw/2+tx, focus_yh/2+ty,tz, 4);
   }
 }
-#line 17438 "./NERA_guide_3x3_sample.c"
+#line 17491 "./NERA_guide_3x3_sample.c"
 }   /* End of Source_simple=Source_simple() SETTING parameter declarations. */
 #undef srcArea
 #undef square
@@ -17477,7 +17530,7 @@ MCNUM ymax = mccslit01_ymax;
 MCNUM radius = mccslit01_radius;
 MCNUM xwidth = mccslit01_xwidth;
 MCNUM yheight = mccslit01_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17500,7 +17553,7 @@ MCNUM yheight = mccslit01_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17484 "./NERA_guide_3x3_sample.c"
+#line 17537 "./NERA_guide_3x3_sample.c"
 }   /* End of slit01=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17520,7 +17573,7 @@ MCNUM ymax = mccslit02_ymax;
 MCNUM radius = mccslit02_radius;
 MCNUM xwidth = mccslit02_xwidth;
 MCNUM yheight = mccslit02_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17543,7 +17596,7 @@ MCNUM yheight = mccslit02_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17527 "./NERA_guide_3x3_sample.c"
+#line 17580 "./NERA_guide_3x3_sample.c"
 }   /* End of slit02=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17563,7 +17616,7 @@ MCNUM ymax = mccslit03_ymax;
 MCNUM radius = mccslit03_radius;
 MCNUM xwidth = mccslit03_xwidth;
 MCNUM yheight = mccslit03_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17586,7 +17639,7 @@ MCNUM yheight = mccslit03_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17570 "./NERA_guide_3x3_sample.c"
+#line 17623 "./NERA_guide_3x3_sample.c"
 }   /* End of slit03=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17606,7 +17659,7 @@ MCNUM ymax = mccslit1_ymax;
 MCNUM radius = mccslit1_radius;
 MCNUM xwidth = mccslit1_xwidth;
 MCNUM yheight = mccslit1_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17629,7 +17682,7 @@ MCNUM yheight = mccslit1_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17613 "./NERA_guide_3x3_sample.c"
+#line 17666 "./NERA_guide_3x3_sample.c"
 }   /* End of slit1=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17649,7 +17702,7 @@ MCNUM ymax = mccslit2_ymax;
 MCNUM radius = mccslit2_radius;
 MCNUM xwidth = mccslit2_xwidth;
 MCNUM yheight = mccslit2_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17672,7 +17725,7 @@ MCNUM yheight = mccslit2_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17656 "./NERA_guide_3x3_sample.c"
+#line 17709 "./NERA_guide_3x3_sample.c"
 }   /* End of slit2=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17692,7 +17745,7 @@ MCNUM ymax = mccslit3_ymax;
 MCNUM radius = mccslit3_radius;
 MCNUM xwidth = mccslit3_xwidth;
 MCNUM yheight = mccslit3_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17715,7 +17768,7 @@ MCNUM yheight = mccslit3_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17699 "./NERA_guide_3x3_sample.c"
+#line 17752 "./NERA_guide_3x3_sample.c"
 }   /* End of slit3=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17735,7 +17788,7 @@ MCNUM ymax = mccslit4_ymax;
 MCNUM radius = mccslit4_radius;
 MCNUM xwidth = mccslit4_xwidth;
 MCNUM yheight = mccslit4_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17758,7 +17811,7 @@ MCNUM yheight = mccslit4_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17742 "./NERA_guide_3x3_sample.c"
+#line 17795 "./NERA_guide_3x3_sample.c"
 }   /* End of slit4=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17778,7 +17831,7 @@ MCNUM ymax = mccLast_slit_ymax;
 MCNUM radius = mccLast_slit_radius;
 MCNUM xwidth = mccLast_slit_xwidth;
 MCNUM yheight = mccLast_slit_yheight;
-#line 81 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Slit.comp"
+#line 83 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Slit.comp"
 {
   
   if (radius == 0) {
@@ -17801,7 +17854,7 @@ MCNUM yheight = mccLast_slit_yheight;
     circle("xy",0,0,0,radius);
   }
 }
-#line 17785 "./NERA_guide_3x3_sample.c"
+#line 17838 "./NERA_guide_3x3_sample.c"
 }   /* End of Last_slit=Slit() SETTING parameter declarations. */
 #undef mccompcurname
 #undef mccompcurtype
@@ -17813,7 +17866,7 @@ MCNUM yheight = mccLast_slit_yheight;
 #define mccompcurname  Guide_start_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 11
-#line 40 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -17821,7 +17874,7 @@ MCNUM yheight = mccLast_slit_yheight;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 17805 "./NERA_guide_3x3_sample.c"
+#line 17858 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -17869,7 +17922,7 @@ MCNUM nelements = mccMain_guide_nelements;
 MCNUM nu = mccMain_guide_nu;
 MCNUM phase = mccMain_guide_phase;
 char* reflect = mccMain_guide_reflect;
-#line 571 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_gravity.comp"
+#line 571 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_gravity.comp"
 {
 
   if (l > 0 && nelements > 0) {
@@ -17932,7 +17985,7 @@ char* reflect = mccMain_guide_reflect;
   }
 
 }
-#line 17916 "./NERA_guide_3x3_sample.c"
+#line 17969 "./NERA_guide_3x3_sample.c"
 }   /* End of Main_guide=Guide_gravity() SETTING parameter declarations. */
 #undef pTable
 #undef GVars
@@ -17946,7 +17999,7 @@ char* reflect = mccMain_guide_reflect;
 #define mccompcurname  Main_guide_arm
 #define mccompcurtype  Arm
 #define mccompcurindex 13
-#line 40 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -17954,7 +18007,7 @@ char* reflect = mccMain_guide_reflect;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 17938 "./NERA_guide_3x3_sample.c"
+#line 17991 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -18024,7 +18077,7 @@ MCNUM my = mccFocusing_nose_ell_my;
 MCNUM segno = mccFocusing_nose_ell_segno;
 MCNUM curvature = mccFocusing_nose_ell_curvature;
 MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
-#line 625 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -18057,7 +18110,7 @@ MCNUM curvature_v = mccFocusing_nose_ell_curvature_v;
   }
 
 }
-#line 18041 "./NERA_guide_3x3_sample.c"
+#line 18094 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_ell=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -18167,7 +18220,7 @@ MCNUM my = mccFocusing_nose_par_my;
 MCNUM segno = mccFocusing_nose_par_segno;
 MCNUM curvature = mccFocusing_nose_par_curvature;
 MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
-#line 625 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Guide_tapering.comp"
+#line 625 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Guide_tapering.comp"
 {
   double x;
   int i,ii;
@@ -18200,7 +18253,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   }
 
 }
-#line 18184 "./NERA_guide_3x3_sample.c"
+#line 18237 "./NERA_guide_3x3_sample.c"
 }   /* End of Focusing_nose_par=Guide_tapering() SETTING parameter declarations. */
 #undef rotation_v
 #undef rotation_h
@@ -18251,7 +18304,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
 #define mccompcurname  guide_end
 #define mccompcurtype  Arm
 #define mccompcurindex 16
-#line 40 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/optics/Arm.comp"
+#line 40 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../optics/Arm.comp"
 {
   /* A bit ugly; hard-coded dimensions. */
   
@@ -18259,7 +18312,7 @@ MCNUM curvature_v = mccFocusing_nose_par_curvature_v;
   line(0,0,0,0,0.2,0);
   line(0,0,0,0,0,0.2);
 }
-#line 18243 "./NERA_guide_3x3_sample.c"
+#line 18296 "./NERA_guide_3x3_sample.c"
 #undef mccompcurname
 #undef mccompcurtype
 #undef mccompcurindex
@@ -18299,7 +18352,7 @@ char* username1 = mccmonitor_nd_xy_username1;
 char* username2 = mccmonitor_nd_xy_username2;
 char* username3 = mccmonitor_nd_xy_username3;
 int nowritefile = mccmonitor_nd_xy_nowritefile;
-#line 493 "/Applications/McStas-2.5.app/Contents/Resources/mcstas/2.5/monitors/Monitor_nD.comp"
+#line 496 "/usr/share/mcstas/2.6.1/tools/Python/mcrun/../mccodelib/../../../monitors/Monitor_nD.comp"
 {
   if (geometry && strlen(geometry) && strcmp(geometry,"0") && strcmp(geometry, "NULL"))
   {
@@ -18308,7 +18361,7 @@ int nowritefile = mccmonitor_nd_xy_nowritefile;
     Monitor_nD_McDisplay(&DEFS, &Vars);
   }
 }
-#line 18292 "./NERA_guide_3x3_sample.c"
+#line 18345 "./NERA_guide_3x3_sample.c"
 }   /* End of monitor_nd_xy=Monitor_nD() SETTING parameter declarations. */
 #undef offdata
 #undef detector

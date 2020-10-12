@@ -1,0 +1,27 @@
+begin instrument:
+  Creator: mcstas 2.6.1
+  Source: NERA_guide_3x3_sample_m_scan3_3parab_parts.instr
+  Parameters:  m1
+  Trace_enabled: no
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation
+Date: Mon Oct 12 00 08 2020
+Ncount: 100000000
+Numpoints: 2
+Param: m1 = 1, m1 = 6
+end simulation
+
+begin data
+type: multiarray_1d(2)
+title: Scan of m1
+xvars: m1
+yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_y_I,monitor_nd_y_ERR)
+xlabel: 'm1'
+ylabel: 'Intensity'
+xlimits: 1 6
+filename: mccode.dat
+variables: m1 monitor_nd_x_I monitor_nd_x_ERR monitor_nd_y_I monitor_nd_y_ERR
+end data

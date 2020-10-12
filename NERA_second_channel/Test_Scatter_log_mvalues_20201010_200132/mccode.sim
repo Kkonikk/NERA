@@ -1,0 +1,156 @@
+McStas simulation description file for Test_Scatter_log_mvalues.
+Date:    Sat Oct 10 20:01:32 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Test_Scatter_log_mvalues
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/Test_Scatter_log_mvalues_20201010_200132/mccode
+  Source: Test_Scatter_log_mvalues.instr
+  Parameters: 
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/Test_Scatter_log_mvalues_20201010_200132
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: Test_Scatter_log_mvalues.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1602389912
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/Test_Scatter_log_mvalues_20201010_200132
+end simulation
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(90, 90)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: psd0
+  position: 0 0 0.5
+  title: PSD monitor
+  Ncount: 1000000
+  filename: psd0.dat
+  statistics: X0=0.00052132; dX=2.68396; Y0=0.00331205; dY=2.6886;
+  signal: Min=0.00303766; Max=0.0189088; Mean=0.0106935;
+  values: 86.6175 0.116833 549945
+  xvar: X
+  yvar: Y
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -5 5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(100, 20)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: mnd1
+  position: 0 0 17.9254
+  title:  Intensity Position m Monitor (on PREVIOUS) per bin
+  Ncount: 1000000
+  filename: mnd1.dat
+  statistics: X0=5e-09; dX=0; Y0=2.55861; dY=0.943657;
+  signal: Min=0; Max=1.54569; Mean=0.00957953;
+  values: 19.1591 0.0557163 247818
+  xvar: z
+  yvar: m
+  xlabel: z [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0 1e-06 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(100, 20)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: mnd2
+  position: 0 0 9.4627
+  title:  Intensity Position m Monitor (on PREVIOUS) per bin
+  Ncount: 1000000
+  filename: mnd2.dat
+  statistics: X0=5e-09; dX=0; Y0=2.32185; dY=0.96992;
+  signal: Min=0; Max=1.07044; Mean=0.00823831;
+  values: 16.4766 0.0474921 146135
+  xvar: y
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0 1e-06 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(100, 20)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: mnd3
+  position: 0 0 9.4627
+  title:  Intensity Position m Monitor (on PREVIOUS) per bin
+  Ncount: 1000000
+  filename: mnd3.dat
+  statistics: X0=5e-09; dX=1.11022e-16; Y0=2.55395; dY=0.949484;
+  signal: Min=0; Max=0.827574; Mean=0.00519256;
+  values: 10.3851 0.0362681 98210
+  xvar: y
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0 1e-06 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(100, 20)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: mnd4
+  position: 0 0 9.4627
+  title:  Intensity Position m Monitor (on PREVIOUS) per bin
+  Ncount: 1000000
+  filename: mnd4.dat
+  statistics: X0=5e-09; dX=0; Y0=2.74673; dY=0.861479;
+  signal: Min=0; Max=0.69162; Mean=0.00377295;
+  values: 7.5459 0.0285661 84865
+  xvar: y
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0 1e-06 0 4
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 20:01:36 2020 (1602349296)
+  type: array_2d(100, 20)
+  Source: Test_Scatter_log_mvalues (Test_Scatter_log_mvalues.instr)
+  component: mndtot
+  position: 0 0 9.4627
+  title:  Intensity Position m Monitor (on PREVIOUS) per bin
+  Ncount: 1000000
+  filename: mndtot.dat
+  statistics: X0=5e-09; dX=9.61481e-17; Y0=2.56615; dY=0.942719;
+  signal: Min=0; Max=4.99602; Mean=0.0312319;
+  values: 62.4637 0.0904996 812451
+  xvar: y
+  yvar: m
+  xlabel: y [m]
+  ylabel: m
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0 1e-06 0 4
+  variables: I I_err N
+end data

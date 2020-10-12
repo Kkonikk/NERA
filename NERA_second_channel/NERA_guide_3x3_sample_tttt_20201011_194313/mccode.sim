@@ -1,0 +1,76 @@
+McStas simulation description file for Nera.
+Date:    Sun Oct 11 19:43:18 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194313/mccode
+  Source: NERA_guide_3x3_sample_tttt.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194313
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: NERA_guide_3x3_sample_tttt.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1602505432
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_tttt_20201011_194313
+  Nodes: 8
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.2107
+  Param: guide_height=0.2
+  Param: focusing_length=16.9254
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0
+  Param: linw=0
+  Param: loutw=0.6146
+  Param: sample_size=0.03
+end simulation
+
+begin data
+  Date: Sun Oct 11 19:43:19 2020 (1602434599)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_tttt.instr)
+  component: monitor_nd_xy
+  position: 0 -0.10125 105.001
+  title: Hor. Divergence [deg] monitor
+  Ncount: 10000000
+  filename: monitor_nd_xy_1602434598.hd
+  statistics: X0=0.000972828; dX=0.574332;
+  signal: Min=0; Max=3.52113e+11; Mean=1.19912e+11;
+  values: 1.19912e+13 1.23918e+11 17421
+  xvar: hd
+  yvar: (I,I_err)
+  xlabel: Hor. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: hd I I_err N
+end data
+
+begin data
+  Date: Sun Oct 11 19:43:19 2020 (1602434599)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_tttt.instr)
+  component: monitor_nd_xy2
+  position: 0 -0.10125 105.002
+  title: x [m] monitor
+  Ncount: 10000000
+  filename: monitor_nd_xy2_1602434598.x
+  statistics: X0=2.91898e-05; dX=0.0112717;
+  signal: Min=0; Max=3.71513e+11; Mean=1.5035e+11;
+  values: 1.5035e+13 1.38528e+11 22242
+  xvar: x
+  yvar: (I,I_err)
+  xlabel: x [m]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -0.04 0.04
+  variables: x I I_err N
+end data

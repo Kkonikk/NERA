@@ -1,0 +1,27 @@
+begin instrument:
+  Creator: mcstas 2.6.1
+  Source: NERA_guide_3x3_sample_m_scan3_2parab_parts.instr
+  Parameters:  focus_x
+  Trace_enabled: no
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation
+Date: Sun Oct 11 21 22 2020
+Ncount: 10000000
+Numpoints: 2
+Param: focus_x = 0.1, focus_x = 0.8
+end simulation
+
+begin data
+type: multiarray_1d(2)
+title: Scan of focus_x
+xvars: focus_x
+yvars: (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_y_I,monitor_nd_y_ERR)
+xlabel: 'focus_x'
+ylabel: 'Intensity'
+xlimits: 0.1 0.8
+filename: mccode.dat
+variables: focus_x monitor_nd_x_I monitor_nd_x_ERR monitor_nd_y_I monitor_nd_y_ERR
+end data

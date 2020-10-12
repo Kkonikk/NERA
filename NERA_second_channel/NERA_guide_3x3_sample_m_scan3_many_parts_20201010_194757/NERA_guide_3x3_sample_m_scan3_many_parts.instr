@@ -1,0 +1,487 @@
+/*******************************************************************************
+* Instrument: NERA_guide_3x3_sample.instr
+*
+* Written by: Peter Konik and Yurii Kireenko
+* Date: 27.11.19
+* Origin: PNPI
+*
+* new NERA TOF-spectrometer guide
+*
+* IBR-2M guide for channel 2
+*
+* source_lambda_min:   [AA] minimal wavelength produced by the source
+* source_lambda_max:   [AA] maximal wavelength produced by the source
+* source_optics_dist:      [m] distance between moderator and optics
+* guide_widtht:               [m] Initial guide width
+* guide_height:               [m] Initial guide height
+*focusing_length:           [m] Length of the focusing nose
+*shape:                          [0 or 1] Shape of the focusing nose - either elliptical (1) or parabolical (0)
+*linh:                              [m] Distance from the focusing nose to the left focus in vertical plane
+*louth:                            [m] Distance from the focusing nose to the right focus in vertical plane
+*linw:                              [m] Distance from the focusing nose to the left focus in horizontal plane
+*lputw:                           [m] Distance from the focusing nose to the right focus in horizontal plane
+*sample_size                   [m] Sample width and height
+* ...
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT Nera (source_lambda_min = 0.5, source_lambda_max = 1, guide_width = 0.15, guide_height = 0.26, focusing_length = 10, guide_shape = 1, linh = 10.5, louth = 0.5, linw = 10.5, loutw = 0.5, sample_size = 0.03,m_hor = 4,m_vert = 4,m = 6, m2 = 7)
+
+DECLARE
+%{
+//Source description
+double source_I = 1e16;
+double source_height=0.405, source_width=0.335;
+double source_shift;
+double lambda0, dlambda;
+
+//Channel description
+double slit01_dist =0.29;
+double slit02_dist =0.48;
+double slit03_dist = 0.86;
+double slit_width;
+double shutter_height = 0.42;
+double shutter_width1 = 0.22, shutter_dist1 = 1.17;
+double shutter_width2 = 0.30, shutter_dist2 = 1.80;
+double shutter_width3 = 0.36, shutter_dist3 = 2.16;
+double shutter_width4 = 0.46, shutter_dist4 = 2.56;
+
+//Guide description
+double source_optics_dist = 2.6;
+double total_length = 105;
+double distance_before_sample = 0.35;
+double guide_length_st;
+
+//Reflectivity description
+double R0 = 0.99, alpha = 3.3, W = 0.003, Qc=0.0218, m_foc = 7;
+
+%}
+
+INITIALIZE
+%{
+
+lambda0=(source_lambda_min + source_lambda_max)/2;
+dlambda=source_lambda_max - lambda0;
+
+source_shift = -source_height/4;
+source_height = source_height/2;
+
+slit_width = shutter_width1/2;
+
+total_length = total_length - source_optics_dist - distance_before_sample;
+guide_length_st = total_length-focusing_length;
+
+%}
+
+TRACE
+
+
+
+//Source
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT Source_simple = Source_simple(
+    yheight=source_height, 
+    xwidth=source_width, 
+    dist=source_optics_dist, 
+    focus_xw=guide_width, 
+    focus_yh=guide_height, 
+    lambda0=lambda0, 
+    dlambda=dlambda, 
+    flux=source_I)
+AT (0, source_shift, 0) RELATIVE origin
+
+//Channel
+
+COMPONENT slit01 = Slit(
+    xmin = -slit_width, xmax = 1,
+    yheight=1)
+AT (0, 0, slit01_dist) RELATIVE origin
+
+COMPONENT slit02 = Slit(
+    xmin = -1, xmax = slit_width, 
+    yheight=1)
+AT (0, 0, slit02_dist) RELATIVE origin
+
+COMPONENT slit03 = Slit(
+    xwidth=shutter_width1, 
+    yheight=1)
+AT (0, 0, slit03_dist) RELATIVE origin
+
+//Shutter
+
+COMPONENT slit1 = Slit(
+    xwidth=shutter_width1, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist1) RELATIVE origin
+
+COMPONENT slit2 = Slit(
+    xwidth=shutter_width2, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist2) RELATIVE origin
+
+COMPONENT slit3 = Slit(
+    xwidth=shutter_width3, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist3) RELATIVE origin
+
+COMPONENT slit4 = Slit(
+    xwidth=shutter_width4, 
+    yheight=shutter_height)
+AT (0, 0, shutter_dist4) RELATIVE origin
+
+COMPONENT Last_slit = Slit(
+    xmin=-1, 
+    xmax=1, 
+    ymin=-1, ymax=0)
+AT (0, 0, source_optics_dist) RELATIVE origin
+
+//Guide
+
+COMPONENT Guide_start_arm = Arm()
+AT (0, source_shift, source_optics_dist) RELATIVE origin
+
+COMPONENT  Main_guide = Guide_gravity(
+    w1 = guide_width, h1 = guide_height,  l = guide_length_st, mleft  = m_hor, mright = m_hor, 
+mtop = m_vert, mbottom = m_vert, R0=R0, Qc=Qc, alpha=alpha, W=W)
+  AT (0, 0, 0.001) RELATIVE Guide_start_arm
+
+COMPONENT Main_guide_arm = Arm()
+AT (0, 0, guide_length_st) RELATIVE Main_guide
+
+COMPONENT Focusing_nose_par = Guide_tapering(
+    option="parabolical", 
+    w1=0.2107, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115,
+    mx=m,
+    my=6, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE Main_guide_arm
+
+COMPONENT arm = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT monitor_nd_xt = Monitor_nD(
+    xwidth=0.22, yheight=0.22, bins=100, restore_neutron=1, 
+    options="x y")
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.205359141591534, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*2,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.199881967350894, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*3,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.194250417525718, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*4,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.188450652813324, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*5,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+	
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.182466633614533, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*6,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.176279596719168, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*7,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.169867360185306, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*8,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.163203381990621, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*9,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.156255456640812, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*10,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.148983863444606, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*11,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.141338655023079, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*12,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.133255541125257, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*13,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.124649360517563, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*14,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.115403149499004, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*15,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+				
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.105348520403191, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*16,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.0942270374573756, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*17,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.0816036667365247, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*18,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(Focusing_nose_par) = Guide_tapering(
+    option="parabolical", 
+    w1=0.0666301903171372, 
+    h1=guide_height, 
+    l=0.846269047887115, 
+    linh = 0, 
+    louth = 0,
+    linw = 0,
+    loutw = 17.54-0.846269047887115*19,
+    mx=m2,
+    my=m_foc, alphax=alpha, alphay=alpha, Qcx=Qc, Qcy=Qc, W=W, R0=R0)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT COPY(arm) = Arm()
+AT (0, 0, 0.846269047887115 + 0.001) RELATIVE PREVIOUS
+
+
+COMPONENT guide_end = Arm()
+AT (0, 0, focusing_length) RELATIVE Main_guide_arm
+
+//Sample
+
+COMPONENT monitor_nd_x = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="dx limits = [-2 2]")
+AT (0, 0, distance_before_sample) RELATIVE guide_end
+
+COMPONENT monitor_nd_y = Monitor_nD(
+    xwidth=sample_size, yheight=sample_size, bins=100, restore_neutron=1, 
+    options="dy limits = [-2 2]")
+AT (0, 0, distance_before_sample + 0.001) RELATIVE guide_end
+
+FINALLY
+%{
+
+%}
+
+END

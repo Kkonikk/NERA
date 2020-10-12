@@ -1,0 +1,102 @@
+McStas simulation description file for Nera.
+Date:    Sat Oct 10 19:44:46 2020
+Program: McStas 2.6.1 - May. 04, 2020
+
+begin instrument: Nera
+  File: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_many_parts_20201010_194423/mccode
+  Source: NERA_guide_3x3_sample_m_scan3_many_parts.instr
+  Parameters:  source_lambda_min(double) source_lambda_max(double) guide_width(double) guide_height(double) focusing_length(double) guide_shape(double) linh(double) louth(double) linw(double) loutw(double) sample_size(double) m_hor(double) m_vert(double) m(double) m2(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_many_parts_20201010_194423
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.6.1 - May. 04, 2020
+  Instrument: NERA_guide_3x3_sample_m_scan3_many_parts.instr
+  Ncount: 100000000
+  Trace: no
+  Gravitation: no
+  Seed: 1602387030
+  Directory: /home/nerde/JOB/github/NERA/NERA_second_channel/NERA_guide_3x3_sample_m_scan3_many_parts_20201010_194423
+  Nodes: 8
+  Param: source_lambda_min=0.5
+  Param: source_lambda_max=1
+  Param: guide_width=0.2107
+  Param: guide_height=0.2
+  Param: focusing_length=16.9254
+  Param: guide_shape=0
+  Param: linh=0
+  Param: louth=0
+  Param: linw=0
+  Param: loutw=0.6146
+  Param: sample_size=0.03
+  Param: m_hor=4
+  Param: m_vert=4
+  Param: m=6
+  Param: m2=7
+end simulation
+
+begin data
+  Date: Sat Oct 10 19:45:50 2020 (1602348350)
+  type: array_2d(100, 100)
+  Source: Nera (NERA_guide_3x3_sample_m_scan3_many_parts.instr)
+  component: monitor_nd_xt
+  position: 0 -0.10125 88.5749
+  title:  Intensity Position Position Monitor (Square) per bin
+  Ncount: 100000000
+  filename: monitor_nd_xt_1602348286.x_y
+  statistics: X0=-5.86692e-05; dX=0.0603963; Y0=1.9077e-05; dY=0.0578006;
+  signal: Min=0; Max=3.24525e+10; Mean=1.63858e+10;
+  values: 1.63858e+14 1.64637e+11 1.89099e+06
+  xvar: x
+  yvar: y
+  xlabel: x [m]
+  ylabel: y [m]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -0.11 0.11 -0.11 0.11
+  variables: I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 19:45:50 2020 (1602348350)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_m_scan3_many_parts.instr)
+  component: monitor_nd_x
+  position: 0 -0.10125 105.001
+  title: Hor. Divergence [deg] monitor
+  Ncount: 100000000
+  filename: monitor_nd_x_1602348286.hd
+  statistics: X0=-0.00077016; dX=0.505882;
+  signal: Min=0; Max=2.70823e+11; Mean=8.40841e+10;
+  values: 8.40841e+12 3.5248e+10 94797
+  xvar: hd
+  yvar: (I,I_err)
+  xlabel: Hor. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: hd I I_err N
+end data
+
+begin data
+  Date: Sat Oct 10 19:45:50 2020 (1602348350)
+  type: array_1d(100)
+  Source: Nera (NERA_guide_3x3_sample_m_scan3_many_parts.instr)
+  component: monitor_nd_y
+  position: 0 -0.10125 105.002
+  title: Vert. Divergence [deg] monitor
+  Ncount: 100000000
+  filename: monitor_nd_y_1602348286.vd
+  statistics: X0=-0.000289075; dX=0.165191;
+  signal: Min=0; Max=6.82015e+11; Mean=8.40837e+10;
+  values: 8.40837e+12 3.52485e+10 94777
+  xvar: vd
+  yvar: (I,I_err)
+  xlabel: Vert. Divergence [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -2 2
+  variables: vd I I_err N
+end data

@@ -1,6 +1,6 @@
 date = datestr(today('datetime'));
-type = "elliptical"; %only elliptical or parabolical
-dimension_plane = "vertical"; %only vertical or horizontal
+type = "parabolical"; %only elliptical or parabolical
+dimension_plane = "horizontal"; %only vertical or horizontal
 name = date + "_" + type + "_" + dimension_plane + "_scan";
 
 

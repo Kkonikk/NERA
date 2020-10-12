@@ -1,0 +1,25 @@
+# Instrument-source: 'NERA_guide_3x3_sample_m_scan3_many_parts.instr'
+# Date: Sat Oct 10 20 18 2020
+# Ncount: 10000000
+# Numpoints: 11
+# Param: m3 = 1
+# type: multiarray_1d(11)
+# title: Scan of m3
+# xlabel: 'm3'
+# ylabel: 'Intensity'
+# xvars: m3
+# yvars: (monitor_nd_xt_I,monitor_nd_xt_ERR) (monitor_nd_x_I,monitor_nd_x_ERR) (monitor_nd_y_I,monitor_nd_y_ERR)
+# xlimits: 1 6
+# filename: mccode.dat
+# variables: m3 monitor_nd_xt_I monitor_nd_xt_ERR monitor_nd_x_I monitor_nd_x_ERR monitor_nd_y_I monitor_nd_y_ERR
+1 1.63984E+14 5.2076E+11 6.78634E+12 1.0161E+11 6.78602E+12 1.01606E+11
+1.5 1.63928E+14 5.2051E+11 6.89331E+12 1.02697E+11 6.8947E+12 1.02708E+11
+2 1.62891E+14 5.1938E+11 6.72639E+12 1.00953E+11 6.72812E+12 1.00973E+11
+2.5 1.64174E+14 5.21476E+11 6.65175E+12 1.00402E+11 6.6523E+12 1.0041E+11
+3 1.63488E+14 5.20052E+11 6.53398E+12 9.97289E+10 6.53519E+12 9.97362E+10
+3.5 1.63969E+14 5.20567E+11 6.97663E+12 1.03179E+11 6.97333E+12 1.03152E+11
+4 1.63915E+14 5.20761E+11 6.71616E+12 1.00726E+11 6.71535E+12 1.00723E+11
+4.5 1.63572E+14 5.20212E+11 6.74753E+12 1.01056E+11 6.74455E+12 1.01034E+11
+5 1.64098E+14 5.21004E+11 6.97667E+12 1.02374E+11 6.97809E+12 1.02389E+11
+5.5 1.64497E+14 5.21679E+11 7.24788E+12 1.04508E+11 7.25483E+12 1.04564E+11
+6 1.64361E+14 5.21311E+11 7.30277E+12 1.04217E+11 7.30433E+12 1.04229E+11
